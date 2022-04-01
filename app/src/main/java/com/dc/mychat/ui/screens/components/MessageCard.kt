@@ -26,19 +26,20 @@ fun MessageCard(message: Message) {
         elevation = 4.dp,
         backgroundColor = Color.LightGray,
         shape = RoundedCornerShape(0.dp, 8.dp, 8.dp, 8.dp),
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier.wrapContentWidth().padding(8.dp)
     ) {
         Row(
             modifier = Modifier.wrapContentWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
         ) {
             Text(
                 text = message.message,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
-                    .padding(8.dp)
-                    .weight(6f)
+                    .padding(8.dp).weight(5f, fill = false)
+
             )
 
             Text(
@@ -47,9 +48,7 @@ fun MessageCard(message: Message) {
                 fontWeight = FontWeight.Light,
                 modifier = Modifier
                     .wrapContentWidth()
-                    .padding(8.dp)
-                    .weight(1f),
-                textAlign = TextAlign.End
+                    .padding(8.dp).weight(1f, fill = false)
             )
         }
 
@@ -60,5 +59,5 @@ fun MessageCard(message: Message) {
 @Composable
 fun CardMessagesPreview() {
     val message = MessageRepository().getAllMessages()
-    MessageCard(message = message[3])
+    MessageCard(message = message[4])
 }
