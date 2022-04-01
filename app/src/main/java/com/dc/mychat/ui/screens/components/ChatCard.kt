@@ -1,5 +1,6 @@
 package com.dc.mychat.ui.screens
 
+import android.provider.ContactsContract
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -14,9 +15,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dc.mychat.R
+import com.dc.mychat.model.Profile
 
 @Composable
-fun CardChat() {
+fun CardChat(profile: Profile) {
     Card(
         elevation = 10.dp,
         modifier = Modifier
@@ -38,7 +40,7 @@ fun CardChat() {
 
                 ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_add_profile_picture),
+                    painter = painterResource(id = profile.profilePicture),
                     contentDescription = "Profile Image"
                 )
             }
@@ -48,14 +50,14 @@ fun CardChat() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Deepak Choudhary",
+                    text = profile.name,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     fontSize = 24.sp
                 )
                 Text(
-                    text = "choudharydeepak990@gmail.com",
+                    text = profile.mailId,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
