@@ -1,6 +1,7 @@
 package com.dc.mychat.ui.screens
 
 import android.provider.ContactsContract
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -31,7 +32,7 @@ fun CardChat(profile: Profile, mainViewModel: MainViewModel) {
             .fillMaxWidth()
             .padding(8.dp),
         onClick = {
-            onUserClicked(mainViewModel.messageRepository.getAllMessages(), mainViewModel)
+            onUserClicked(mainViewModel.messageRepository.getAllMessagesFromRepository(), mainViewModel)
         }
     ) {
         Row(
@@ -82,4 +83,5 @@ fun CardChat(profile: Profile, mainViewModel: MainViewModel) {
 
 fun onUserClicked(allMessages: List<Message>, mainViewModel: MainViewModel) {
     mainViewModel.uiState.value = MainUIState.NewMessage(allMessages)
+    Log.d("TAG1", "Inside onUserClicked ")
 }

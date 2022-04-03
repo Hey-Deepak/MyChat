@@ -52,7 +52,7 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
                 trailingIcon = {
                     IconButton(onClick = {
 
-
+                        Log.d("TAG", "Inside send Message icon ${text}")
                         mainViewModel.messageRepository.sendMessage(
 
                             message = Message(
@@ -61,7 +61,7 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
                                 "choudhary@gmail.com"
                             )
                         )
-                        mainViewModel.uiState.value = MainUIState.NewMessage(mainViewModel.messageRepository.getAllMessages())
+                        mainViewModel.uiState.value = MainUIState.NewMessage(mainViewModel.messageRepository.getAllMessages().toList())
                     }) {
                         Icon(imageVector = Icons.Filled.Send, contentDescription = "Send Message")
                     }

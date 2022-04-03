@@ -15,7 +15,7 @@ import com.dc.mychat.ui.viewmodel.MainViewModel
 @Composable
 fun MessageScreen( mainViewModel: MainViewModel) {
     Log.d("TAG", "Inside Message Screen2")
-    val messages: List<Message> = mainViewModel.messageRepository.getAllMessagesFromRepository()
+    val messages: List<Message> = mainViewModel.messageRepository.getAllMessages()
     Column(modifier = Modifier.fillMaxSize(),
     verticalArrangement = Arrangement.SpaceBetween) {
         Log.d("TAG", "Inside Message Screen3")

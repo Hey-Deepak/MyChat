@@ -1,5 +1,6 @@
 package com.dc.mychat.repository
 
+import android.util.Log
 import com.dc.mychat.R
 import com.dc.mychat.model.Message
 import com.dc.mychat.model.Profile
@@ -24,7 +25,9 @@ class MessageRepository {
     }
 
     fun sendMessage(message: Message) {
+        Log.d("TAG", "Inside send Message function in repo")
         listOfMessage.add(message)
+        Log.d("TAG", listOfMessage.toString())
     }
 
     fun getAllMessages(): List<Message>{

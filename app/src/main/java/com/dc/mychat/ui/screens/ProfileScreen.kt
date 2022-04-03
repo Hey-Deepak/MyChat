@@ -78,8 +78,7 @@ fun ProfileScreen(profile: Profile, mainViewModel: MainViewModel) {
 }
 
 fun createProfile(profile: Profile, mainViewModel: MainViewModel) {
-    val pf = profile
-    mainViewModel.userRepository.saveProfileToPrefs(pf)
+    mainViewModel.userRepository.saveProfileToPrefs(profile)
     mainViewModel.uiState.value = MainUIState.AllUsers(mainViewModel.profileRepository.getAllProfiles())
 }
 
