@@ -18,13 +18,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dc.mychat.R
+import com.dc.mychat.model.Profile
 import org.intellij.lang.annotations.JdkConstants
 
 @Composable
-fun ProfileScreen() {
-    Column(modifier = Modifier.fillMaxSize(),
-    horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.Center) {
+fun ProfileScreen(profile: Profile) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
         Image(painter = painterResource(id = R.drawable.ic_add_profile_picture),
             contentDescription = "",
             modifier = Modifier
@@ -43,27 +46,16 @@ fun ProfileScreen() {
             textStyle = TextStyle(color = Color.Blue, fontWeight = FontWeight.SemiBold),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
 
-        )
-        var textOfUserId by remember { mutableStateOf("") }
-        OutlinedTextField(
-            value = textOfUserId,
-            onValueChange = { textOfUserId = it },
-            label = { Text("Enter Your UserId Name", fontSize = 20.sp) },
-            maxLines = 1,
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            textStyle = TextStyle(color = Color.Blue, fontWeight = FontWeight.SemiBold),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             )
-        
-        Button(onClick = { createProfile() },
-        modifier = Modifier.padding(8.dp),
-        ) {
-            Text(text = "Done", fontSize = 16.sp)
-        }
-
     }
+
+    Button(
+        onClick = { createProfile() },
+        modifier = Modifier.padding(8.dp),
+    ) {
+        Text(text = "Done", fontSize = 16.sp)
+    }
+
 }
 
 fun createProfile() {
@@ -77,5 +69,5 @@ fun onProfileClicked() {
 @Preview
 @Composable
 fun viewProfileScreen() {
-    ProfileScreen()
+    ProfileScreen(profile = Profile("Deepak", "choudharydeepak@gmail.com", R.drawable.ic_add_profile_picture))
 }

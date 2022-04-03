@@ -11,17 +11,18 @@ import androidx.compose.runtime.*
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dc.mychat.model.SendMessage
+import com.dc.mychat.model.Message
+import com.dc.mychat.ui.viewmodel.MainViewModel
 
 
 @Composable
-fun SendMessageCard() {
+fun SendMessageCard(mainViewModel: MainViewModel) {
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,7 +47,7 @@ fun SendMessageCard() {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
 
                 trailingIcon = {
-                    IconButton(onClick = { sendMessage() }) {
+                    IconButton(onClick = { sendMessage(text = text, mainViewModel) }) {
                         Icon(imageVector = Icons.Filled.Send, contentDescription = "Send Message")
                     }
                 },
@@ -59,8 +60,15 @@ fun SendMessageCard() {
     }
 }
 
-fun sendMessage() {
-    TODO("Not yet implemented")
+fun sendMessage(text: String, mainViewModel: MainViewModel) {
+
+    mainViewModel.sendMessage(
+        message = Message(
+            text,
+            "12:30 AM",
+            "choudhary@gmail.com"
+        )
+    )
 }
 
 @Preview

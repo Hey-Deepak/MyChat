@@ -14,9 +14,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dc.mychat.R
+import com.dc.mychat.ui.viewmodel.MainViewModel
 
 @Composable
-fun LoggedInScreen() {
+fun LoggedInScreen(emailId: String, mainViewModel: MainViewModel) {
     Column(
         Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -32,7 +33,7 @@ fun LoggedInScreen() {
             fontWeight = FontWeight.SemiBold
         )
 
-        Button(onClick = {  }) {
+        Button(onClick = { mainViewModel.isLoggedIn(true) }) {
             Text(text = "Login",
                 fontSize = 20.sp)
         }
@@ -41,8 +42,9 @@ fun LoggedInScreen() {
 }
 
 
+/*
 @Preview
 @Composable
 fun viewNotLoggedIn() {
-    LoggedInScreen()
-}
+    LoggedInScreen("choudharydeepak@gmail.com")
+}*/

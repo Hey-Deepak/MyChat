@@ -5,14 +5,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dc.mychat.model.Message
 import com.dc.mychat.repository.MessageRepository
 import com.dc.mychat.ui.screens.components.MessageCard
 import com.dc.mychat.ui.screens.components.SendMessageCard
+import com.dc.mychat.ui.viewmodel.MainViewModel
 
 @Composable
-fun MessageScreen(messages: List<Message>) {
+fun MessageScreen(messages: List<Message>, mainViewModel: MainViewModel) {
+
     Column(modifier = Modifier.fillMaxSize(),
     verticalArrangement = Arrangement.SpaceBetween) {
 
@@ -22,13 +23,14 @@ fun MessageScreen(messages: List<Message>) {
                 MessageCard(message = message)
             }
         }
-        SendMessageCard()
+        SendMessageCard(mainViewModel)
     }
 }
 
+/*
 @Preview
 @Composable
 fun MessageScreenPreview() {
-    val messages = MessageRepository().getAllMessages()
+    val messages = MessageRepository().getAllMessagesFromrRepository()
     MessageScreen(messages = messages)
-}
+}*/

@@ -1,9 +1,14 @@
 package com.dc.mychat.repository
 
+import com.dc.mychat.R
 import com.dc.mychat.model.Message
+import com.dc.mychat.model.Profile
 
 class MessageRepository {
-    fun getAllMessages(): List<Message>{
+
+    val listOfMessage = mutableListOf<Message>()
+
+    fun getAllMessagesFromrRepository(): List<Message>{
         return listOf(
             Message("Hi, My name is Deepak","12:01 AM", "choudharydeepak990@gmail.com"),
             Message("Hi, My name is Deepak2","12:02 AM", "gljat990@gmail.com"),
@@ -13,4 +18,18 @@ class MessageRepository {
             Message("Sounds, cool. Best wishes from my side","12:05 AM", "gljat999@gmail.com"),
         )
     }
+
+    fun getProfileFromRepository(): Profile {
+        return Profile("Deepak choudhary", "choudharydeepak@gmail.com", R.drawable.ic_add_profile_picture)
+    }
+
+    fun sendMessage(message: Message) : List<Message> {
+        listOfMessage.add(message)
+        return listOfMessage
+    }
+
+    fun getAllMessages(): List<Message>{
+        return listOfMessage
+    }
+
 }
