@@ -2,6 +2,8 @@ package com.dc.mychat.di
 
 import android.content.Context
 import androidx.activity.ComponentActivity
+import com.dc.mychat.repository.MessageRepository
+import com.dc.mychat.repository.ProfileRepository
 import com.dc.mychat.repository.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -22,6 +24,18 @@ object AppModule {
         return UserRepository(
             appContext.getSharedPreferences("main", ComponentActivity.MODE_PRIVATE)
         )
+    }
+
+    @Singleton
+    @Provides
+    fun provideProfileRepository() : ProfileRepository {
+        return ProfileRepository()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMessageRepository() : MessageRepository {
+        return MessageRepository()
     }
 
 

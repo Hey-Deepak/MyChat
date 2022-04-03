@@ -1,5 +1,7 @@
 package com.dc.mychat.ui.screens.components
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dc.mychat.model.Message
 import com.dc.mychat.ui.viewmodel.MainViewModel
+import com.dc.mychat.ui.viewmodel.state.MainUIState
 
 
 @Composable
@@ -47,7 +50,19 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
 
                 trailingIcon = {
-                    IconButton(onClick = { sendMessage(text = text, mainViewModel) }) {
+                    IconButton(onClick = {
+
+
+                        mainViewModel.messageRepository.sendMessage(
+
+                            message = Message(
+                                text,
+                                "12:30 AM",
+                                "choudhary@gmail.com"
+                            )
+                        )
+                        mainViewModel.uiState.value = MainUIState.NewMessage(mainViewModel.messageRepository.getAllMessages())
+                    }) {
                         Icon(imageVector = Icons.Filled.Send, contentDescription = "Send Message")
                     }
                 },
@@ -60,16 +75,18 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
     }
 }
 
-fun sendMessage(text: String, mainViewModel: MainViewModel) {
+/*fun sendMessage(text: String, mainViewModel: MainViewModel) {
 
-    mainViewModel.sendMessage(
+    mainViewModel.messageRepository.sendMessage(
         message = Message(
             text,
             "12:30 AM",
             "choudhary@gmail.com"
         )
     )
-}
+    Log.d("TAG", "Inside send Message function")
+    mainViewModel.uiState.value = MainUIState.NewMessage(mainViewModel.messageRepository.getAllMessages())
+}*/
 
 @Preview
 @Composable

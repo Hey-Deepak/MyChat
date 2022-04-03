@@ -1,5 +1,6 @@
 package com.dc.mychat.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,9 +8,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -19,10 +20,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dc.mychat.R
 import com.dc.mychat.model.Profile
-import org.intellij.lang.annotations.JdkConstants
+import com.dc.mychat.ui.viewmodel.MainViewModel
+import com.dc.mychat.ui.viewmodel.state.MainUIState
 
 @Composable
-fun ProfileScreen(profile: Profile) {
+fun ProfileScreen(profile: Profile, mainViewModel: MainViewModel) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -32,7 +35,15 @@ fun ProfileScreen(profile: Profile) {
             contentDescription = "",
             modifier = Modifier
                 .size(200.dp, 200.dp)
-                .clickable { onProfileClicked() }
+                .clickable {
+                    Toast
+                        .makeText(
+                            context,
+                            "Profile Picture Clicked!",
+                            Toast.LENGTH_LONG
+                        )
+                        .show()
+                }
         )
         var text by remember { mutableStateOf("") }
         OutlinedTextField(
@@ -47,27 +58,46 @@ fun ProfileScreen(profile: Profile) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
 
             )
+
+        Button(
+            onClick = { Toast
+                .makeText(
+                    context,
+                    text,
+                    Toast.LENGTH_LONG
+                )
+                .show()
+                createProfile(profile, mainViewModel)},
+            modifier = Modifier.padding(8.dp),
+        ) {
+            Text(text = "Done", fontSize = 16.sp)
+        }
     }
 
-    Button(
-        onClick = { createProfile() },
-        modifier = Modifier.padding(8.dp),
-    ) {
-        Text(text = "Done", fontSize = 16.sp)
-    }
 
 }
 
-fun createProfile() {
+fun createProfile(profile: Profile, mainViewModel: MainViewModel) {
+    val pf = profile
+    mainViewModel.userRepository.saveProfileToPrefs(pf)
+    mainViewModel.uiState.value = MainUIState.AllUsers(mainViewModel.profileRepository.getAllProfiles())
+}
+
+fun onProfilePictureClicked() {
     TODO("Not yet implemented")
+
+
 }
 
-fun onProfileClicked() {
-    TODO("Not yet implemented")
-}
-
+/*
 @Preview
 @Composable
 fun viewProfileScreen() {
-    ProfileScreen(profile = Profile("Deepak", "choudharydeepak@gmail.com", R.drawable.ic_add_profile_picture))
-}
+    ProfileScreen(
+        profile = Profile(
+            "Deepak",
+            "choudharydeepak@gmail.com",
+            R.drawable.ic_add_profile_picture
+        )
+    )
+}*/

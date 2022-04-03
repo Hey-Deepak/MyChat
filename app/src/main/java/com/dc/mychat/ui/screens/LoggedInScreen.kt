@@ -33,7 +33,7 @@ fun LoggedInScreen(emailId: String, mainViewModel: MainViewModel) {
             fontWeight = FontWeight.SemiBold
         )
 
-        Button(onClick = { mainViewModel.isLoggedIn(true) }) {
+        Button(onClick = { mainViewModel.onLoggedInClicked(emailId) }) {
             Text(text = "Login",
                 fontSize = 20.sp)
         }

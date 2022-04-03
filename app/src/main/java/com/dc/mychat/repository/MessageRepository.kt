@@ -8,7 +8,7 @@ class MessageRepository {
 
     val listOfMessage = mutableListOf<Message>()
 
-    fun getAllMessagesFromrRepository(): List<Message>{
+    fun getAllMessagesFromRepository(): List<Message>{
         return listOf(
             Message("Hi, My name is Deepak","12:01 AM", "choudharydeepak990@gmail.com"),
             Message("Hi, My name is Deepak2","12:02 AM", "gljat990@gmail.com"),
@@ -23,9 +23,8 @@ class MessageRepository {
         return Profile("Deepak choudhary", "choudharydeepak@gmail.com", R.drawable.ic_add_profile_picture)
     }
 
-    fun sendMessage(message: Message) : List<Message> {
+    fun sendMessage(message: Message) {
         listOfMessage.add(message)
-        return listOfMessage
     }
 
     fun getAllMessages(): List<Message>{

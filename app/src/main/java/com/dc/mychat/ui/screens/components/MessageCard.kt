@@ -1,5 +1,6 @@
 package com.dc.mychat.ui.screens.components
 
+import android.util.Log
 import com.dc.mychat.repository.MessageRepository
 
 
@@ -16,10 +17,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dc.mychat.model.Message
+import com.dc.mychat.ui.viewmodel.MainViewModel
 
 @Composable
-fun MessageCard(message: Message) {
-
+fun MessageCard(message: Message, mainViewModel: MainViewModel) {
+    Log.d("TAG", "Inside Message card")
 
     Card(
         elevation = 4.dp,
@@ -54,9 +56,10 @@ fun MessageCard(message: Message) {
     }
 }
 
+/*
 @Preview
 @Composable
 fun CardMessagesPreview() {
-    val message = MessageRepository().getAllMessagesFromrRepository()
+    val message = MessageRepository().getAllMessagesFromRepository()
     MessageCard(message = message[1])
-}
+}*/

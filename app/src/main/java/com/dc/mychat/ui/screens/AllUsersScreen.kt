@@ -3,6 +3,7 @@ package com.dc.mychat.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -16,9 +17,11 @@ import androidx.compose.ui.unit.sp
 import com.dc.mychat.R
 import com.dc.mychat.model.Profile
 import com.dc.mychat.repository.ProfileRepository
+import com.dc.mychat.ui.viewmodel.MainViewModel
 
+@ExperimentalMaterialApi
 @Composable
-fun AllUsersScreen(profiles: List<Profile>) {
+fun AllUsersScreen(profiles: List<Profile>, mainViewModel: MainViewModel) {
     Surface() {
         Column(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -34,7 +37,7 @@ fun AllUsersScreen(profiles: List<Profile>) {
                     fontWeight = FontWeight.Bold
                 )
                 for (profile in profiles){
-                    CardChat(profile = profile)
+                    CardChat(profile = profile, mainViewModel)
                 }
             }
         }
@@ -42,9 +45,11 @@ fun AllUsersScreen(profiles: List<Profile>) {
 }
 
 
+/*
+@ExperimentalMaterialApi
 @Preview
 @Composable
 fun viewAllUsersScreen() {
     val profiles = ProfileRepository().getAllProfiles()
    AllUsersScreen(profiles = profiles)
-}
+}*/
