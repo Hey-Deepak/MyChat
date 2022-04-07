@@ -1,9 +1,7 @@
-package com.dc.mychat.repository
+package com.dc.mychat.domain.repository
 
 import android.content.SharedPreferences
-import androidx.activity.ComponentActivity
-import androidx.compose.ui.platform.LocalContext
-import com.dc.mychat.model.Profile
+import com.dc.mychat.domain.model.Profile
 
 class UserRepository(val prefs: SharedPreferences) {
 

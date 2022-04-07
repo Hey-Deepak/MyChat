@@ -3,8 +3,7 @@ package com.dc.mychat.ui.screens
 import android.util.Log
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import com.dc.mychat.model.Message
-import com.dc.mychat.model.Profile
+import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.ui.viewmodel.MainViewModel
 import com.dc.mychat.ui.viewmodel.state.MainUIState
 

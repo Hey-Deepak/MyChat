@@ -1,8 +1,7 @@
-package com.dc.mychat.repository
+package com.dc.mychat.domain.repository
 
-import androidx.compose.ui.res.painterResource
 import com.dc.mychat.R
-import com.dc.mychat.model.Profile
+import com.dc.mychat.domain.model.Profile
 
 class ProfileRepository {
 

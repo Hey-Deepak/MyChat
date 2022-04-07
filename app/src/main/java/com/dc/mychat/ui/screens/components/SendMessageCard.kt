@@ -1,7 +1,6 @@
 package com.dc.mychat.ui.screens.components
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,7 +17,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dc.mychat.model.Message
+import com.dc.mychat.domain.model.Message
 import com.dc.mychat.ui.viewmodel.MainViewModel
 import com.dc.mychat.ui.viewmodel.state.MainUIState
 
