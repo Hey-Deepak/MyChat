@@ -1,7 +1,5 @@
 package com.dc.mychat
 
-import android.content.Intent
-import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -15,11 +13,11 @@ import com.dc.mychat.ui.viewmodel.MainViewModel
 fun SetupNavGraph(
     navHostController: NavHostController,
     mainViewModel: MainViewModel,
-    loginLauncher: ActivityResultLauncher<Intent>
+    launchLoginFlow: (() -> Unit) -> Unit
 ) {
     NavHost(navController = navHostController, startDestination = Screen.LoggedIn.route){
         composable(route = Screen.LoggedIn.route){
-            LoggedInScreen(mainViewModel = mainViewModel, navHostController = navHostController, loginLauncher)
+            LoggedInScreen(mainViewModel = mainViewModel, navHostController = navHostController, launchLoginFlow)
         }
         composable(route = Screen.Profile.route){
             ProfileScreen(mainViewModel = mainViewModel, navHostController = navHostController)

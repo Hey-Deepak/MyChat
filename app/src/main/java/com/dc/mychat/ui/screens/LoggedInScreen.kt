@@ -2,6 +2,8 @@ package com.dc.mychat.ui.screens
 
 
 import android.content.Intent
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -19,12 +21,13 @@ import com.dc.mychat.R
 import com.dc.mychat.Screen
 import com.dc.mychat.ui.viewmodel.MainViewModel
 import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun LoggedInScreen(
     mainViewModel: MainViewModel,
     navHostController: NavHostController,
-    loginLauncher: ActivityResultLauncher<Intent>
+    launchLoginFlow: (() -> Unit) -> Unit
 ) {
     Column(
         Modifier.fillMaxSize(),
@@ -42,8 +45,22 @@ fun LoggedInScreen(
         )
 
         Button(onClick = {
-            fireLoginIntent(loginLauncher)
-            navHostController.navigate(Screen.Profile.route)
+            launchLoginFlow {
+                val user = FirebaseAuth.getInstance().currentUser
+                user?.let {
+                    val email = it.email!!
+                    Log.d("TAG","Inside setupLoginLauncher $email")
+                    mainViewModel.userRepository.saveEmailToPrefs(email)
+
+                    /*Toast.makeText(
+                        this,
+                        "Congratulation! You have logged in as $email",
+                        Toast.LENGTH_LONG
+                    ).show()*/
+                }
+                navHostController.navigate(Screen.Profile.route)
+            }
+
         }) {
             Text(text = "Login",
                 fontSize = 20.sp)

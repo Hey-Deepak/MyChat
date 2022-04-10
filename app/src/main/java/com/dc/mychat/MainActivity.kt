@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
@@ -18,7 +17,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dc.mychat.ui.theme.MyChatTheme
 import com.dc.mychat.ui.viewmodel.MainViewModel
-import com.google.firebase.auth.FirebaseAuth
+import com.firebase.ui.auth.AuthUI
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -26,17 +25,16 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     val mainViewModel: MainViewModel by viewModels()
-    private lateinit var loginLauncher: ActivityResultLauncher<Intent>
     lateinit var navHostController: NavHostController
 
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupLoginLauncher()
+        registerLoginLauncher()
         setContent {
             MyChatTheme {
                 navHostController = rememberNavController()
-                SetupNavGraph(navHostController = navHostController, mainViewModel, loginLauncher)
+                SetupNavGraph(navHostController = navHostController, mainViewModel, ::launchLoginFlow)
             }
         }
 
@@ -44,28 +42,35 @@ class MainActivity : ComponentActivity() {
     }
 
 
-    private fun setupLoginLauncher() {
+    private lateinit var loginLauncher: ActivityResultLauncher<Intent>
+
+    // Step 3: Handler (to get the result)
+    private lateinit var loginHandler: (() -> Unit)
+
+    // Step 1: Registration
+    private fun registerLoginLauncher() {
         Log.d("TAG","Inside setupLoginLauncher")
         loginLauncher= registerForActivityResult(ActivityResultContracts.StartActivityForResult())
         { result: ActivityResult ->
             Log.d("TAG","Inside setupLoginLauncher")
             if (result.resultCode == Activity.RESULT_OK) {
-                val user = FirebaseAuth.getInstance().currentUser
-                user?.let {
-                    val email = it.email!!
-                    Log.d("TAG","Inside setupLoginLauncher $email")
-                    mainViewModel.userRepository.saveEmailToPrefs(email)
-
-
-                    Toast.makeText(
-                        this,
-                        "Congratulation! You have logged in as $email",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+                loginHandler()
             }
         }
     }
+
+    // Step 2: Launcher
+    private fun launchLoginFlow(loginHandler: (() -> Unit)) {
+        this.loginHandler = loginHandler
+        val intent = AuthUI.getInstance()
+            .createSignInIntentBuilder()
+            .setAvailableProviders(listOf(
+                AuthUI.IdpConfig.GoogleBuilder().build()
+            ))
+            .build()
+        loginLauncher.launch(intent)
+    }
+
 }
 
 
