@@ -1,6 +1,5 @@
 package com.dc.mychat.ui.screens
 
-import android.provider.ContactsContract
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -16,15 +15,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dc.mychat.R
-import com.dc.mychat.model.Message
-import com.dc.mychat.model.Profile
+import androidx.navigation.NavHostController
+import com.dc.mychat.Screen
+import com.dc.mychat.domain.model.Message
 import com.dc.mychat.ui.viewmodel.MainViewModel
 import com.dc.mychat.ui.viewmodel.state.MainUIState
 
 @ExperimentalMaterialApi
 @Composable
-fun CardChat(profile: Profile, mainViewModel: MainViewModel) {
+fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController) {
     Card(
         elevation = 10.dp,
         modifier = Modifier
@@ -32,7 +31,7 @@ fun CardChat(profile: Profile, mainViewModel: MainViewModel) {
             .fillMaxWidth()
             .padding(8.dp),
         onClick = {
-            onUserClicked(mainViewModel.messageRepository.getAllMessagesFromRepository(), mainViewModel)
+            onUserClicked(mainViewModel.messageRepository.getAllMessagesFromRepository(), mainViewModel, navHostController)
         }
     ) {
         Row(
@@ -48,10 +47,10 @@ fun CardChat(profile: Profile, mainViewModel: MainViewModel) {
                 border = BorderStroke(1.dp, Color.Green),
 
                 ) {
-                Image(
-                    painter = painterResource(id = profile.profilePicture),
+                /*Image(
+                    painter = painterResource(id = mainViewModel.profileRepository.getProfile().profilePicture),
                     contentDescription = "Profile Image"
-                )
+                )*/
             }
             Column(
                 modifier = Modifier,
@@ -59,14 +58,14 @@ fun CardChat(profile: Profile, mainViewModel: MainViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = profile.name,
+                    text = mainViewModel.profileRepository.getProfile().name,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     fontSize = 24.sp
                 )
                 Text(
-                    text = profile.mailId,
+                    text = mainViewModel.profileRepository.getProfile().mailId,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
@@ -81,7 +80,8 @@ fun CardChat(profile: Profile, mainViewModel: MainViewModel) {
     }
 }
 
-fun onUserClicked(allMessages: List<Message>, mainViewModel: MainViewModel) {
-    mainViewModel.uiState.value = MainUIState.NewMessage(allMessages)
+fun onUserClicked(allMessages: List<Message>, mainViewModel: MainViewModel, navHostController: NavHostController) {
+    mainViewModel.uiState.value = MainUIState.AllMessages(allMessages)
+    navHostController.navigate(Screen.Message.route)
     Log.d("TAG1", "Inside onUserClicked ")
 }

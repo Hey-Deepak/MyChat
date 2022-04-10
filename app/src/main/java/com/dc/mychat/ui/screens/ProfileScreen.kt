@@ -15,16 +15,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.dc.mychat.R
-import com.dc.mychat.model.Profile
+import com.dc.mychat.Screen
+import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.ui.viewmodel.MainViewModel
 import com.dc.mychat.ui.viewmodel.state.MainUIState
 
 @Composable
-fun ProfileScreen(profile: Profile, mainViewModel: MainViewModel) {
+fun ProfileScreen(mainViewModel: MainViewModel, navHostController: NavHostController) {
     val context = LocalContext.current
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -60,14 +61,9 @@ fun ProfileScreen(profile: Profile, mainViewModel: MainViewModel) {
             )
 
         Button(
-            onClick = { Toast
-                .makeText(
-                    context,
-                    text,
-                    Toast.LENGTH_LONG
-                )
-                .show()
-                createProfile(profile, mainViewModel)},
+            onClick = {
+                createProfile(mainViewModel, navHostController)
+            },
             modifier = Modifier.padding(8.dp),
         ) {
             Text(text = "Done", fontSize = 16.sp)
@@ -77,9 +73,9 @@ fun ProfileScreen(profile: Profile, mainViewModel: MainViewModel) {
 
 }
 
-fun createProfile(profile: Profile, mainViewModel: MainViewModel) {
-    mainViewModel.userRepository.saveProfileToPrefs(profile)
-    mainViewModel.uiState.value = MainUIState.AllUsers(mainViewModel.profileRepository.getAllProfiles())
+fun createProfile(mainViewModel: MainViewModel, navHostController: NavHostController) {
+
+    navHostController.navigate(Screen.AllUsers.route)
 }
 
 fun onProfilePictureClicked() {

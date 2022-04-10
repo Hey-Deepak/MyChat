@@ -1,4 +1,4 @@
-package com.dc.mychat.model
+package com.dc.mychat.domain.model
 
 
 data class Message (

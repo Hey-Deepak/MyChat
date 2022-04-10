@@ -1,11 +1,11 @@
-package com.dc.mychat.repository
+package com.dc.mychat.domain.repository
 
 import android.util.Log
 import com.dc.mychat.R
-import com.dc.mychat.model.Message
-import com.dc.mychat.model.Profile
+import com.dc.mychat.domain.model.Message
+import com.dc.mychat.domain.model.Profile
 
-class MessageRepository {
+open class MessageRepository {
 
     val listOfMessage = mutableListOf<Message>()
 
@@ -21,7 +21,7 @@ class MessageRepository {
     }
 
     fun getProfileFromRepository(): Profile {
-        return Profile("Deepak choudhary", "choudharydeepak@gmail.com", R.drawable.ic_add_profile_picture)
+        return Profile("Deepak choudhary", "choudharydeepak@gmail.com")
     }
 
     fun sendMessage(message: Message) {

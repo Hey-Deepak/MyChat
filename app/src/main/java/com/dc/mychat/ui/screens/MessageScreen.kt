@@ -5,9 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.dc.mychat.model.Message
-import com.dc.mychat.repository.MessageRepository
+import com.dc.mychat.domain.model.Message
 import com.dc.mychat.ui.screens.components.MessageCard
 import com.dc.mychat.ui.screens.components.SendMessageCard
 import com.dc.mychat.ui.viewmodel.MainViewModel
