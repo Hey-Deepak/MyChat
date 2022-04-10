@@ -1,29 +1,31 @@
 package com.dc.mychat
 
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.dc.mychat.domain.repository.UserRepository
 import com.dc.mychat.ui.screens.*
 import com.dc.mychat.ui.viewmodel.MainViewModel
-import com.dc.mychat.ui.viewmodel.state.MainUIState
 
 @ExperimentalMaterialApi
 @Composable
-fun SetupNavGraph(navController: NavHostController, mainViewModel: MainViewModel) {
-    NavHost(navController = navController, startDestination = Screen.LoggedIn.route){
+fun SetupNavGraph(
+    navHostController: NavHostController,
+    mainViewModel: MainViewModel,
+    loginLauncher: ActivityResultLauncher<Intent>
+) {
+    NavHost(navController = navHostController, startDestination = Screen.LoggedIn.route){
         composable(route = Screen.LoggedIn.route){
-            MainScreen(mainViewModel = mainViewModel)
+            LoggedInScreen(mainViewModel = mainViewModel, navHostController = navHostController, loginLauncher)
         }
         composable(route = Screen.Profile.route){
-            val profile = (mainViewModel.uiState.value as MainUIState.Profile).profile
-            ProfileScreen(profile = profile, mainViewModel = mainViewModel)
+            ProfileScreen(mainViewModel = mainViewModel, navHostController = navHostController)
         }
         composable(route = Screen.AllUsers.route){
-            val profiles = (mainViewModel.uiState.value as MainUIState.AllUsers).listOfUsers
-            AllUsersScreen(profiles = profiles, mainViewModel = mainViewModel)
+            AllUsersScreen(mainViewModel = mainViewModel, navHostController = navHostController)
         }
         composable(route = Screen.Message.route){
             MessageScreen(mainViewModel = mainViewModel)

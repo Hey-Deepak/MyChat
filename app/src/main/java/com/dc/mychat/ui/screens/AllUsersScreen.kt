@@ -10,12 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.ui.viewmodel.MainViewModel
 
 @ExperimentalMaterialApi
 @Composable
-fun AllUsersScreen(profiles: List<Profile>, mainViewModel: MainViewModel) {
+fun AllUsersScreen(mainViewModel: MainViewModel, navHostController: NavHostController) {
     Surface() {
         Column(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -30,8 +31,8 @@ fun AllUsersScreen(profiles: List<Profile>, mainViewModel: MainViewModel) {
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold
                 )
-                for (profile in profiles){
-                    CardChat(profile = profile, mainViewModel)
+                for (profile in mainViewModel.profileRepository.getAllProfiles()){
+                    CardChat(mainViewModel, navHostController)
                 }
             }
         }

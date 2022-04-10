@@ -3,11 +3,16 @@ package com.dc.mychat.domain.repository
 import android.content.SharedPreferences
 import com.dc.mychat.domain.model.Profile
 
-class UserRepository(val prefs: SharedPreferences) {
+interface UserRepository {
 
+    fun getLoggedInEmailFromPrefs(): String?
 
+    fun saveEmailToPrefs(email: String)
+
+}
+/*
     fun getLoggedInEmailFromPrefs(): String? {
-        return prefs.getString("emailId", null)
+        return prefs.getString("emailId", "choudharydeepak@gmail.com")
     }
 
     fun saveEmailToPrefs(email: String) {
@@ -15,5 +20,5 @@ class UserRepository(val prefs: SharedPreferences) {
     }
     fun saveProfileToPrefs(profile: Profile) {
         prefs.edit().putString("profile", profile.toString()).apply()
-    }
-}
+    }*/
+

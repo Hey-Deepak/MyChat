@@ -33,7 +33,7 @@ class MainViewModel @Inject constructor(
     }*/
 
     fun onLoggedInClicked(email: String){
-        uiState.value = MainUIState.Profile(Profile("Deepak", "choudharydeepak@gmail.com", R.drawable.ic_add_profile_picture))
+        uiState.value = MainUIState.Profile(Profile("Deepak", "choudharydeepak@gmail.com"))
     }
 
 }

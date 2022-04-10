@@ -1,6 +1,8 @@
 package com.dc.mychat.ui.screens
 
 
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -10,14 +12,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.dc.mychat.R
+import com.dc.mychat.Screen
 import com.dc.mychat.ui.viewmodel.MainViewModel
+import com.firebase.ui.auth.AuthUI
 
 @Composable
-fun LoggedInScreen(emailId: String, mainViewModel: MainViewModel) {
+fun LoggedInScreen(
+    mainViewModel: MainViewModel,
+    navHostController: NavHostController,
+    loginLauncher: ActivityResultLauncher<Intent>
+) {
     Column(
         Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -33,7 +41,10 @@ fun LoggedInScreen(emailId: String, mainViewModel: MainViewModel) {
             fontWeight = FontWeight.SemiBold
         )
 
-        Button(onClick = { mainViewModel.onLoggedInClicked(emailId) }) {
+        Button(onClick = {
+            fireLoginIntent(loginLauncher)
+            navHostController.navigate(Screen.Profile.route)
+        }) {
             Text(text = "Login",
                 fontSize = 20.sp)
         }
@@ -41,6 +52,15 @@ fun LoggedInScreen(emailId: String, mainViewModel: MainViewModel) {
     }
 }
 
+fun fireLoginIntent(loginLauncher: ActivityResultLauncher<Intent>) {
+    val intent = AuthUI.getInstance()
+        .createSignInIntentBuilder()
+        .setAvailableProviders(listOf(
+            AuthUI.IdpConfig.GoogleBuilder().build()
+        ))
+        .build()
+    loginLauncher.launch(intent)
+}
 
 /*
 @Preview
