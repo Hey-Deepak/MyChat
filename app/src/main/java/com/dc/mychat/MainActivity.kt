@@ -34,12 +34,20 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyChatTheme {
                 navHostController = rememberNavController()
-                SetupNavGraph(navHostController = navHostController, mainViewModel, ::launchLoginFlow)
+                SetupNavGraph(navHostController = navHostController, mainViewModel, ::launchLoginFlow, selectImageLauncher)
             }
         }
 
 
     }
+
+    val selectImageLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            Log.d("TAG4", "Inside selectImageLauncher")
+            mainViewModel.imageUriState.value = uri
+        }
+
+
 
 
     private lateinit var loginLauncher: ActivityResultLauncher<Intent>
@@ -50,10 +58,11 @@ class MainActivity : ComponentActivity() {
     // Step 1: Registration
     private fun registerLoginLauncher() {
         Log.d("TAG","Inside setupLoginLauncher")
-        loginLauncher= registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+        loginLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
         { result: ActivityResult ->
-            Log.d("TAG","Inside setupLoginLauncher")
+            Log.d("TAG","Inside ActivityResult $result")
             if (result.resultCode == Activity.RESULT_OK) {
+                Log.d("TAG","Inside ResultLambda ")
                 loginHandler()
             }
         }
