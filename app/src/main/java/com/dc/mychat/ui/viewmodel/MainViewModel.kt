@@ -27,10 +27,14 @@ class MainViewModel @Inject constructor(
     val imageUriState = mutableStateOf<Uri?>(null)
     val profileState = mutableStateOf<Profile>(Profile("", "", ""))
 
+    fun fetchProfileFromServer(serverRepository: ServerRepository){
+        serverRepository.getProfile(profileState.value.displayName)
+    }
 
     init {
         Log.d("TAG", "Init block")
     }
+
 
 
 }

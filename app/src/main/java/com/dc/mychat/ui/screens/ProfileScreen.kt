@@ -40,9 +40,12 @@ fun ProfileScreen(
             modifier = Modifier.size(200.dp)
         )
 
+        val text by remember {
+            mutableStateOf(mainViewModel.profileState.value.displayName)
+        }
         OutlinedTextField(
-            value = mainViewModel.profileState.value.displayName,
-            onValueChange = { mainViewModel.profileState.value.displayName = it },
+            value = text,
+            onValueChange = { mainViewModel.profileState.value.displayName = text },
             label = { Text("Enter Your Name", fontSize = 20.sp) },
             maxLines = 1,
             modifier = Modifier

@@ -9,4 +9,6 @@ interface ServerRepository {
 
     fun getAllProfile() : List<Profile>
 
+    fun getProfile(name: String) : Profile
+
 }

@@ -4,6 +4,6 @@ import android.net.Uri
 
 data class Profile(
     var displayName: String,
-    val mailId: String,
-    val displayPhoto: String
+    var mailId: String,
+    var displayPhoto: String
 )

@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.dc.mychat.Screen
 import com.dc.mychat.domain.model.Message
 import com.dc.mychat.ui.viewmodel.MainViewModel
@@ -47,10 +48,8 @@ fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController)
                 border = BorderStroke(1.dp, Color.Green),
 
                 ) {
-                /*Image(
-                    painter = painterResource(id = mainViewModel.profileRepository.getProfile().profilePicture),
-                    contentDescription = "Profile Image"
-                )*/
+                AsyncImage(model = mainViewModel.profileState.value.displayPhoto,
+                    contentDescription = "display photo")
             }
             Column(
                 modifier = Modifier,
@@ -58,14 +57,14 @@ fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController)
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = mainViewModel.profileRepository.getProfile().displayName,
+                    text = mainViewModel.profileState.value.displayName,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     fontSize = 24.sp
                 )
                 Text(
-                    text = mainViewModel.profileRepository.getProfile().mailId,
+                    text = mainViewModel.profileState.value.mailId,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
