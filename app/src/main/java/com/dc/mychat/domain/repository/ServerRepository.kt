@@ -7,7 +7,7 @@ interface ServerRepository {
 
     fun createProfile(mainViewModel: MainViewModel)
 
-    fun getAllProfile() : List<Profile>
+    fun getAllProfile(mainViewModel: MainViewModel) : List<Profile>
 
     fun getProfile(name: String) : Profile
 

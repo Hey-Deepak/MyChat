@@ -1,5 +1,6 @@
 package com.dc.mychat.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Surface
@@ -31,7 +32,11 @@ fun AllUsersScreen(mainViewModel: MainViewModel, navHostController: NavHostContr
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold
                 )
-                    CardChat(mainViewModel, navHostController)
+
+                    for (profile in mainViewModel.allUsersState) {
+                        Log.d("TAG 13", profile.toString())
+                        CardChat(mainViewModel, navHostController, profile)
+                    }
 
             }
         }

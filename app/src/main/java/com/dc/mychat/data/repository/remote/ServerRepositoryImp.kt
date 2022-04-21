@@ -13,11 +13,11 @@ import com.google.firebase.storage.ktx.storage
 class ServerRepositoryImp(): ServerRepository {
     val storageRef = Firebase.storage.reference.child("Profiles")
     val databaseRef = Firebase.database.reference.child("Profiles")
-    val listOfProfile = mutableListOf<Profile>()
+    var listOfProfile = mutableListOf<Profile>()
 
     override fun createProfile(mainViewModel: MainViewModel) {
 
-        mainViewModel.profileState.value?.let {
+        /*mainViewModel.profileState.value?.let {
             databaseRef.child(mainViewModel.profileState.value.displayName).get().addOnSuccessListener {
                 mainViewModel.profileState.value.displayName = it.child("displayName").value.toString()
                 mainViewModel.profileState.value.displayPhoto = it.child("displayPhoto").value.toString()
@@ -25,23 +25,24 @@ class ServerRepositoryImp(): ServerRepository {
                 Log.d("TAG 14", "${it.value}")
             }
 
-        }
+        }*/
 
         mainViewModel.profileState.value?.let {
+            Log.d("TAG 12 ServerRepository", "$it")
             databaseRef.child(it.displayName).setValue(it).addOnSuccessListener {
-                Log.d("TAG 12", "$it")
+                //Log.d("TAG 12 ServerRepository", "$it")
             }.addOnFailureListener {
                 Log.d("TAG 12 database ref failure", "$it")
             }
         }
     }
 
-    override fun getAllProfile() : List<Profile> {
-        databaseRef.get().addOnSuccessListener {
-            it.value
-            Log.d("TAG12", "${it.value}")
+    override fun getAllProfile(mainViewModel: MainViewModel){
+         databaseRef.get().addOnSuccessListener {
+             it.value
+            Log.d("TAG15 getAllProfiles", "${it.value}")
         }
-        return listOfProfile
+
     }
 
     override fun getProfile(name: String): Profile {

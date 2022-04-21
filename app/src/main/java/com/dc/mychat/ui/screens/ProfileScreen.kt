@@ -40,12 +40,12 @@ fun ProfileScreen(
             modifier = Modifier.size(200.dp)
         )
 
-        val text by remember {
-            mutableStateOf(mainViewModel.profileState.value.displayName)
-        }
+
         OutlinedTextField(
-            value = text,
-            onValueChange = { mainViewModel.profileState.value.displayName = text },
+            value = mainViewModel.profileState.value.displayName,
+            onValueChange = { mainViewModel.profileState.value = mainViewModel.profileState.value.copy(
+                displayName = it
+            ) },
             label = { Text("Enter Your Name", fontSize = 20.sp) },
             maxLines = 1,
             modifier = Modifier
@@ -72,7 +72,7 @@ fun ProfileScreen(
 fun createProfile(mainViewModel: MainViewModel, navHostController: NavHostController) {
 
     mainViewModel.serverRepository.createProfile(mainViewModel)
-
+    mainViewModel.serverRepository.getAllProfile(mainViewModel = mainViewModel)
     navHostController.navigate(Screen.AllUsers.route)
 }
 

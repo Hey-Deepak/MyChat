@@ -19,12 +19,13 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.dc.mychat.Screen
 import com.dc.mychat.domain.model.Message
+import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.ui.viewmodel.MainViewModel
 import com.dc.mychat.ui.viewmodel.state.MainUIState
 
 @ExperimentalMaterialApi
 @Composable
-fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController) {
+fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController, profile: Profile) {
     Card(
         elevation = 10.dp,
         modifier = Modifier
@@ -48,7 +49,7 @@ fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController)
                 border = BorderStroke(1.dp, Color.Green),
 
                 ) {
-                AsyncImage(model = mainViewModel.profileState.value.displayPhoto,
+                AsyncImage(model = profile.displayName,
                     contentDescription = "display photo")
             }
             Column(
@@ -57,14 +58,14 @@ fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController)
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = mainViewModel.profileState.value.displayName,
+                    text = profile.displayName,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     fontSize = 24.sp
                 )
                 Text(
-                    text = mainViewModel.profileState.value.mailId,
+                    text = profile.mailId,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
