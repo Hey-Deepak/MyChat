@@ -31,7 +31,7 @@ fun AllUsersScreen(mainViewModel: MainViewModel, navHostController: NavHostContr
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold
                 )
-                for (profile in mainViewModel.profileRepository.getAllProfiles()){
+                for (profile in mainViewModel.serverRepository.getAllProfile()){
                     CardChat(mainViewModel, navHostController)
                 }
             }

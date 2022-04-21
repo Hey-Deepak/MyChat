@@ -5,7 +5,7 @@ import com.dc.mychat.domain.model.Profile
 
 interface ProfileRepository {
 
-    fun getAllProfiles(): List<Profile>
+   // fun getAllProfiles(): List<Profile>
 
     fun getProfile(): Profile
 

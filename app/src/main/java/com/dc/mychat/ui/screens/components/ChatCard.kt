@@ -58,7 +58,7 @@ fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController)
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = mainViewModel.profileRepository.getProfile().name,
+                    text = mainViewModel.profileRepository.getProfile().displayName,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),

@@ -5,9 +5,11 @@ import androidx.activity.ComponentActivity
 import com.dc.mychat.data.repository.local.ProfileRepositoryImp
 import com.dc.mychat.data.repository.local.UserRepositoryImp
 import com.dc.mychat.data.repository.remote.MessageRepositoryImp
+import com.dc.mychat.data.repository.remote.ServerRepositoryImp
 import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.domain.repository.MessageRepository
 import com.dc.mychat.domain.repository.ProfileRepository
+import com.dc.mychat.domain.repository.ServerRepository
 import com.dc.mychat.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -42,6 +44,12 @@ object AppModule {
     @Provides
     fun provideMessageRepository() : MessageRepository {
         return MessageRepositoryImp()
+    }
+
+    @Singleton
+    @Provides
+    fun provideServerRepository() : ServerRepository {
+        return ServerRepositoryImp()
     }
 
 
