@@ -31,6 +31,9 @@ class MainViewModel @Inject constructor(
     var allUsersState = mutableStateListOf<Profile>()
 
 
+
+
+
     fun fetchProfileFromServer(serverRepository: ServerRepository){
         serverRepository.getProfile(profileState.value.displayName)
     }

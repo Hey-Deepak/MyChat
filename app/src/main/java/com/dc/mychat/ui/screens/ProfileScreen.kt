@@ -18,6 +18,9 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.dc.mychat.Screen
 import com.dc.mychat.ui.viewmodel.MainViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -58,7 +61,9 @@ fun ProfileScreen(
 
         Button(
             onClick = {
-                createProfile(mainViewModel = mainViewModel, navHostController)
+                GlobalScope.launch(Dispatchers.Main) {
+                 createProfile(mainViewModel = mainViewModel, navHostController)
+                }
             },
             modifier = Modifier.padding(8.dp),
         ) {
@@ -69,7 +74,7 @@ fun ProfileScreen(
 
 }
 
-fun createProfile(mainViewModel: MainViewModel, navHostController: NavHostController) {
+suspend fun createProfile(mainViewModel: MainViewModel, navHostController: NavHostController) {
 
     mainViewModel.serverRepository.createProfile(mainViewModel)
     mainViewModel.serverRepository.getAllProfile(mainViewModel = mainViewModel)

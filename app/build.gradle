@@ -92,6 +92,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage-ktx'
     implementation 'com.google.firebase:firebase-database-ktx'
 
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1"
+
 
     def activity_version = "1.4.0"
     // Kotlin

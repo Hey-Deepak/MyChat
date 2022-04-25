@@ -1,48 +1,44 @@
 package com.dc.mychat.data.repository.remote
 
+import android.nfc.Tag
 import android.util.Log
+import android.util.Log.d
 import android.widget.Toast
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.domain.repository.ServerRepository
 import com.dc.mychat.ui.viewmodel.MainViewModel
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.tasks.await
 
 class ServerRepositoryImp(): ServerRepository {
     val storageRef = Firebase.storage.reference.child("Profiles")
     val databaseRef = Firebase.database.reference.child("Profiles")
+    val firestoreDatabaseRef = Firebase.firestore
     var listOfProfile = mutableListOf<Profile>()
 
-    override fun createProfile(mainViewModel: MainViewModel) {
-
-        /*mainViewModel.profileState.value?.let {
-            databaseRef.child(mainViewModel.profileState.value.displayName).get().addOnSuccessListener {
-                mainViewModel.profileState.value.displayName = it.child("displayName").value.toString()
-                mainViewModel.profileState.value.displayPhoto = it.child("displayPhoto").value.toString()
-                mainViewModel.profileState.value.mailId = it.child("mailId").value.toString()
-                Log.d("TAG 14", "${it.value}")
-            }
-
-        }*/
+    override suspend fun createProfile(mainViewModel: MainViewModel) {
 
         mainViewModel.profileState.value?.let {
+
             Log.d("TAG 12 ServerRepository", "$it")
-            databaseRef.child(it.displayName).setValue(it).addOnSuccessListener {
-                //Log.d("TAG 12 ServerRepository", "$it")
-            }.addOnFailureListener {
-                Log.d("TAG 12 database ref failure", "$it")
+            firestoreDatabaseRef.collection("Profiles").add(it).addOnSuccessListener {
+                Log.d("TAG 17 ServerRepository inside firebaseDatabaseRef", "$it")
             }
         }
     }
 
-    override fun getAllProfile(mainViewModel: MainViewModel){
-         databaseRef.get().addOnSuccessListener {
-             it.value
-            Log.d("TAG15 getAllProfiles", "${it.value}")
-        }
+    override suspend fun getAllProfile(mainViewModel: MainViewModel) {
 
+        firestoreDatabaseRef.collection("Profiles").get().addOnSuccessListener {
+            listOfProfile = it.toObjects(Profile::class.java)
+           ??
+            Log.d("TAG 18", " List of profiles ${listOfProfile}")
+        }
     }
 
     override fun getProfile(name: String): Profile {
