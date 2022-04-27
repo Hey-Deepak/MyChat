@@ -1,5 +1,6 @@
 package com.dc.mychat.ui.screens
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -16,14 +17,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.dc.mychat.Screen
 import com.dc.mychat.domain.model.Message
+import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.ui.viewmodel.MainViewModel
 import com.dc.mychat.ui.viewmodel.state.MainUIState
 
 @ExperimentalMaterialApi
 @Composable
-fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController) {
+fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController, profile: Profile) {
     Card(
         elevation = 10.dp,
         modifier = Modifier
@@ -47,10 +50,9 @@ fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController)
                 border = BorderStroke(1.dp, Color.Green),
 
                 ) {
-                /*Image(
-                    painter = painterResource(id = mainViewModel.profileRepository.getProfile().profilePicture),
-                    contentDescription = "Profile Image"
-                )*/
+                Log.d("TAG 22 chat image", "Chat Image")
+                AsyncImage(model = Uri.parse(profile.displayPhoto),
+                    contentDescription = "display photo")
             }
             Column(
                 modifier = Modifier,
@@ -58,14 +60,14 @@ fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController)
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = mainViewModel.profileRepository.getProfile().name,
+                    text = profile.displayName,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     fontSize = 24.sp
                 )
                 Text(
-                    text = mainViewModel.profileRepository.getProfile().mailId,
+                    text = profile.mailId,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),

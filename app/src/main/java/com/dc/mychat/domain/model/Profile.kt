@@ -1,6 +1,9 @@
 package com.dc.mychat.domain.model
 
+import android.net.Uri
+
 data class Profile(
-    val name: String,
-    val mailId: String
+    var displayName: String,
+    var mailId: String,
+    var displayPhoto: String
 )

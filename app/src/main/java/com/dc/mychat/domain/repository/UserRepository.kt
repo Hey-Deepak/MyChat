@@ -9,6 +9,8 @@ interface UserRepository {
 
     fun saveEmailToPrefs(email: String)
 
+    fun saveProfileToPrefs(profile: Profile)
+
 }
 /*
     fun getLoggedInEmailFromPrefs(): String? {
@@ -18,7 +20,7 @@ interface UserRepository {
     fun saveEmailToPrefs(email: String) {
         prefs.edit().putString("emailId", email).apply()
     }
-    fun saveProfileToPrefs(profile: Profile) {
+     {
         prefs.edit().putString("profile", profile.toString()).apply()
     }*/
 

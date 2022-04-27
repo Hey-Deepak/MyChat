@@ -2,6 +2,9 @@ package com.dc.mychat.ui.screens
 
 
 import android.content.Intent
+import android.net.Uri
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -17,14 +20,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.dc.mychat.R
 import com.dc.mychat.Screen
+import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.ui.viewmodel.MainViewModel
 import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun LoggedInScreen(
     mainViewModel: MainViewModel,
     navHostController: NavHostController,
-    loginLauncher: ActivityResultLauncher<Intent>
+    launchLoginFlow: (() -> Unit) -> Unit
 ) {
     Column(
         Modifier.fillMaxSize(),
@@ -42,8 +47,33 @@ fun LoggedInScreen(
         )
 
         Button(onClick = {
-            fireLoginIntent(loginLauncher)
-            navHostController.navigate(Screen.Profile.route)
+            Log.d("TAG","Inside Button")
+            launchLoginFlow {
+                Log.d("TAG","Inside launchLoginFlow")
+                val user = FirebaseAuth.getInstance().currentUser
+                user?.let {
+
+                    val email = it.email!!
+                    val displayPhoto = it.photoUrl.toString()
+                    val displayName = it.displayName.toString()
+                    val profile = Profile(displayName, email, displayPhoto)
+
+                    Log.d("TAG","Inside launchLoginFlow $email, $displayName, $displayPhoto")
+
+                    mainViewModel.imageUriState.value = Uri.parse(displayPhoto)
+                    mainViewModel.profileState.value = profile
+                    mainViewModel.userRepository.saveProfileToPrefs(profile)
+
+                    navHostController.navigate(Screen.Profile.route)
+
+                    /*Toast.makeText(
+                        this,
+                        "Congratulation! You have logged in as $email",
+                        Toast.LENGTH_LONG
+                    ).show()*/
+                }
+            }
+
         }) {
             Text(text = "Login",
                 fontSize = 20.sp)
