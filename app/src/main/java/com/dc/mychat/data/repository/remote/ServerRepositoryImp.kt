@@ -16,7 +16,7 @@ import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
 
 class ServerRepositoryImp(): ServerRepository {
-    val storageRef = Firebase.storage.reference.child("Profiles")
+
     val databaseRef = Firebase.database.reference.child("Profiles")
     val firestoreDatabaseRef = Firebase.firestore
     var listOfProfile = mutableListOf<Profile>()
@@ -24,42 +24,37 @@ class ServerRepositoryImp(): ServerRepository {
     override suspend fun createProfile(mainViewModel: MainViewModel) {
 
         mainViewModel.profileState.value?.let {
-
-            Log.d("TAG 12 ServerRepository", "$it")
-            firestoreDatabaseRef.collection("Profiles").add(it).addOnSuccessListener {
-                Log.d("TAG 17 ServerRepository inside firebaseDatabaseRef", "$it")
+            firestoreDatabaseRef.collection("Profiles").document(it.mailId).set(it).addOnSuccessListener {
             }
         }
     }
 
+
     override suspend fun getAllProfile(mainViewModel: MainViewModel) {
 
         firestoreDatabaseRef.collection("Profiles").get().addOnSuccessListener {
-            val listOfProffiless = mutableListOf<Profile>()
 
             for (profile in it.documents){
                val data = profile.data
                 val displayName = data?.get("displayName")
                 val displayPhoto = data?.get("displayPhoto")
                 val emailId = data?.get("mailId")
-                listOfProffiless.add(Profile(displayName.toString(), emailId.toString(), displayPhoto.toString()))
+                listOfProfile.add(Profile(displayName.toString(), emailId.toString(), displayPhoto.toString()))
             }
-               Log.d("TAG 21" ,"${listOfProffiless} ")
 
-
-            mainViewModel.allUsersState.value = listOfProffiless
-            Log.d("TAG 18", " List of profiles ${listOfProffiless}")
+            mainViewModel.allUsersState.value = listOfProfile
+            Log.d("TAG 18", " List of profiles ${listOfProfile}")
         }
     }
 
+
     override fun getProfile(name: String): Profile {
+
         val profile = Profile(name," "," ")
         databaseRef.child(name).get().addOnSuccessListener {
             profile.displayName = it.child("displayName").value.toString()
             profile.displayPhoto = it.child("displayPhoto").value.toString()
             profile.mailId = it.child("mailId").value.toString()
-            Log.d("TAG 13", "${it.value}")
-            Log.d("TAG 14", "${profile}")
         }
 
         return profile

@@ -30,21 +30,4 @@ class MainViewModel @Inject constructor(
     val profileState = mutableStateOf<Profile>(Profile("", "", ""))
     var allUsersState = mutableStateOf<List<Profile>>(listOf(profileState.value))
 
-
-
-
-
-    fun fetchProfileFromServer(serverRepository: ServerRepository){
-        serverRepository.getProfile(profileState.value.displayName)
-    }
-
-    fun fetchProfilesfromServer(serverRepository: ServerRepository){
-        //Log.d("TAG 15", serverRepository.getAllProfile().toString())
-       // allUsersState = serverRepository.getAllProfile()
-    }
-
-init {
-   // fetchProfilesfromServer(serverRepository)
-}
-
 }

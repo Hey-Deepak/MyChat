@@ -12,15 +12,5 @@ interface UserRepository {
     fun saveProfileToPrefs(profile: Profile)
 
 }
-/*
-    fun getLoggedInEmailFromPrefs(): String? {
-        return prefs.getString("emailId", "choudharydeepak@gmail.com")
-    }
 
-    fun saveEmailToPrefs(email: String) {
-        prefs.edit().putString("emailId", email).apply()
-    }
-     {
-        prefs.edit().putString("profile", profile.toString()).apply()
-    }*/
 
