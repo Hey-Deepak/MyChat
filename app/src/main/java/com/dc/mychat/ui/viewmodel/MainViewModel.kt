@@ -28,7 +28,7 @@ class MainViewModel @Inject constructor(
     val uiState = mutableStateOf<MainUIState>(MainUIState.IsLoggedIn(false))
     val imageUriState = mutableStateOf<Uri?>(null)
     val profileState = mutableStateOf<Profile>(Profile("", "", ""))
-    var allUsersState = mutableStateListOf<Profile>()
+    var allUsersState = mutableStateOf<List<Profile>>(listOf(profileState.value))
 
 
 

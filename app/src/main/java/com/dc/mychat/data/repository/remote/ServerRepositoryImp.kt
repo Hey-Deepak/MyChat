@@ -35,9 +35,20 @@ class ServerRepositoryImp(): ServerRepository {
     override suspend fun getAllProfile(mainViewModel: MainViewModel) {
 
         firestoreDatabaseRef.collection("Profiles").get().addOnSuccessListener {
-            listOfProfile = it.toObjects(Profile::class.java)
-           ??
-            Log.d("TAG 18", " List of profiles ${listOfProfile}")
+            val listOfProffiless = mutableListOf<Profile>()
+
+            for (profile in it.documents){
+               val data = profile.data
+                val displayName = data?.get("displayName")
+                val displayPhoto = data?.get("displayPhoto")
+                val emailId = data?.get("mailId")
+                listOfProffiless.add(Profile(displayName.toString(), emailId.toString(), displayPhoto.toString()))
+            }
+               Log.d("TAG 21" ,"${listOfProffiless} ")
+
+
+            mainViewModel.allUsersState.value = listOfProffiless
+            Log.d("TAG 18", " List of profiles ${listOfProffiless}")
         }
     }
 

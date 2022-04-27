@@ -1,5 +1,6 @@
 package com.dc.mychat.ui.screens
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -49,7 +50,8 @@ fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController,
                 border = BorderStroke(1.dp, Color.Green),
 
                 ) {
-                AsyncImage(model = profile.displayName,
+                Log.d("TAG 22 chat image", "Chat Image")
+                AsyncImage(model = Uri.parse(profile.displayPhoto),
                     contentDescription = "display photo")
             }
             Column(
