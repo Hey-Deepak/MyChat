@@ -41,9 +41,10 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
                 mutableStateOf("Hello")
             }
             OutlinedTextField(
-                value = text,
+                value = mainViewModel.textState.value,
                 onValueChange = {
                     text = it
+                    mainViewModel.textState.value = it
                 },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -60,7 +61,8 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
                                 "choudhary@gmail.com"
                             )
                         )
-                        mainViewModel.uiState.value = MainUIState.AllMessages(mainViewModel.messageRepository.getAllMessages().toList())
+                        /*mainViewModel.uiState.value = MainUIState.AllMessages(mainViewModel.messageRepository.getAllMessagesFromFirebase()
+                            .toList())*/
                     }) {
                         Icon(imageVector = Icons.Filled.Send, contentDescription = "Send Message")
                     }
@@ -84,7 +86,7 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
         )
     )
     Log.d("TAG", "Inside send Message function")
-    mainViewModel.uiState.value = MainUIState.NewMessage(mainViewModel.messageRepository.getAllMessages())
+    mainViewModel.uiState.value = MainUIState.NewMessage(mainViewModel.messageRepository.getAllMessagesFromFirebase())
 }*/
 
 @Preview

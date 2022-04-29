@@ -9,30 +9,30 @@ import com.dc.mychat.domain.model.Message
 import com.dc.mychat.ui.screens.components.MessageCard
 import com.dc.mychat.ui.screens.components.SendMessageCard
 import com.dc.mychat.ui.viewmodel.MainViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun MessageScreen( mainViewModel: MainViewModel) {
     Log.d("TAG", "Inside Message Screen2")
-    val messages: List<Message> = mainViewModel.messageRepository.getAllMessages()
+
     Column(modifier = Modifier.fillMaxSize(),
     verticalArrangement = Arrangement.SpaceBetween) {
         Log.d("TAG", "Inside Message Screen3")
         Column(modifier = Modifier,
         verticalArrangement = Arrangement.Top) {
-            Log.d("TAG", "Inside Message Screen4")
+            GlobalScope.launch(Dispatchers.Main) {
+                val messages: List<Message> = mainViewModel.getAllMessagesFromFirebase()
+                Log.d("TAG 6", "${messages}")
+                Log.d("TAG", "Inside Message Screen4")
             for (message in messages){
                 Log.d("TAG", "Inside for loop")
                 MessageCard(message = message, mainViewModel)
+            }
             }
         }
         SendMessageCard(mainViewModel)
     }
 }
 
-/*
-@Preview
-@Composable
-fun MessageScreenPreview() {
-    val messages = MessageRepository().getAllMessagesFromrRepository()
-    MessageScreen(messages = messages)
-}*/

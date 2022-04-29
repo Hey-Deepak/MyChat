@@ -3,7 +3,6 @@ package com.dc.mychat.ui.screens
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
@@ -12,17 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.dc.mychat.Screen
-import com.dc.mychat.domain.model.Message
 import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.ui.viewmodel.MainViewModel
-import com.dc.mychat.ui.viewmodel.state.MainUIState
 
 @ExperimentalMaterialApi
 @Composable
@@ -34,7 +30,7 @@ fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController,
             .fillMaxWidth()
             .padding(8.dp),
         onClick = {
-            onUserClicked(mainViewModel.messageRepository.getAllMessagesFromRepository(), mainViewModel, navHostController)
+            onUserClicked(navHostController, mainViewModel, profile)
         }
     ) {
         Row(
@@ -50,7 +46,6 @@ fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController,
                 border = BorderStroke(1.dp, Color.Green),
 
                 ) {
-                Log.d("TAG 22 chat image", "Chat Image")
                 AsyncImage(model = Uri.parse(profile.displayPhoto),
                     contentDescription = "display photo")
             }
@@ -82,8 +77,12 @@ fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController,
     }
 }
 
-fun onUserClicked(allMessages: List<Message>, mainViewModel: MainViewModel, navHostController: NavHostController) {
-    mainViewModel.uiState.value = MainUIState.AllMessages(allMessages)
+fun onUserClicked(
+    navHostController: NavHostController,
+    mainViewModel: MainViewModel,
+    profile: Profile
+) {
+    mainViewModel.receiverMailIdState.value = profile.mailId
     navHostController.navigate(Screen.Message.route)
     Log.d("TAG1", "Inside onUserClicked ")
 }
