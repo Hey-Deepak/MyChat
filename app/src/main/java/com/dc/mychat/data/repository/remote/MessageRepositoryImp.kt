@@ -16,9 +16,14 @@ class MessageRepositoryImp() : MessageRepository {
 
     override suspend fun sendMessage(message: Message, groupId: String) {
         Log.d("TAG 19 Message & GroupId ", "$message + $groupId")
-        firebaseChatCollectionRef.document("$groupId")
-            .update("messageArray", FieldValue.arrayUnion(message))
-
+        val doc = firebaseChatCollectionRef.document(groupId).get().await()
+        if(doc.exists()) {
+            firebaseChatCollectionRef.document(groupId)
+                .update("messageArray", FieldValue.arrayUnion(message)).await()
+        } else {
+            firebaseChatCollectionRef.document(groupId)
+                .set(Messages(listOf(message))).await()
+        }
     }
 
 
@@ -37,8 +42,9 @@ class MessageRepositoryImp() : MessageRepository {
 
     override suspend fun getAllMessagesFromFirebase(groupId: String): List<Message> {
         Log.d("TAG 18", "${groupId}")
-        return firebaseChatCollectionRef.document(groupId).get()
-            .await()
-            .toObject(Messages::class.java)!!.messageArray
+        return firebaseChatCollectionRef.document(groupId).get().await()
+            .toObject(Messages::class.java)?.messageArray ?: emptyList()
+
+
     }
 }

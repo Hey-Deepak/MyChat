@@ -1,5 +1,6 @@
 package com.dc.mychat.ui.screens.components
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -50,14 +51,16 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
                 trailingIcon = {
                     IconButton(onClick = {
                         GlobalScope.launch(Dispatchers.IO) {
-                            mainViewModel.messageRepository.sendMessage(
 
+                            Log.d("TAG 3", "${mainViewModel.groupIdState.value}")
+                            mainViewModel.messageRepository.sendMessage(
                                 message = Message(
                                     mainViewModel.textState.value,
                                     Timestamp.now(),
                                     mainViewModel.userRepository.getLoggedInEmailFromPrefs().toString()
                                 ), mainViewModel.groupIdState.value
                             )
+                            Log.d("TAG 4 groupId", "${mainViewModel.groupIdState.value}")
                             mainViewModel.refreshMessageScreen()
                         }
 

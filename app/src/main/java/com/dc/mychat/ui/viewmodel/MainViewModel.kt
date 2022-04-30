@@ -11,6 +11,7 @@ import com.dc.mychat.domain.repository.MessageRepository
 import com.dc.mychat.domain.repository.ServerRepository
 import com.dc.mychat.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,7 +20,7 @@ class MainViewModel @Inject constructor(
     val userRepository: UserRepository,
     val messageRepository: MessageRepository,
     val serverRepository: ServerRepository
-): ViewModel() {
+) : ViewModel() {
 
 
     val imageUriState = mutableStateOf<Uri?>(null)
@@ -33,18 +34,20 @@ class MainViewModel @Inject constructor(
     val groupIdState = mutableStateOf(senderMailIdState.value + "%" + receiverMailIdState.value)
 
     init {
-        viewModelScope.launch {
-            refreshMessageScreen()
+        viewModelScope.launch(Dispatchers.IO) {
+            //refreshMessageScreen()
         }
 
     }
 
-    suspend fun refreshMessageScreen(){
-        allMessagesState.value = messageRepository.getAllMessagesFromFirebase(groupIdState.value)
-        textState.value = ""
+    suspend fun refreshMessageScreen() {
+        if (allMessagesState.value != messageRepository.getAllMessagesFromFirebase(groupIdState.value)) {
+            allMessagesState.value = messageRepository.getAllMessagesFromFirebase(groupIdState.value)
+            textState.value = ""
+        }
     }
 
-    suspend fun getAllMessageFromFirebase(){
+    suspend fun getAllMessageFromFirebase() {
         Log.d("TAG 18", "${groupIdState.value}")
         messageRepository.getAllMessagesFromFirebase(groupIdState.value)
     }

@@ -8,6 +8,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -83,7 +84,9 @@ fun onUserClicked(
     profile: Profile
 ) {
     mainViewModel.receiverMailIdState.value = profile.mailId
+    Log.d("TAG1", "Inside onUserClicked RC ${mainViewModel.receiverMailIdState.value}")
     mainViewModel.senderMailIdState.value = mainViewModel.userRepository.getLoggedInEmailFromPrefs().toString()
-    Log.d("TAG1", "Inside onUserClicked RC & Sender ${mainViewModel.receiverMailIdState.value + mainViewModel.senderMailIdState.value}")
+    mainViewModel.groupIdState.value = "${mainViewModel.senderMailIdState.value}%${mainViewModel.receiverMailIdState.value}"
+    Log.d("TAG2", "Inside onUserClicked RC & Sender ${mainViewModel.groupIdState.value}")
     navHostController.navigate(Screen.Message.route)
 }
