@@ -83,6 +83,7 @@ fun onUserClicked(
     profile: Profile
 ) {
     mainViewModel.receiverMailIdState.value = profile.mailId
+    mainViewModel.senderMailIdState.value = mainViewModel.userRepository.getLoggedInEmailFromPrefs().toString()
+    Log.d("TAG1", "Inside onUserClicked RC & Sender ${mainViewModel.receiverMailIdState.value + mainViewModel.senderMailIdState.value}")
     navHostController.navigate(Screen.Message.route)
-    Log.d("TAG1", "Inside onUserClicked ")
 }

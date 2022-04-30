@@ -2,40 +2,43 @@ package com.dc.mychat.data.repository.remote
 
 import android.util.Log
 import com.dc.mychat.domain.model.Message
-import com.dc.mychat.domain.model.Profile
+import com.dc.mychat.domain.model.Messages
 import com.dc.mychat.domain.repository.MessageRepository
-import com.dc.mychat.ui.viewmodel.MainViewModel
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 
 class MessageRepositoryImp() : MessageRepository {
 
-    val firebaseDatabaseRef = Firebase.firestore
     val firebaseChatCollectionRef = Firebase.firestore.collection("Chats")
-    private val listOfMessages = mutableListOf<Message>()
 
-    override fun getProfileFromRepository(): Profile {
-        TODO("Not yet implemented")
+
+    override suspend fun sendMessage(message: Message, groupId: String) {
+        Log.d("TAG 19 Message & GroupId ", "$message + $groupId")
+        firebaseChatCollectionRef.document("$groupId")
+            .update("messageArray", FieldValue.arrayUnion(message))
+
     }
 
-    override fun sendMessage(message: Message) {
-        TODO("Not yet implemented")
-    }
 
-    override suspend fun getAllMessagesFromFirebase(mainViewModel: MainViewModel): List<Message> {
+    /*override suspend fun getAllMessagesFromFirebase(): List<Message> {
         val groupName = "gljat999@gmail.com%choudharydeepak990@gmail.com"
-        firebaseChatCollectionRef.document(groupName).get().addOnSuccessListener {
-            val data = it.data
-            Log.d("TAG 25", "$data")
-            val message = Message(data?.get("message").toString(),
-                data?.get("timestamp").toString(),
-                data?.get("senderMailId").toString())
-            listOfMessages.add(message)
+        return suspendCoroutine { cont ->
+            firebaseChatCollectionRef.document(groupName).get().addOnSuccessListener {
+
+                val messages = it.toObject(Messages::class.java)
+                cont.resume(messages!!.messageArray)
+            }.addOnFailureListener {
+                cont.resumeWithException(it)
+            }
         }
+    }*/
 
-        mainViewModel.allMessagesState.value = listOfMessages
-
-
-        return listOfMessages
+    override suspend fun getAllMessagesFromFirebase(groupId: String): List<Message> {
+        Log.d("TAG 18", "${groupId}")
+        return firebaseChatCollectionRef.document(groupId).get()
+            .await()
+            .toObject(Messages::class.java)!!.messageArray
     }
 }

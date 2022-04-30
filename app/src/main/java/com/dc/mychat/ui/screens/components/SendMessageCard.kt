@@ -1,6 +1,5 @@
 package com.dc.mychat.ui.screens.components
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,7 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dc.mychat.domain.model.Message
 import com.dc.mychat.ui.viewmodel.MainViewModel
-import com.dc.mychat.ui.viewmodel.state.MainUIState
+import com.google.firebase.Timestamp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -37,13 +39,9 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
             modifier = Modifier,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            var text by remember {
-                mutableStateOf("Hello")
-            }
             OutlinedTextField(
                 value = mainViewModel.textState.value,
                 onValueChange = {
-                    text = it
                     mainViewModel.textState.value = it
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -51,18 +49,18 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
 
                 trailingIcon = {
                     IconButton(onClick = {
+                        GlobalScope.launch(Dispatchers.IO) {
+                            mainViewModel.messageRepository.sendMessage(
 
-                        Log.d("TAG", "Inside send Message icon ${text}")
-                        mainViewModel.messageRepository.sendMessage(
-
-                            message = Message(
-                                text,
-                                "12:30 AM",
-                                "choudhary@gmail.com"
+                                message = Message(
+                                    mainViewModel.textState.value,
+                                    Timestamp.now(),
+                                    mainViewModel.userRepository.getLoggedInEmailFromPrefs().toString()
+                                ), mainViewModel.groupIdState.value
                             )
-                        )
-                        /*mainViewModel.uiState.value = MainUIState.AllMessages(mainViewModel.messageRepository.getAllMessagesFromFirebase()
-                            .toList())*/
+                            mainViewModel.refreshMessageScreen()
+                        }
+
                     }) {
                         Icon(imageVector = Icons.Filled.Send, contentDescription = "Send Message")
                     }
@@ -75,19 +73,6 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
         }
     }
 }
-
-/*fun sendMessage(text: String, mainViewModel: MainViewModel) {
-
-    mainViewModel.messageRepository.sendMessage(
-        message = Message(
-            text,
-            "12:30 AM",
-            "choudhary@gmail.com"
-        )
-    )
-    Log.d("TAG", "Inside send Message function")
-    mainViewModel.uiState.value = MainUIState.NewMessage(mainViewModel.messageRepository.getAllMessagesFromFirebase())
-}*/
 
 @Preview
 @Composable

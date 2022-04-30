@@ -12,14 +12,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dc.mychat.domain.model.Message
 import com.dc.mychat.ui.viewmodel.MainViewModel
+import com.google.firebase.Timestamp
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
-fun MessageCard(message: Message, mainViewModel: MainViewModel) {
-    Log.d("TAG", "Inside Message card")
+fun MessageCard(message: Message) {
+    Log.d("TAG", "Inside Message card ${message}")
 
     Card(
         elevation = 4.dp,
@@ -38,11 +42,11 @@ fun MessageCard(message: Message, mainViewModel: MainViewModel) {
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
                     .padding(8.dp).weight(5f, fill = false)
-
             )
 
             Text(
-                text = message.timestamp,
+                //For timestamp
+                text =  SimpleDateFormat("h:mm a", Locale.US).format(message.timestamp.toDate()),
                 fontSize = 8.sp,
                 fontWeight = FontWeight.Light,
                 modifier = Modifier
@@ -54,10 +58,9 @@ fun MessageCard(message: Message, mainViewModel: MainViewModel) {
     }
 }
 
-/*
 @Preview
 @Composable
 fun CardMessagesPreview() {
-    val message = MessageRepository().getAllMessagesFromRepository()
-    MessageCard(message = message[1])
-}*/
+        MessageCard(message = Message("afffasf", Timestamp.now(), "dfdf"))
+
+}

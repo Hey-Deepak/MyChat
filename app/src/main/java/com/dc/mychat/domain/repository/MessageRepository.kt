@@ -8,10 +8,8 @@ import com.dc.mychat.ui.viewmodel.MainViewModel
 
 interface MessageRepository {
 
+    suspend fun sendMessage(message: Message, groupId: String)
 
-    fun getProfileFromRepository(): Profile 
+    suspend fun getAllMessagesFromFirebase(groupId: String): List<Message>
 
-    fun sendMessage(message: Message)
-
-    suspend fun getAllMessagesFromFirebase(mainViewModel: MainViewModel): List<Message>
 }
