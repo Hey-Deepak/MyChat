@@ -40,16 +40,33 @@ class MainViewModel @Inject constructor(
 
     }
 
-    suspend fun refreshMessageScreen() {
-        if (allMessagesState.value != messageRepository.getAllMessagesFromFirebase(groupIdState.value)) {
-            allMessagesState.value = messageRepository.getAllMessagesFromFirebase(groupIdState.value)
-            textState.value = ""
+    fun refreshMessageScreen() {
+        viewModelScope.launch {
+            if (allMessagesState.value != messageRepository.getAllMessagesFromFirebase(groupIdState.value)) {
+                allMessagesState.value =
+                    messageRepository.getAllMessagesFromFirebase(groupIdState.value)
+                textState.value = ""
+            }
         }
     }
 
-    suspend fun getAllMessageFromFirebase() {
+    fun getAllMessageFromFirebase() {
         Log.d("TAG 18", "${groupIdState.value}")
-        messageRepository.getAllMessagesFromFirebase(groupIdState.value)
+        viewModelScope.launch {
+            allMessagesState.value =
+                messageRepository.getAllMessagesFromFirebase(groupIdState.value)
+        }
     }
 
+    fun sendMessage(message: Message) {
+        viewModelScope.launch {
+            messageRepository.sendMessage(message = message, groupId = groupIdState.value)
+        }
+    }
+
+    fun getMailIdFromSharedPrefs() {
+        viewModelScope.launch {
+            senderMailIdState.value = userRepository.getLoggedInEmailFromPrefs().toString()
+        }
+    }
 }

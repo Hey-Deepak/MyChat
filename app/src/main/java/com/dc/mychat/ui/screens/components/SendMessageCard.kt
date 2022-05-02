@@ -50,19 +50,18 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
 
                 trailingIcon = {
                     IconButton(onClick = {
-                        GlobalScope.launch(Dispatchers.IO) {
 
                             Log.d("TAG 3", "${mainViewModel.groupIdState.value}")
-                            mainViewModel.messageRepository.sendMessage(
+                            mainViewModel.sendMessage(message = mainViewModel.messageState.value)
+                            mainViewModel.sendMessage(
                                 message = Message(
                                     mainViewModel.textState.value,
                                     Timestamp.now(),
-                                    mainViewModel.userRepository.getLoggedInEmailFromPrefs().toString()
-                                ), mainViewModel.groupIdState.value
+                                    mainViewModel.senderMailIdState.value
+                                )
                             )
                             Log.d("TAG 4 groupId", "${mainViewModel.groupIdState.value}")
                             mainViewModel.refreshMessageScreen()
-                        }
 
                     }) {
                         Icon(imageVector = Icons.Filled.Send, contentDescription = "Send Message")
