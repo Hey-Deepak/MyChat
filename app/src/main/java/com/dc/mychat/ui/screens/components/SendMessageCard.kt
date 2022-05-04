@@ -51,7 +51,7 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
                 trailingIcon = {
                     IconButton(onClick = {
 
-                            Log.d("TAG 3", "${mainViewModel.groupIdState.value}")
+                            Log.d("TAG 3", mainViewModel.groupIdState.value)
                             mainViewModel.sendMessage(message = mainViewModel.messageState.value)
                             mainViewModel.sendMessage(
                                 message = Message(
@@ -60,8 +60,7 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
                                     mainViewModel.senderMailIdState.value
                                 )
                             )
-                            Log.d("TAG 4 groupId", "${mainViewModel.groupIdState.value}")
-                            mainViewModel.refreshMessageScreen()
+                            mainViewModel.getAllMessageFromFirebase()
 
                     }) {
                         Icon(imageVector = Icons.Filled.Send, contentDescription = "Send Message")
@@ -74,10 +73,4 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun SendMessageCardPreview() {
-
 }

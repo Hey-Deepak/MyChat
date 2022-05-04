@@ -29,8 +29,6 @@ fun ProfileScreen(
     navHostController: NavHostController,
     selectImageLauncher: ActivityResultLauncher<String>
 ) {
-
-    val context = LocalContext.current
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,9 +44,11 @@ fun ProfileScreen(
 
         OutlinedTextField(
             value = mainViewModel.profileState.value.displayName,
-            onValueChange = { mainViewModel.profileState.value = mainViewModel.profileState.value.copy(
-                displayName = it
-            ) },
+            onValueChange = {
+                mainViewModel.profileState.value = mainViewModel.profileState.value.copy(
+                    displayName = it
+                )
+            },
             label = { Text("Enter Your Name", fontSize = 20.sp) },
             maxLines = 1,
             modifier = Modifier
@@ -61,9 +61,7 @@ fun ProfileScreen(
 
         Button(
             onClick = {
-                GlobalScope.launch(Dispatchers.Main) {
-                 createProfile(mainViewModel = mainViewModel, navHostController)
-                }
+                createProfile(mainViewModel = mainViewModel, navHostController)
             },
             modifier = Modifier.padding(8.dp),
         ) {
@@ -74,25 +72,10 @@ fun ProfileScreen(
 
 }
 
-suspend fun createProfile(mainViewModel: MainViewModel, navHostController: NavHostController) {
+fun createProfile(mainViewModel: MainViewModel, navHostController: NavHostController) {
 
-    mainViewModel.serverRepository.createProfile(mainViewModel)
-    mainViewModel.serverRepository.getAllProfile(mainViewModel = mainViewModel)
+    mainViewModel.createProfile(mainViewModel.profileState.value)
     navHostController.navigate(Screen.AllUsers.route)
 }
 
 
-
-
-/*
-@Preview
-@Composable
-fun viewProfileScreen() {
-    ProfileScreen(
-        profile = Profile(
-            "Deepak",
-            "choudharydeepak@gmail.com",
-            R.drawable.ic_add_profile_picture
-        )
-    )
-}*/

@@ -45,6 +45,5 @@ class MessageRepositoryImp() : MessageRepository {
         return firebaseChatCollectionRef.document(groupId).get().await()
             .toObject(Messages::class.java)?.messageArray ?: emptyList()
 
-
     }
 }

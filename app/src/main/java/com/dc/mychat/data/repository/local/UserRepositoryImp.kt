@@ -15,16 +15,7 @@ class UserRepositoryImp(
         prefs.edit().putString("emailId", email).apply()
     }
 
-   /* override fun saveProfileToPrefs(profile: Profile) {
-        prefs.edit().putString("emailId", profile.mailId).apply()
-        prefs.edit().putString("displayName", profile.displayName).apply()
-        prefs.edit().putString("displayPhoto", profile.displayPhoto).apply()
-    }*/
-
     override fun saveProfileToPrefs(profile: Profile) {
         prefs.edit().putString("profile", profile.toString()).apply()
-        prefs.edit().putString("emailId", profile.mailId).apply()
-        prefs.edit().putString("displayName", profile.displayName).apply()
-        prefs.edit().putString("displayPhoto", profile.displayPhoto).apply()
     }
 }

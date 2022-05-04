@@ -17,48 +17,24 @@ import kotlinx.coroutines.tasks.await
 
 class ServerRepositoryImp(): ServerRepository {
 
-    val databaseRef = Firebase.database.reference.child("Profiles")
     val firestoreDatabaseRef = Firebase.firestore
-    var listOfProfile = mutableListOf<Profile>()
 
-    override suspend fun createProfile(mainViewModel: MainViewModel) {
-
-        mainViewModel.profileState.value?.let {
-            firestoreDatabaseRef.collection("Profiles").document(it.mailId).set(it).addOnSuccessListener {
-            }
-        }
+    override suspend fun createProfile(profile: Profile) {
+            firestoreDatabaseRef.collection("Profiles").document(profile.mailId).set(profile).await()
     }
 
 
-    override suspend fun getAllProfile(mainViewModel: MainViewModel) {
+    override suspend fun getAllProfile(): List<Profile>{
 
-        firestoreDatabaseRef.collection("Profiles").get().addOnSuccessListener {
-
-            for (profile in it.documents){
-               val data = profile.data
-                val displayName = data?.get("displayName")
-                val displayPhoto = data?.get("displayPhoto")
-                val emailId = data?.get("mailId")
-                listOfProfile.add(Profile(displayName.toString(), emailId.toString(), displayPhoto.toString()))
-            }
-
-            mainViewModel.allUsersState.value = listOfProfile
-            Log.d("TAG 18", " List of profiles ${listOfProfile}")
-        }
+        return firestoreDatabaseRef.collection("Profiles").get().await()
+            .toObjects(Profile::class.java).filterNotNull()
     }
 
 
-    override fun getProfile(name: String): Profile {
+    override suspend fun getProfile(name: String): Profile? {
 
-        val profile = Profile(name," "," ")
-        databaseRef.child(name).get().addOnSuccessListener {
-            profile.displayName = it.child("displayName").value.toString()
-            profile.displayPhoto = it.child("displayPhoto").value.toString()
-            profile.mailId = it.child("mailId").value.toString()
-        }
-
-        return profile
-
+        return firestoreDatabaseRef.collection("Profiles").document(name).get().await()
+            .toObject(Profile::class.java)
     }
 
 }

@@ -12,6 +12,7 @@ import com.dc.mychat.domain.repository.ServerRepository
 import com.dc.mychat.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,26 +36,17 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            //refreshMessageScreen()
+            getAllProfileFromFirebase()
         }
 
     }
 
-    fun refreshMessageScreen() {
-        viewModelScope.launch {
-            if (allMessagesState.value != messageRepository.getAllMessagesFromFirebase(groupIdState.value)) {
-                allMessagesState.value =
-                    messageRepository.getAllMessagesFromFirebase(groupIdState.value)
-                textState.value = ""
-            }
-        }
-    }
 
     fun getAllMessageFromFirebase() {
-        Log.d("TAG 18", "${groupIdState.value}")
+        Log.d("TAG 18", groupIdState.value)
         viewModelScope.launch {
-            allMessagesState.value =
-                messageRepository.getAllMessagesFromFirebase(groupIdState.value)
+            allMessagesState.value = messageRepository.getAllMessagesFromFirebase(groupIdState.value)
+            textState.value = ""
         }
     }
 
@@ -67,6 +59,25 @@ class MainViewModel @Inject constructor(
     fun getMailIdFromSharedPrefs() {
         viewModelScope.launch {
             senderMailIdState.value = userRepository.getLoggedInEmailFromPrefs().toString()
+        }
+
+    }
+
+    fun createProfile(profile: Profile) {
+        viewModelScope.launch {
+            serverRepository.createProfile(profile)
+        }
+    }
+
+    fun saveProfileToPrefs(profile: Profile) {
+        viewModelScope.launch {
+            userRepository.saveProfileToPrefs(profile = profile)
+        }
+    }
+
+    fun getAllProfileFromFirebase(){
+        viewModelScope.launch {
+            allUsersState.value = serverRepository.getAllProfile()
         }
     }
 }

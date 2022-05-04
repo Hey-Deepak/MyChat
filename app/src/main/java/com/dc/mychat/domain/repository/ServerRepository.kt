@@ -5,10 +5,10 @@ import com.dc.mychat.ui.viewmodel.MainViewModel
 
 interface ServerRepository {
 
-    suspend fun createProfile(mainViewModel: MainViewModel)
+    suspend fun createProfile(profile: Profile)
 
-    suspend fun getAllProfile(mainViewModel: MainViewModel)
+    suspend fun getAllProfile(): List<Profile>
 
-    fun getProfile(name: String) : Profile
+    suspend fun getProfile(name: String) : Profile?
 
 }

@@ -49,7 +49,6 @@ fun LoggedInScreen(
         Button(onClick = {
             Log.d("TAG","Inside Button")
             launchLoginFlow {
-                Log.d("TAG","Inside launchLoginFlow")
                 val user = FirebaseAuth.getInstance().currentUser
                 user?.let {
 
@@ -62,15 +61,9 @@ fun LoggedInScreen(
 
                     mainViewModel.imageUriState.value = Uri.parse(displayPhoto)
                     mainViewModel.profileState.value = profile
-                    mainViewModel.userRepository.saveProfileToPrefs(profile)
+                    mainViewModel.saveProfileToPrefs(profile)
 
                     navHostController.navigate(Screen.Profile.route)
-
-                    /*Toast.makeText(
-                        this,
-                        "Congratulation! You have logged in as $email",
-                        Toast.LENGTH_LONG
-                    ).show()*/
                 }
             }
 
@@ -91,10 +84,3 @@ fun fireLoginIntent(loginLauncher: ActivityResultLauncher<Intent>) {
         .build()
     loginLauncher.launch(intent)
 }
-
-/*
-@Preview
-@Composable
-fun viewNotLoggedIn() {
-    LoggedInScreen("choudharydeepak@gmail.com")
-}*/
