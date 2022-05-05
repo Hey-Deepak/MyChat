@@ -52,7 +52,6 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
                     IconButton(onClick = {
 
                             Log.d("TAG 3", mainViewModel.groupIdState.value)
-                            mainViewModel.sendMessage(message = mainViewModel.messageState.value)
                             mainViewModel.sendMessage(
                                 message = Message(
                                     mainViewModel.textState.value,
@@ -60,6 +59,7 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
                                     mainViewModel.senderMailIdState.value
                                 )
                             )
+                        Log.d("TAG 3 sendmessagecard", mainViewModel.groupIdState.value)
 
 
                     }) {

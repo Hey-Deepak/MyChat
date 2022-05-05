@@ -61,7 +61,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun getMailIdFromSharedPrefs() {
-        viewModelScope.launch {
+        runBlocking {
             senderMailIdState.value = userRepository.getLoggedInEmailFromPrefs().toString()
         }
 
