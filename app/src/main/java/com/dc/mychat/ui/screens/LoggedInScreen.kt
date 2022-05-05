@@ -61,7 +61,9 @@ fun LoggedInScreen(
 
                     mainViewModel.imageUriState.value = Uri.parse(displayPhoto)
                     mainViewModel.profileState.value = profile
+
                     mainViewModel.saveProfileToPrefs(profile)
+                    mainViewModel.saveLoginStatusToPrefs(true)
 
                     navHostController.navigate(Screen.Profile.route)
                 }

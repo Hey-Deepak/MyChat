@@ -1,5 +1,6 @@
 package com.dc.mychat
 
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
@@ -17,7 +18,10 @@ fun SetupNavGraph(
     launchLoginFlow: (() -> Unit) -> Unit,
     selectImageLauncher: ActivityResultLauncher<String>
 ) {
-    NavHost(navController = navHostController, startDestination = Screen.LoggedIn.route){
+    mainViewModel.getLoginStatus()
+    val startDestination = if(mainViewModel.loginStatusState.value) Screen.AllUsers.route else Screen.LoggedIn.route
+
+    NavHost(navController = navHostController, startDestination = startDestination){
         composable(route = Screen.LoggedIn.route){
             LoggedInScreen(mainViewModel = mainViewModel, navHostController = navHostController, launchLoginFlow)
         }

@@ -33,6 +33,7 @@ class MainViewModel @Inject constructor(
     val textState = mutableStateOf("")
     val messageState = mutableStateOf(Message())
     val groupIdState = mutableStateOf(senderMailIdState.value + "%" + receiverMailIdState.value)
+    val loginStatusState = mutableStateOf(false)
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -78,6 +79,18 @@ class MainViewModel @Inject constructor(
     fun getAllProfileFromFirebase(){
         viewModelScope.launch {
             allUsersState.value = serverRepository.getAllProfile()
+        }
+    }
+
+    fun getLoginStatus(){
+        viewModelScope.launch {
+            loginStatusState.value = userRepository.getLoginStatusFromPrefs()
+        }
+    }
+
+    fun saveLoginStatusToPrefs(loginStatus: Boolean){
+        viewModelScope.launch {
+            userRepository.saveLoginStatusToPrefs(loginStatus = loginStatus)
         }
     }
 }
