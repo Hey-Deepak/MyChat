@@ -86,7 +86,7 @@ fun onUserClicked(
 
     mainViewModel.receiverMailIdState.value = profile.mailId
     Log.d("TAG1", "Inside onUserClicked RC ${mainViewModel.receiverMailIdState.value}")
-    mainViewModel.senderMailIdState.value = mainViewModel.userRepository.getLoggedInEmailFromPrefs().toString()
+    mainViewModel.senderMailIdState.value = mainViewModel.getMailIdFromSharedPrefs().toString()
     mainViewModel.groupIdState.value = "${mainViewModel.senderMailIdState.value}%${mainViewModel.receiverMailIdState.value}"
     Log.d("TAG2", "Inside onUserClicked RC & Sender ${mainViewModel.groupIdState.value}")
     mainViewModel.allMessagesState.value = emptyList()

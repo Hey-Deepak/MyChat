@@ -51,20 +51,7 @@ fun LoggedInScreen(
             launchLoginFlow {
                 val user = FirebaseAuth.getInstance().currentUser
                 user?.let {
-
-                    val email = it.email!!
-                    val displayPhoto = it.photoUrl.toString()
-                    val displayName = it.displayName.toString()
-                    val profile = Profile(displayName, email, displayPhoto)
-
-                    Log.d("TAG","Inside launchLoginFlow $email, $displayName, $displayPhoto")
-
-                    mainViewModel.imageUriState.value = Uri.parse(displayPhoto)
-                    mainViewModel.profileState.value = profile
-
-                    mainViewModel.saveProfileToPrefs(profile)
-                    mainViewModel.saveLoginStatusToPrefs(true)
-
+                    mainViewModel.getFirebaseUser(it)
                     navHostController.navigate(Screen.Profile.route)
                 }
             }

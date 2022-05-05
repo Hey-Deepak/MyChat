@@ -10,10 +10,12 @@ import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.domain.repository.MessageRepository
 import com.dc.mychat.domain.repository.ServerRepository
 import com.dc.mychat.domain.repository.UserRepository
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,6 +56,7 @@ class MainViewModel @Inject constructor(
     fun sendMessage(message: Message) {
         viewModelScope.launch {
             messageRepository.sendMessage(message = message, groupId = groupIdState.value)
+            getAllMessageFromFirebase()
         }
     }
 
@@ -83,7 +86,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun getLoginStatus(){
-        viewModelScope.launch {
+        runBlocking {
             loginStatusState.value = userRepository.getLoginStatusFromPrefs()
         }
     }
@@ -92,5 +95,20 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             userRepository.saveLoginStatusToPrefs(loginStatus = loginStatus)
         }
+    }
+
+    fun getFirebaseUser(it: FirebaseUser){
+        val email = it.email!!
+        val displayPhoto = it.photoUrl.toString()
+        val displayName = it.displayName.toString()
+        val profile = Profile(displayName, email, displayPhoto)
+
+        Log.d("TAG","Inside launchLoginFlow $email, $displayName, $displayPhoto")
+
+        imageUriState.value = Uri.parse(displayPhoto)
+        profileState.value = profile
+
+        saveProfileToPrefs(profile)
+        saveLoginStatusToPrefs(true)
     }
 }

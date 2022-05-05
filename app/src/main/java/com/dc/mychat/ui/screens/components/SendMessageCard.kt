@@ -60,7 +60,7 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
                                     mainViewModel.senderMailIdState.value
                                 )
                             )
-                            mainViewModel.getAllMessageFromFirebase()
+
 
                     }) {
                         Icon(imageVector = Icons.Filled.Send, contentDescription = "Send Message")
