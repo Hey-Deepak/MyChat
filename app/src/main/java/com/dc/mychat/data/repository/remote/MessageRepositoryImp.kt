@@ -15,7 +15,7 @@ class MessageRepositoryImp() : MessageRepository {
 
 
     override suspend fun sendMessage(message: Message, groupId: String) {
-        Log.d("TAG 19 Message & GroupId ", "$message + $groupId")
+        Log.d("TAG 19 Message & GroupId Message Repo ", "$message + $groupId")
         val doc = firebaseChatCollectionRef.document(groupId).get().await()
         if(doc.exists()) {
             firebaseChatCollectionRef.document(groupId)
@@ -24,6 +24,8 @@ class MessageRepositoryImp() : MessageRepository {
             firebaseChatCollectionRef.document(groupId)
                 .set(Messages(listOf(message))).await()
         }
+
+
     }
 
 
@@ -40,10 +42,13 @@ class MessageRepositoryImp() : MessageRepository {
         }
     }*/
 
-    override suspend fun getAllMessagesFromFirebase(groupId: String): List<Message> {
+    override suspend fun getAllMessagesFromFirebase(groupId: String): MutableList<Message> {
         Log.d("TAG 18", "${groupId}")
-        return firebaseChatCollectionRef.document(groupId).get().await()
+        var listOfMessages = listOf<Message>()
+
+        listOfMessages = firebaseChatCollectionRef.document(groupId).get().await()
             .toObject(Messages::class.java)?.messageArray ?: emptyList()
+        return listOfMessages.toMutableList()
 
     }
 }

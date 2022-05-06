@@ -25,11 +25,10 @@ class MainViewModel @Inject constructor(
     val serverRepository: ServerRepository
 ) : ViewModel() {
 
-
     val imageUriState = mutableStateOf<Uri?>(null)
     val profileState = mutableStateOf<Profile>(Profile("", "", ""))
     var allUsersState = mutableStateOf<List<Profile>>(listOf(profileState.value))
-    val allMessagesState = mutableStateOf<List<Message>>(listOf())
+    val allMessagesState = mutableStateOf<MutableList<Message>>(mutableListOf())
     val receiverMailIdState = mutableStateOf("")
     val senderMailIdState = mutableStateOf("${userRepository.getLoggedInEmailFromPrefs()}")
     val textState = mutableStateOf("")
@@ -49,14 +48,16 @@ class MainViewModel @Inject constructor(
         Log.d("TAG 18", groupIdState.value)
         viewModelScope.launch {
             allMessagesState.value = messageRepository.getAllMessagesFromFirebase(groupIdState.value)
-            textState.value = ""
         }
     }
 
     fun sendMessage(message: Message) {
         viewModelScope.launch {
+            allMessagesState.value.add(message)
+            Log.d("TAG 9 MainViewModel", allMessagesState.value.toString())
             messageRepository.sendMessage(message = message, groupId = groupIdState.value)
-            getAllMessageFromFirebase()
+            textState.value = ""
+
         }
     }
 
@@ -64,7 +65,6 @@ class MainViewModel @Inject constructor(
         runBlocking {
             senderMailIdState.value = userRepository.getLoggedInEmailFromPrefs().toString()
         }
-
     }
 
     fun createProfile(profile: Profile) {

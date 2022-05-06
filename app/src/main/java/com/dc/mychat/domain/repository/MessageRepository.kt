@@ -10,6 +10,6 @@ interface MessageRepository {
 
     suspend fun sendMessage(message: Message, groupId: String)
 
-    suspend fun getAllMessagesFromFirebase(groupId: String): List<Message>
+    suspend fun getAllMessagesFromFirebase(groupId: String): MutableList<Message>
 
 }

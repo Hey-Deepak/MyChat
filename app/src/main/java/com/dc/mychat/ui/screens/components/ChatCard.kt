@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.dc.mychat.Screen
+import com.dc.mychat.domain.model.Message
 import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.ui.viewmodel.MainViewModel
 
@@ -89,7 +90,7 @@ fun onUserClicked(
     mainViewModel.getMailIdFromSharedPrefs()
     mainViewModel.groupIdState.value = "${mainViewModel.senderMailIdState.value}%${mainViewModel.receiverMailIdState.value}"
     Log.d("TAG2", "Inside onUserClicked RC & Sender ${mainViewModel.groupIdState.value}")
-    mainViewModel.allMessagesState.value = emptyList()
+    mainViewModel.allMessagesState.value.clear()
     mainViewModel.getAllMessageFromFirebase()
     navHostController.navigate(Screen.Message.route)
 }
