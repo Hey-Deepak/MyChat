@@ -1,6 +1,8 @@
 package com.dc.mychat.ui.screens.components
 
 import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 
 
 import androidx.compose.foundation.layout.*
@@ -11,7 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,45 +26,57 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun MessageCard(message: Message) {
+fun MessageCard(message: Message, mainViewModel: MainViewModel) {
     Log.d("TAG", "Inside Message card ${message}")
+    val isRight = mainViewModel.senderMailIdState.value.equals(message.senderMailId)
+    Log.d("TAg 11 Message Card", isRight.toString())
 
-    Card(
-        elevation = 4.dp,
-        backgroundColor = Color.LightGray,
-        shape = RoundedCornerShape(0.dp, 8.dp, 8.dp, 8.dp),
-        modifier = Modifier.wrapContentWidth().padding(8.dp)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
     ) {
         Row(
-            modifier = Modifier.wrapContentWidth(),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = if (isRight) Arrangement.End else Arrangement.Start
         ) {
-            Text(
-                text = message.message,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
+            Card(
                 modifier = Modifier
-                    .padding(8.dp).weight(5f, fill = false)
-            )
+                    .wrapContentWidth(),
+                elevation = 8.dp,
+                shape = if (isRight) RoundedCornerShape(8.dp, 0.dp, 8.dp, 8.dp ) else RoundedCornerShape(0.dp, 8.dp, 8.dp, 8.dp ),
+                backgroundColor = Color.LightGray
+            ) {
+                Row(
+                    modifier = Modifier,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = message.message,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier
+                            .padding(8.dp)
 
-            Text(
-                //For timestamp
-                text =  SimpleDateFormat("h:mm a", Locale.US).format(message.timestamp.toDate()),
-                fontSize = 8.sp,
-                fontWeight = FontWeight.Light,
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .padding(8.dp).weight(1f, fill = false)
-            )
+                    )
+                    Text(
+                        text = SimpleDateFormat(
+                            "h:mm a",
+                            Locale.US
+                        ).format(message.timestamp.toDate()),
+                        fontSize = 8.sp,
+                        fontWeight = FontWeight.Light,
+                        modifier = Modifier
+                            .wrapContentWidth()
+                            .padding(8.dp)
+                    )
+                }
+
+            }
+
         }
 
     }
 }
 
-@Preview
-@Composable
-fun CardMessagesPreview() {
-        MessageCard(message = Message("afffasf", Timestamp.now(), "dfdf"))
-
-}
