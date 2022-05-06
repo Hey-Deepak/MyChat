@@ -31,8 +31,7 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(16.dp),
+            .wrapContentHeight(),
         elevation = 8.dp,
         border = BorderStroke(1.dp, color = Color.Blue)
     ) {

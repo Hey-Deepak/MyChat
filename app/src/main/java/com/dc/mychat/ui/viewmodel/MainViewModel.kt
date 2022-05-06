@@ -53,11 +53,11 @@ class MainViewModel @Inject constructor(
 
     fun sendMessage(message: Message) {
         viewModelScope.launch {
-            allMessagesState.value.add(message)
+            //allMessagesState.value.add(message)
             Log.d("TAG 9 MainViewModel", allMessagesState.value.toString())
             messageRepository.sendMessage(message = message, groupId = groupIdState.value)
             textState.value = ""
-
+            getAllMessageFromFirebase()
         }
     }
 
