@@ -84,13 +84,6 @@ fun onUserClicked(
     mainViewModel: MainViewModel,
     profile: Profile
 ) {
-
-    mainViewModel.receiverMailIdState.value = profile.mailId
-    Log.d("TAG1", "Inside onUserClicked RC ${mainViewModel.receiverMailIdState.value}")
-    mainViewModel.getMailIdFromSharedPrefs()
-    mainViewModel.groupIdState.value = "${mainViewModel.senderMailIdState.value}%${mainViewModel.receiverMailIdState.value}"
-    Log.d("TAG2", "Inside onUserClicked RC & Sender ${mainViewModel.groupIdState.value}")
-    mainViewModel.allMessagesState.value.clear()
-    mainViewModel.getAllMessageFromFirebase()
+    mainViewModel.onUserClicked(profile = profile)
     navHostController.navigate(Screen.Message.route)
 }

@@ -59,8 +59,6 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
                                 )
                             )
                         Log.d("TAG 3 sendmessagecard", mainViewModel.groupIdState.value)
-
-
                     }) {
                         Icon(imageVector = Icons.Filled.Send, contentDescription = "Send Message")
                     }
