@@ -1,5 +1,6 @@
 package com.dc.mychat.ui.screens
 
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -29,6 +30,7 @@ fun ProfileScreen(
     navHostController: NavHostController,
     selectImageLauncher: ActivityResultLauncher<String>
 ) {
+    Log.d("TAG 10.1", "Inside profile screen start")
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -73,9 +75,11 @@ fun ProfileScreen(
 }
 
 fun createProfile(mainViewModel: MainViewModel, navHostController: NavHostController) {
-
+    Log.d("TAG 10.2", "Inside profile screen createProfile function start")
     mainViewModel.createProfile(mainViewModel.profileState.value)
+    Log.d("TAG 10.3", "Inside profile screen createProfile function end")
     navHostController.navigate(Screen.AllUsers.route)
+    Log.d("TAG 10.4", "Inside profile screen createProfile function navigate to all users end")
 }
 
 

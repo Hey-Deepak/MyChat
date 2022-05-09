@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
 import com.dc.mychat.domain.model.Message
 import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.domain.repository.MessageRepository
@@ -15,7 +14,6 @@ import com.dc.mychat.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -41,7 +39,7 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            getAllProfileFromFirebase()
+
         }
 
     }
@@ -65,19 +63,23 @@ class MainViewModel @Inject constructor(
 
     fun getMailIdFromSharedPrefs() {
         runBlocking {
-            senderMailIdState.value = userRepository.getLoggedInEmailFromPrefs().toString()
+            senderMailIdState.value = userRepository.getProfileFromPrefs().mailId
         }
     }
 
     fun createProfile(profile: Profile) {
         viewModelScope.launch {
+            Log.d("TAG 9.5", "Mainviewmodel, Create Profile ")
             serverRepository.createProfile(profile)
+            saveLoginStatusToPrefs(true)
+            Log.d("TAG 9.5.2", "Inside MainViewModel createProfile End")
         }
     }
 
     fun saveProfileToPrefs(profile: Profile) {
         viewModelScope.launch {
             userRepository.saveProfileToPrefs(profile = profile)
+            Log.d("TAG 9.6", "Mainviewmodel, profile saved to prefs ${profile.toString()}")
         }
     }
 
@@ -90,6 +92,7 @@ class MainViewModel @Inject constructor(
     fun getLoginStatus() {
         runBlocking {
             loginStatusState.value = userRepository.getLoginStatusFromPrefs()
+            Log.d("TAG 9.3", loginStatusState.toString())
         }
     }
 
@@ -100,27 +103,33 @@ class MainViewModel @Inject constructor(
     }
 
     fun getFirebaseUser(it: FirebaseUser) {
-        val email = it.email!!
-        val displayPhoto = it.photoUrl.toString()
-        val displayName = it.displayName.toString()
-        val profile = Profile(displayName, email, displayPhoto)
+            runBlocking {
+                val email = it.email!!
+                val displayPhoto = it.photoUrl.toString()
+                val displayName = it.displayName.toString()
+                val profile = Profile(displayName, email, displayPhoto)
 
-        Log.d("TAG", "Inside launchLoginFlow $email, $displayName, $displayPhoto")
+                Log.d("TAG 9.4.1", "Inside MainViewModel getFirebaseUser $email, $displayName, $displayPhoto")
 
-        imageUriState.value = Uri.parse(displayPhoto)
-        profileState.value = profile
+                imageUriState.value = Uri.parse(displayPhoto)
+                profileState.value = profile
+                loginStatusState.value = true
 
-        saveProfileToPrefs(profile)
-        saveLoginStatusToPrefs(true)
+                saveProfileToPrefs(profile)
+                getLoginStatus()
+                Log.d("TAG 9.6","loginStatus set to true")
+
+            }
+
     }
 
     fun onUserClicked(profile: Profile) {
         receiverMailIdState.value = profile.mailId
-        Log.d("TAG4", "Inside onUserClicked RC mainviewModel ${receiverMailIdState.value}")
+        Log.d("TAG 9.1", "Inside onUserClicked RC mainviewModel ${receiverMailIdState.value} & profile = ${profile.mailId}")
         getMailIdFromSharedPrefs()
         groupIdState.value =
             listOf(senderMailIdState.value, receiverMailIdState.value).sorted().joinToString("%")
-        Log.d("TAG5", "Inside onUserClicked RC & Sender mainviewModel ${groupIdState.value}")
+        Log.d("TAG 9.2", "Inside onUserClicked RC & Sender mainviewModel ${groupIdState.value}")
         allMessagesState.clear()
         getAllMessageFromFirebase()
     }

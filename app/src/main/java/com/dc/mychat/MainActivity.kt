@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
     val mainViewModel: MainViewModel by viewModels()
     lateinit var navHostController: NavHostController
 
-    @ExperimentalMaterialApi
+    @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         registerLoginLauncher()
@@ -43,7 +43,6 @@ class MainActivity : ComponentActivity() {
 
     val selectImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            Log.d("TAG4", "Inside selectImageLauncher")
             mainViewModel.imageUriState.value = uri
         }
 

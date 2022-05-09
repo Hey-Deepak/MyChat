@@ -47,12 +47,15 @@ fun LoggedInScreen(
         )
 
         Button(onClick = {
-            Log.d("TAG","Inside Button")
+            Log.d("TAG1","Inside Button")
             launchLoginFlow {
                 val user = FirebaseAuth.getInstance().currentUser
                 user?.let {
+                    Log.d("TAG 2","Inside Button LoggedIn Screen ${it.toString()}")
                     mainViewModel.getFirebaseUser(it)
+                    Log.d("TAG 3","Inside Button LoggedIn Screen ${it.toString()}")
                     navHostController.navigate(Screen.Profile.route)
+                    Log.d("TAG 4","Inside Button LoggedIn Screen ${it.toString()}")
                 }
             }
 

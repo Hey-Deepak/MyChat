@@ -9,14 +9,14 @@ class UserRepositoryImp(
     val prefs: SharedPreferences,
 ) : UserRepository {
     override fun getLoggedInEmailFromPrefs(): String? {
-        return prefs.getString("emailId", "choudharydeepak@gmail.com")
+        return prefs.getString("emailId", null)
     }
 
     override fun saveEmailToPrefs(email: String) {
         prefs.edit().putString("emailId", email).apply()
     }
 
-    override fun saveProfileToPrefs(profile: Profile) {
+    override suspend fun saveProfileToPrefs(profile: Profile) {
         prefs.edit().putString("profile", Gson().toJson(profile)).apply()
     }
 

@@ -9,7 +9,7 @@ interface UserRepository {
 
     fun saveEmailToPrefs(email: String)
 
-    fun saveProfileToPrefs(profile: Profile)
+    suspend fun saveProfileToPrefs(profile: Profile)
 
     suspend fun getProfileFromPrefs(): Profile
 

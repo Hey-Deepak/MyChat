@@ -25,6 +25,8 @@ import com.dc.mychat.ui.viewmodel.MainViewModel
 @ExperimentalMaterialApi
 @Composable
 fun AllUsersScreen(mainViewModel: MainViewModel, navHostController: NavHostController) {
+    mainViewModel.getAllProfileFromFirebase()
+    Log.d("TAG 13.1", "All User Screen, All profile got from firebase ")
 
     Surface() {
         Column(modifier = Modifier
@@ -44,7 +46,7 @@ fun AllUsersScreen(mainViewModel: MainViewModel, navHostController: NavHostContr
                     LazyColumn(){
                         items(items = mainViewModel.allUsersState.value){ profile ->
                             CardChat(mainViewModel, navHostController, profile)
-                             Log.d("TAG 13", profile.toString())
+                             Log.d("TAG 13.2 All User Screen inside items", profile.toString())
                         }
                     }
             }

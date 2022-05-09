@@ -27,9 +27,7 @@ import java.util.*
 
 @Composable
 fun MessageCard(message: Message, mainViewModel: MainViewModel) {
-    Log.d("TAG", "Inside Message card ${message}")
     val isRight = mainViewModel.senderMailIdState.value.equals(message.senderMailId)
-    Log.d("TAg 11 Message Card", isRight.toString())
 
     Box(
         modifier = Modifier
