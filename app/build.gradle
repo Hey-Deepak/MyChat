@@ -87,13 +87,13 @@ dependencies {
     // FirebaseUI for Firebase Auth
     implementation 'com.firebaseui:firebase-ui-auth:8.0.0'
     // Coroutines support for Firebase
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.1'
     // Database & Storage
     implementation platform('com.google.firebase:firebase-bom:29.3.1')
     implementation 'com.google.firebase:firebase-storage-ktx'
     implementation 'com.google.firebase:firebase-database-ktx'
 
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.4.1"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.1"
 
 
     def activity_version = "1.4.0"

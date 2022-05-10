@@ -12,4 +12,8 @@ interface MessageRepository {
 
     suspend fun getAllMessagesFromFirebase(groupId: String): MutableList<Message>
 
+    fun subscribeForMessages(groupId: String): List<Message>
+
+    suspend fun subcribeToMessages2(groupId: String): List<Message>
+
 }

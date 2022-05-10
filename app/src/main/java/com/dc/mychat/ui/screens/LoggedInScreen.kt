@@ -65,14 +65,15 @@ fun LoggedInScreen(
         }
 
     }
+    fun fireLoginIntent(loginLauncher: ActivityResultLauncher<Intent>) {
+        val intent = AuthUI.getInstance()
+            .createSignInIntentBuilder()
+            .setAvailableProviders(listOf(
+                AuthUI.IdpConfig.GoogleBuilder().build()
+            ))
+            .build()
+        loginLauncher.launch(intent)
+    }
+
 }
 
-fun fireLoginIntent(loginLauncher: ActivityResultLauncher<Intent>) {
-    val intent = AuthUI.getInstance()
-        .createSignInIntentBuilder()
-        .setAvailableProviders(listOf(
-            AuthUI.IdpConfig.GoogleBuilder().build()
-        ))
-        .build()
-    loginLauncher.launch(intent)
-}

@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dc.mychat.ui.theme.MyChatTheme
 import com.dc.mychat.ui.viewmodel.MainViewModel
 import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.auth.api.Auth
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -70,12 +71,14 @@ class MainActivity : ComponentActivity() {
     // Step 2: Launcher
     private fun launchLoginFlow(loginHandler: (() -> Unit)) {
         this.loginHandler = loginHandler
+
         val intent = AuthUI.getInstance()
             .createSignInIntentBuilder()
             .setAvailableProviders(listOf(
                 AuthUI.IdpConfig.GoogleBuilder().build()
             ))
             .build()
+
         loginLauncher.launch(intent)
     }
 

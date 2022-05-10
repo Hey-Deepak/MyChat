@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dc.mychat.domain.model.Message
@@ -28,7 +29,7 @@ class MainViewModel @Inject constructor(
     val imageUriState = mutableStateOf<Uri?>(null)
     val profileState = mutableStateOf(Profile("", "", ""))
     var allUsersState = mutableStateOf(listOf(profileState.value))
-    val allMessagesState = mutableStateListOf<Message>()
+    var allMessagesState = mutableStateListOf<Message>()
     val receiverMailIdState = mutableStateOf("")
     val senderMailIdState = mutableStateOf("${userRepository.getLoggedInEmailFromPrefs()}")
     val textState = mutableStateOf("")
@@ -45,17 +46,20 @@ class MainViewModel @Inject constructor(
     }
 
     fun getAllMessageFromFirebase() {
-        Log.d("TAG 18", groupIdState.value)
+        Log.d("TAG 9.8.1", groupIdState.value)
         viewModelScope.launch {
-            allMessagesState.addAll(messageRepository.getAllMessagesFromFirebase(groupIdState.value))
+            //allMessagesState.addAll(messageRepository.getAllMessagesFromFirebase(groupIdState.value))
+            //Log.d("TAG 9.8.2", messageRepository.subcribeToMessages2(groupIdState.value).toString())
+            allMessagesState.clear()
+            allMessagesState.addAll(messageRepository.subcribeToMessages2(groupIdState.value))
         }
     }
 
     fun sendMessage(message: Message) {
         viewModelScope.launch {
             allMessagesState.add(message)
-            Log.d("TAG 9 MainViewModel", allMessagesState.toString())
-            Log.d("TAG 10 MainViewModel", groupIdState.value)
+            Log.d("TAG 9.7.1 MainViewModel", allMessagesState.toString())
+            Log.d("TAG 9.7.2 MainViewModel", groupIdState.value)
             messageRepository.sendMessage(message = message, groupId = groupIdState.value)
             textState.value = ""
         }
