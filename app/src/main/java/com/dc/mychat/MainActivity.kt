@@ -19,6 +19,7 @@ import com.dc.mychat.ui.theme.MyChatTheme
 import com.dc.mychat.ui.viewmodel.MainViewModel
 import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.auth.api.Auth
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -32,6 +33,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         registerLoginLauncher()
+        FirebaseMessaging.getInstance().subscribeToTopic("users")
         setContent {
             MyChatTheme {
                 navHostController = rememberNavController()
@@ -45,6 +47,7 @@ class MainActivity : ComponentActivity() {
     val selectImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             mainViewModel.imageUriState.value = uri
+
         }
 
 

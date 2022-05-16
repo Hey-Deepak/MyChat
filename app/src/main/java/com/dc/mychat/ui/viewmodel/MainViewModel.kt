@@ -4,27 +4,36 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dc.mychat.data.repository.fcm.FCMMessageBuilder
+import com.dc.mychat.data.repository.fcm.FCMSender
 import com.dc.mychat.domain.model.Message
+import com.dc.mychat.domain.model.NewMessageNotification
 import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.domain.repository.MessageRepository
 import com.dc.mychat.domain.repository.ServerRepository
 import com.dc.mychat.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
+import java.io.IOException
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     val userRepository: UserRepository,
     val messageRepository: MessageRepository,
-    val serverRepository: ServerRepository
+    val serverRepository: ServerRepository,
 ) : ViewModel() {
+
 
     val imageUriState = mutableStateOf<Uri?>(null)
     val profileState = mutableStateOf(Profile("", "", ""))
@@ -39,19 +48,17 @@ class MainViewModel @Inject constructor(
     val loginStatusState = mutableStateOf(false)
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-
-        }
 
     }
 
     fun getAllMessageFromFirebase() {
         Log.d("TAG 9.8.1", groupIdState.value)
         viewModelScope.launch {
-            //allMessagesState.addAll(messageRepository.getAllMessagesFromFirebase(groupIdState.value))
-            //Log.d("TAG 9.8.2", messageRepository.subcribeToMessages2(groupIdState.value).toString())
-            allMessagesState.clear()
-            allMessagesState.addAll(messageRepository.subcribeToMessages2(groupIdState.value))
+            messageRepository.subscribeToMessages3(groupIdState.value) {
+                allMessagesState.clear()
+                allMessagesState.addAll(it.messageArray)
+
+            }
         }
     }
 
@@ -61,6 +68,32 @@ class MainViewModel @Inject constructor(
             Log.d("TAG 9.7.1 MainViewModel", allMessagesState.toString())
             Log.d("TAG 9.7.2 MainViewModel", groupIdState.value)
             messageRepository.sendMessage(message = message, groupId = groupIdState.value)
+            val data = FCMMessageBuilder.buildNewMessageNotification(
+                NewMessageNotification(
+                    message.message, receiverMailIdState.value, senderMailIdState.value
+                )
+            )
+            suspendCoroutine<String> { continuation ->
+                FCMSender().send(
+                    data,
+                    callback = object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+                            continuation.resumeWithException(e)
+                        }
+
+                        override fun onResponse(call: Call, response: Response) {
+                            val responseMsg = response.body?.string() ?: ""
+                            if(responseMsg.contains("message_id"))
+                                continuation.resume(response.message)
+                            else
+                                continuation.resumeWithException(
+                                    Exception(responseMsg)
+                                )
+                        }
+                    }
+                )
+            }
+
             textState.value = ""
         }
     }
@@ -107,29 +140,35 @@ class MainViewModel @Inject constructor(
     }
 
     fun getFirebaseUser(it: FirebaseUser) {
-            runBlocking {
-                val email = it.email!!
-                val displayPhoto = it.photoUrl.toString()
-                val displayName = it.displayName.toString()
-                val profile = Profile(displayName, email, displayPhoto)
+        runBlocking {
+            val email = it.email!!
+            val displayPhoto = it.photoUrl.toString()
+            val displayName = it.displayName.toString()
+            val profile = Profile(displayName, email, displayPhoto)
 
-                Log.d("TAG 9.4.1", "Inside MainViewModel getFirebaseUser $email, $displayName, $displayPhoto")
+            Log.d(
+                "TAG 9.4.1",
+                "Inside MainViewModel getFirebaseUser $email, $displayName, $displayPhoto"
+            )
 
-                imageUriState.value = Uri.parse(displayPhoto)
-                profileState.value = profile
-                loginStatusState.value = true
+            imageUriState.value = Uri.parse(displayPhoto)
+            profileState.value = profile
+            loginStatusState.value = true
 
-                saveProfileToPrefs(profile)
-                getLoginStatus()
-                Log.d("TAG 9.6","loginStatus set to true")
+            saveProfileToPrefs(profile)
+            getLoginStatus()
+            Log.d("TAG 9.6", "loginStatus set to true")
 
-            }
+        }
 
     }
 
     fun onUserClicked(profile: Profile) {
         receiverMailIdState.value = profile.mailId
-        Log.d("TAG 9.1", "Inside onUserClicked RC mainviewModel ${receiverMailIdState.value} & profile = ${profile.mailId}")
+        Log.d(
+            "TAG 9.1",
+            "Inside onUserClicked RC mainviewModel ${receiverMailIdState.value} & profile = ${profile.mailId}"
+        )
         getMailIdFromSharedPrefs()
         groupIdState.value =
             listOf(senderMailIdState.value, receiverMailIdState.value).sorted().joinToString("%")

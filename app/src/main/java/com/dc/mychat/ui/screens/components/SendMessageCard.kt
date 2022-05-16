@@ -49,8 +49,6 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
 
                 trailingIcon = {
                     IconButton(onClick = {
-
-                            Log.d("TAG 3", mainViewModel.groupIdState.value)
                             mainViewModel.sendMessage(
                                 message = Message(
                                     mainViewModel.textState.value,
@@ -58,7 +56,6 @@ fun SendMessageCard(mainViewModel: MainViewModel) {
                                     mainViewModel.senderMailIdState.value
                                 )
                             )
-                        Log.d("TAG 3 sendmessagecard", mainViewModel.groupIdState.value)
                     }) {
                         Icon(imageVector = Icons.Filled.Send, contentDescription = "Send Message")
                     }

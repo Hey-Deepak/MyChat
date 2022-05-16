@@ -49,9 +49,7 @@ class MessageRepositoryImp() : MessageRepository {
 
     override suspend fun getAllMessagesFromFirebase(groupId: String): MutableList<Message> {
         Log.d("TAG 19.9", "${groupId}")
-        var listOfMessages = listOf<Message>()
-
-        listOfMessages = firebaseChatCollectionRef.document(groupId).get().await()
+        val listOfMessages = firebaseChatCollectionRef.document(groupId).get().await()
             .toObject(Messages::class.java)?.messageArray ?: emptyList()
         return listOfMessages.toMutableList()
 
@@ -80,6 +78,25 @@ class MessageRepositoryImp() : MessageRepository {
         return listOfMessages //Issue
     }
 
+    override suspend fun subscribeToMessages3(
+        groupId: String,
+        onChanged: (Messages) -> Unit
+    ) {
+        firebaseChatCollectionRef.document(groupId).addSnapshotListener { documentSnapshot, e ->
+
+            
+            val messages = documentSnapshot?.toObject(Messages::class.java)
+
+            if (messages == null) {
+                //onError(e.toString())
+            } else {
+                onChanged(messages)
+            }
+
+        }
+
+    }
+
 
     override suspend fun subcribeToMessages2(groupId: String): List<Message> {
         Log.d("TAG 19.10.1", "GroupId: $groupId")
@@ -93,6 +110,8 @@ class MessageRepositoryImp() : MessageRepository {
                     if (continuation.context.isActive) {
                         Log.d("TAG 19.10.4", "Current data: ${messages.messageArray}")
                         continuation.resume(messages.messageArray)
+                    } else {
+                        messages.messageArray
                     }
                 }
                 if (messages == null) {

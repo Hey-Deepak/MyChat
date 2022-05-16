@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.dc.mychat.ui.screens.*
 import com.dc.mychat.ui.viewmodel.MainViewModel
+import com.google.firebase.messaging.FirebaseMessagingService
 
 @ExperimentalMaterialApi
 @Composable
@@ -19,7 +20,7 @@ fun SetupNavGraph(
     selectImageLauncher: ActivityResultLauncher<String>
 ) {
     mainViewModel.getLoginStatus()
-    var startDestination = if(mainViewModel.loginStatusState.value ) Screen.AllUsers.route else Screen.LoggedIn.route
+    val startDestination = if(mainViewModel.loginStatusState.value ) Screen.AllUsers.route else Screen.LoggedIn.route
     Log.d("TAG 5.2","Inside Nav Graph ${startDestination}")
 
     NavHost(navController = navHostController, startDestination = startDestination){
@@ -37,3 +38,4 @@ fun SetupNavGraph(
         }
     }
 }
+
