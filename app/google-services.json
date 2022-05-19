@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "243638650365",
+    "firebase_url": "https://mychat-240c1-default-rtdb.firebaseio.com",
     "project_id": "mychat-240c1",
     "storage_bucket": "mychat-240c1.appspot.com"
   },
@@ -14,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "243638650365-b3v8pn25i4iqrola3m0fer4i4bfehu8f.apps.googleusercontent.com",
+          "client_id": "243638650365-6qk59p64gvp9btqovd559csmhnudu58s.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.dc.mychat",
-            "certificate_hash": "95677b980c9e54028f33068cfee2eb255c169e11"
+            "certificate_hash": "a0ba5e05b9716d36ca776fdb782c89fb6e4dd911"
           }
         },
         {
