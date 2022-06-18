@@ -143,17 +143,14 @@ class MainViewModel @Inject constructor(
 
     fun getFirebaseUser(it: FirebaseUser) {
         runBlocking {
-            val email = it.email!!
-            val displayPhoto = it.photoUrl.toString()
-            val displayName = it.displayName.toString()
-            val profile = Profile(displayName, email, displayPhoto)
+            val profile = Profile(it.displayName.toString(), it.email!!, it.photoUrl.toString())
 
             Log.d(
                 "TAG 9.4.1",
-                "Inside MainViewModel getFirebaseUser $email, $displayName, $displayPhoto"
+                "Inside MainViewModel getFirebaseUser(Profile) $profile"
             )
 
-            imageUriState.value = Uri.parse(displayPhoto)
+            imageUriState.value = Uri.parse(profile.displayPhoto)
             profileState.value = profile
             loginStatusState.value = true
 
