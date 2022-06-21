@@ -35,6 +35,7 @@ class FCMReceiverService : FirebaseMessagingService() {
         Log.d("TAG 12.1", "msgString Notification $msgString")
         val msg = parseMsg<NewMessageNotification>(msgString)
         msg?.let {
+            // TODO()
             showNotification(it)
         } ?: kotlin.run {
             Log.d("TAG FCM 12.2", "unable to parse message object of type : type")

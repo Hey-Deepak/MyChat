@@ -93,7 +93,6 @@ class MainViewModel @Inject constructor(
                     }
                 )
             }
-
             textState.value = ""
         }
     }
