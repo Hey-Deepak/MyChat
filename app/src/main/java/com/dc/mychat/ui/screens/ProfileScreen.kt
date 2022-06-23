@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -55,7 +56,12 @@ fun ProfileScreen(
 
             Image(painter = painterResource(id = R.drawable.ic_add_image_1),
                 contentDescription = "Add Image",
-            modifier = Modifier.size(40.dp))
+            modifier = Modifier
+                .size(40.dp)
+                .clickable {
+                    selectImageLauncher.launch("image/*")
+                }
+            )
         }
 
 
@@ -91,6 +97,7 @@ fun ProfileScreen(
 }
 
 fun createProfile(mainViewModel: MainViewModel, navHostController: NavHostController) {
+    Log.d("TAG", "createProfile: ${mainViewModel.profileState.value}")
     mainViewModel.createProfile(mainViewModel.profileState.value)
     navHostController.navigate(Screen.AllUsers.route)
 }

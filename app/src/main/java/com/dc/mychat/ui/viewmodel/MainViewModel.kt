@@ -104,9 +104,12 @@ class MainViewModel @Inject constructor(
     }
 
     fun createProfile(profile: Profile) {
-        viewModelScope.launch {
+        runBlocking {
             Log.d("TAG 9.5", "Mainviewmodel, Create Profile ")
-            serverRepository.createProfile(profile)
+            val uri = Uri.parse(profile.displayPhoto)
+            val downloadedUrl = serverRepository.uploadProfilePicture(imageUriState.value!!)
+            Log.d("TAG", "createProfile: $downloadedUrl")
+            serverRepository.createProfile(profile.copy(displayPhoto = downloadedUrl))
             saveLoginStatusToPrefs(true)
             Log.d("TAG 9.5.2", "Inside MainViewModel createProfile End")
         }

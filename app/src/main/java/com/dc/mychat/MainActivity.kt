@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,10 +45,11 @@ class MainActivity : ComponentActivity() {
 
     }
 
-    val selectImageLauncher =
+    private val selectImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             mainViewModel.imageUriState.value = uri
-
+            //mainViewModel.serverRepository.uploadProfilePicture(uri)
+            Log.d("TAG MainActivity", "uri: $uri")
         }
 
 

@@ -1,15 +1,8 @@
 package com.dc.mychat.data.repository.remote
 
-import android.nfc.Tag
-import android.util.Log
-import android.util.Log.d
-import android.widget.Toast
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import android.net.Uri
 import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.domain.repository.ServerRepository
-import com.dc.mychat.ui.viewmodel.MainViewModel
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -17,10 +10,17 @@ import kotlinx.coroutines.tasks.await
 
 class ServerRepositoryImp(): ServerRepository {
 
-    val firestoreDatabaseRef = Firebase.firestore
+    private val firestoreDatabaseRef = Firebase.firestore
+    private val storageRef = Firebase.storage.reference
 
     override suspend fun createProfile(profile: Profile) {
             firestoreDatabaseRef.collection("Profiles").document(profile.mailId).set(profile).await()
+    }
+
+    override suspend fun uploadProfilePicture(uri: Uri): String {
+        storageRef.child("images/${uri.lastPathSegment}").putFile(uri).await()
+        val photoPath = storageRef.child("images/${uri.lastPathSegment}").downloadUrl.await()
+        return photoPath.toString()
     }
 
 
