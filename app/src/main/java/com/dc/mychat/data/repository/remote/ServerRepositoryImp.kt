@@ -17,9 +17,9 @@ class ServerRepositoryImp(): ServerRepository {
             firestoreDatabaseRef.collection("Profiles").document(profile.mailId).set(profile).await()
     }
 
-    override suspend fun uploadProfilePicture(uri: Uri): String {
-        storageRef.child("images/${uri.lastPathSegment}").putFile(uri).await()
-        val photoPath = storageRef.child("images/${uri.lastPathSegment}").downloadUrl.await()
+    override suspend fun uploadProfilePicture(uri: Uri, profile: Profile): String {
+        storageRef.child("images/${profile.mailId}").putFile(uri).await()
+        val photoPath = storageRef.child("images/${profile.mailId}").downloadUrl.await()
         return photoPath.toString()
     }
 

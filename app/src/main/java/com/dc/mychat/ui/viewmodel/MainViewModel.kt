@@ -107,7 +107,7 @@ class MainViewModel @Inject constructor(
         runBlocking {
             Log.d("TAG 9.5", "Mainviewmodel, Create Profile ")
             val uri = Uri.parse(profile.displayPhoto)
-            val downloadedUrl = serverRepository.uploadProfilePicture(imageUriState.value!!)
+            val downloadedUrl = serverRepository.uploadProfilePicture(imageUriState.value!!, profile)
             Log.d("TAG", "createProfile: $downloadedUrl")
             serverRepository.createProfile(profile.copy(displayPhoto = downloadedUrl))
             saveLoginStatusToPrefs(true)

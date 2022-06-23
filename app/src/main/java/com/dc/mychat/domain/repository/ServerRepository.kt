@@ -9,7 +9,7 @@ interface ServerRepository {
 
     suspend fun createProfile(profile: Profile)
 
-    suspend fun uploadProfilePicture(uri: Uri): String
+    suspend fun uploadProfilePicture(uri: Uri, profile: Profile): String
 
     suspend fun getAllProfile(): List<Profile>
 
