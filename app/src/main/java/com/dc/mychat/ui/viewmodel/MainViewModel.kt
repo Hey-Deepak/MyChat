@@ -163,8 +163,10 @@ class MainViewModel @Inject constructor(
 
     fun getFirebaseUser(it: FirebaseUser) {
         runBlocking {
-            val profile = Profile(it.displayName.toString(), it.email!!, it.photoUrl.toString())
-
+            var profile = serverRepository.fetchProfile(it)
+            if (profile == null){
+                profile = Profile(it.displayName.toString(), it.email!!, it.photoUrl.toString())
+            }
             Log.d(
                 "TAG 9.4.1",
                 "Inside MainViewModel getFirebaseUser(Profile) $profile"
