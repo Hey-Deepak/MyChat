@@ -47,9 +47,11 @@ class MainActivity : ComponentActivity() {
 
     private val selectImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            mainViewModel.imageUriState.value = uri
-            //mainViewModel.serverRepository.uploadProfilePicture(uri)
             Log.d("TAG MainActivity", "uri: $uri")
+            if (uri != null){
+                mainViewModel.imageUriState.value = uri
+            }
+            //mainViewModel.serverRepository.uploadProfilePicture(uri)
         }
 
 
