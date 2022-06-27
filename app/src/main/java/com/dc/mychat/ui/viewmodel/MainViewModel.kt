@@ -69,6 +69,7 @@ class MainViewModel @Inject constructor(
             allMessagesState.add(message)
             Log.d("TAG 9.7.1 MainViewModel", allMessagesState.toString())
             Log.d("TAG 9.7.2 MainViewModel", groupIdState.value)
+            Log.d("TAG 9.7.3 MainViewModel", senderMailIdState.value)
             messageRepository.sendMessage(message = message, groupId = groupIdState.value)
             val data = FCMMessageBuilder.buildNewMessageNotification(
                 NewMessageNotification(

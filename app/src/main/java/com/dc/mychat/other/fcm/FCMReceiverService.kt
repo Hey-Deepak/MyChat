@@ -53,7 +53,7 @@ class FCMReceiverService : FirebaseMessagingService() {
 
         //Build
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(message.receiverMailId)
+            .setContentTitle(message.senderMailId)
             .setContentText(message.message)
             .setStyle(NotificationCompat.BigTextStyle().bigText(message.message))
             .setSmallIcon(R.drawable.ic_chat_app_icon)
