@@ -19,7 +19,6 @@ object FCMMessageBuilder {
     }
 
 
-
     fun jsonToBase64String(msg: String):String{
         val tempMsg = String(
             Base64.encode(msg.toByteArray(), DEFAULT)
