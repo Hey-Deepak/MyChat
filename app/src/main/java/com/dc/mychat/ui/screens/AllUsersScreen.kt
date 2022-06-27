@@ -15,11 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.dc.mychat.R
 import com.dc.mychat.domain.model.Profile
+import com.dc.mychat.ui.screens.components.TopBar
 import com.dc.mychat.ui.viewmodel.MainViewModel
 
 @ExperimentalMaterialApi
@@ -30,6 +33,7 @@ fun AllUsersScreen(mainViewModel: MainViewModel, navHostController: NavHostContr
     Surface() {
         Column(modifier = Modifier
             .fillMaxSize()) {
+
             Column(
                 modifier = Modifier
                     .wrapContentHeight()

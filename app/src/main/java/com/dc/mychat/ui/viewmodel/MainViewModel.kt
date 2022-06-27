@@ -40,6 +40,8 @@ class MainViewModel @Inject constructor(
     var allUsersState = mutableStateOf(listOf(profileState.value))
     var allMessagesState = mutableStateListOf<Message>()
     val receiverMailIdState = mutableStateOf("")
+    val receiverNameState = mutableStateOf("")
+
     val senderMailIdState = mutableStateOf("${userRepository.getLoginEmailFromPrefs()}")
     val textState = mutableStateOf("")
     val groupIdState = mutableStateOf(
@@ -52,7 +54,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun getAllMessageFromFirebase() {
-        Log.d("TAG 9.8.1", groupIdState.value)
+        Log.d("TAG getAllMessageFromFirebase", groupIdState.value)
         viewModelScope.launch {
             messageRepository.subscribeToMessages3(groupIdState.value) {
                 allMessagesState.clear()
@@ -166,6 +168,7 @@ class MainViewModel @Inject constructor(
 
     fun onUserClicked(profile: Profile) {
         receiverMailIdState.value = profile.mailId
+        receiverNameState.value = profile.displayName
         Log.d(
             "TAG 9.1",
             "Inside onUserClicked RC mainviewModel ${receiverMailIdState.value} & profile = ${profile.mailId}"

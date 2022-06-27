@@ -13,22 +13,33 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.dc.mychat.R
 import com.dc.mychat.ui.screens.components.MessageCard
 import com.dc.mychat.ui.screens.components.SendMessageCard
+import com.dc.mychat.ui.screens.components.TopBar
 import com.dc.mychat.ui.viewmodel.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun MessageScreen(mainViewModel: MainViewModel) {
+fun MessageScreen(mainViewModel: MainViewModel, navHostController: NavController) {
     val listState = rememberLazyListState()
 
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
+
+        TopBar(
+            title = mainViewModel.receiverNameState.value,
+            buttonIcon = painterResource(id = R.drawable.ic_back_arrow_back_24)
+        ) {
+            navHostController.popBackStack()
+        }
 
         Box(modifier = Modifier.weight(10f)) {
             LazyColumn(

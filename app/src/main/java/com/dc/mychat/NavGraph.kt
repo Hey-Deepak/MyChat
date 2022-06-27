@@ -9,7 +9,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.dc.mychat.ui.screens.*
 import com.dc.mychat.ui.viewmodel.MainViewModel
-import com.google.firebase.messaging.FirebaseMessagingService
 
 @ExperimentalMaterialApi
 @Composable
@@ -34,7 +33,7 @@ fun SetupNavGraph(
             AllUsersScreen(mainViewModel = mainViewModel, navHostController = navHostController)
         }
         composable(route = Screen.Message.route){
-            MessageScreen(mainViewModel = mainViewModel)
+            MessageScreen(mainViewModel = mainViewModel, navHostController)
         }
     }
 }
