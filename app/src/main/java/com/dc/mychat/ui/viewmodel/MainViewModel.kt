@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dc.mychat.data.repository.fcm.FCMMessageBuilder
-import com.dc.mychat.data.repository.fcm.FCMSender
+import com.dc.mychat.other.fcm.FCMMessageBuilder
+import com.dc.mychat.other.fcm.FCMSender
 import com.dc.mychat.domain.model.Message
 import com.dc.mychat.domain.model.NewMessageNotification
 import com.dc.mychat.domain.model.Profile

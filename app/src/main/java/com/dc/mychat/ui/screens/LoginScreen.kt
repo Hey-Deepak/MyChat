@@ -26,7 +26,7 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun LoggedInScreen(
+fun LoginScreen(
     mainViewModel: MainViewModel,
     navHostController: NavHostController,
     launchLoginFlow: (() -> Unit) -> Unit

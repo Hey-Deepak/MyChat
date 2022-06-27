@@ -30,7 +30,7 @@
         </activity>
 
         <service
-            android:name=".data.repository.fcm.FCMReceiverService"
+            android:name="com.dc.mychat.other.fcm.FCMReceiverService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

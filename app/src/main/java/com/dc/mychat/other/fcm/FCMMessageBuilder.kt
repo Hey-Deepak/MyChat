@@ -1,4 +1,4 @@
-package com.dc.mychat.data.repository.fcm
+package com.dc.mychat.other.fcm
 
 import android.util.Base64
 import android.util.Base64.DEFAULT

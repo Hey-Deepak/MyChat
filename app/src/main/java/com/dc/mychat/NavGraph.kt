@@ -24,7 +24,7 @@ fun SetupNavGraph(
 
     NavHost(navController = navHostController, startDestination = startDestination){
         composable(route = Screen.Login.route){
-            LoggedInScreen(mainViewModel = mainViewModel, navHostController = navHostController, launchLoginFlow)
+            LoginScreen(mainViewModel = mainViewModel, navHostController = navHostController, launchLoginFlow)
         }
         composable(route = Screen.Profile.route){
             ProfileScreen(mainViewModel = mainViewModel, navHostController = navHostController, selectImageLauncher)
