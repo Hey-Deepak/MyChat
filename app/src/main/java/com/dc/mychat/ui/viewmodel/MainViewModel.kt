@@ -40,7 +40,7 @@ class MainViewModel @Inject constructor(
     var allUsersState = mutableStateOf(listOf(profileState.value))
     var allMessagesState = mutableStateListOf<Message>()
     val receiverMailIdState = mutableStateOf("")
-    val senderMailIdState = mutableStateOf("${userRepository.getLoggedInEmailFromPrefs()}")
+    val senderMailIdState = mutableStateOf("${userRepository.getLoginEmailFromPrefs()}")
     val textState = mutableStateOf("")
     val groupIdState = mutableStateOf(
         listOf(senderMailIdState.value, receiverMailIdState.value).sorted().joinToString("%")

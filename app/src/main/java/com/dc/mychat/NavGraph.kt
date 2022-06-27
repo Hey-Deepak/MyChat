@@ -20,11 +20,11 @@ fun SetupNavGraph(
     selectImageLauncher: ActivityResultLauncher<String>
 ) {
     mainViewModel.getLoginStatus()
-    val startDestination = if(mainViewModel.loginStatusState.value ) Screen.AllUsers.route else Screen.LoggedIn.route
+    val startDestination = if(mainViewModel.loginStatusState.value ) Screen.AllUsers.route else Screen.Login.route
     Log.d("TAG 2.0","Inside Nav Graph ${startDestination}")
 
     NavHost(navController = navHostController, startDestination = startDestination){
-        composable(route = Screen.LoggedIn.route){
+        composable(route = Screen.Login.route){
             LoggedInScreen(mainViewModel = mainViewModel, navHostController = navHostController, launchLoginFlow)
         }
         composable(route = Screen.Profile.route){

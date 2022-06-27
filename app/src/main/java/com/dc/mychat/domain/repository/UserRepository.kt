@@ -5,7 +5,7 @@ import com.dc.mychat.domain.model.Profile
 
 interface UserRepository {
 
-    fun getLoggedInEmailFromPrefs(): String?
+    fun getLoginEmailFromPrefs(): String?
 
     fun saveEmailToPrefs(email: String)
 
