@@ -105,11 +105,13 @@ class MainViewModel @Inject constructor(
 
     fun createProfile(profile: Profile) {
         runBlocking {
-            Log.d("TAG 9.5", "Mainviewmodel, Create Profile ")
-            val uri = Uri.parse(profile.displayPhoto)
-            val downloadedUrl = serverRepository.uploadProfilePicture(imageUriState.value!!, profile)
-            Log.d("TAG", "createProfile: $downloadedUrl")
-            serverRepository.createProfile(profile.copy(displayPhoto = downloadedUrl))
+            Log.d("TAG MVM", "Mainviewmodel, Create Profile ${imageUriState.value} ")
+            if (imageUriState.value.toString().contains("content://")) {
+                val downloadedUrl = serverRepository.uploadProfilePicture(imageUriState.value!!, profile)
+                serverRepository.createProfile(profile.copy(displayPhoto = downloadedUrl))
+            } else {
+                serverRepository.createProfile(profile)
+            }
             saveLoginStatusToPrefs(true)
             Log.d("TAG 9.5.2", "Inside MainViewModel createProfile End")
         }
