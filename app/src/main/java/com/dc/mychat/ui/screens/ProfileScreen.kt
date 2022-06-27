@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -73,12 +74,12 @@ fun ProfileScreen(
                     displayName = it
                 )
             },
-            label = { Text("Enter Your Name", fontSize = 20.sp) },
+            label = { Text("Enter Your Name", fontSize = 16.sp) },
             maxLines = 1,
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
-            textStyle = TextStyle(color = Color.Blue, fontWeight = FontWeight.SemiBold),
+            textStyle = TextStyle(color = Color.Blue, fontWeight = FontWeight.SemiBold, fontSize = 24.sp),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
 
             )
