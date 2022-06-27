@@ -2,9 +2,7 @@ package com.dc.mychat.ui.screens
 
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -38,31 +36,38 @@ fun ProfileScreen(
 ) {
     Log.d("TAG 10.1", "Inside profile screen start")
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Box(
             modifier = Modifier
-                .size(200.dp)
-                .background(Color.Blue),
-            contentAlignment = Alignment.TopEnd
+                .size(250.dp),
+            contentAlignment = Alignment.BottomEnd
         ) {
+
 
             AsyncImage(
                 model = mainViewModel.imageUriState.value.toString(),
                 contentDescription = null,
-                modifier = Modifier.size(200.dp)
+                modifier = Modifier.size(250.dp)
             )
 
-            Image(painter = painterResource(id = R.drawable.ic_add_image_1),
-                contentDescription = "Add Image",
-            modifier = Modifier
-                .size(40.dp)
-                .clickable {
-                    selectImageLauncher.launch("image/*")
-                }
-            )
+            Box(
+                modifier = Modifier.size(54.dp)
+            ) {
+                Image(painter = painterResource(id = R.drawable.ic_add_image_2),
+                    contentDescription = "Add Image",
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clickable {
+                            selectImageLauncher.launch("image/*")
+                        }
+                )
+            }
+
+
         }
 
 
