@@ -54,7 +54,9 @@ fun LoggedInScreen(
                     Log.d("TAG 2","Inside Button LoggedIn Screen ${it.toString()}")
                     mainViewModel.getFirebaseUser(it)
                     Log.d("TAG 3","Inside Button LoggedIn Screen ${it.toString()}")
-                    navHostController.navigate(Screen.Profile.route)
+                    navHostController.navigate(Screen.Profile.route){
+                        popUpTo(Screen.LoggedIn.route){ inclusive = true }
+                    }
                     Log.d("TAG 4","Inside Button LoggedIn Screen ${it.toString()}")
                 }
             }

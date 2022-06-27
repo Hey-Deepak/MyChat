@@ -21,7 +21,7 @@ fun SetupNavGraph(
 ) {
     mainViewModel.getLoginStatus()
     val startDestination = if(mainViewModel.loginStatusState.value ) Screen.AllUsers.route else Screen.LoggedIn.route
-    Log.d("TAG 5.2","Inside Nav Graph ${startDestination}")
+    Log.d("TAG 2.0","Inside Nav Graph ${startDestination}")
 
     NavHost(navController = navHostController, startDestination = startDestination){
         composable(route = Screen.LoggedIn.route){

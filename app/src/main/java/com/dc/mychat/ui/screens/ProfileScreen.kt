@@ -99,7 +99,9 @@ fun ProfileScreen(
 fun createProfile(mainViewModel: MainViewModel, navHostController: NavHostController) {
     Log.d("TAG", "createProfile: ${mainViewModel.profileState.value}")
     mainViewModel.createProfile(mainViewModel.profileState.value)
-    navHostController.navigate(Screen.AllUsers.route)
+    navHostController.navigate(Screen.AllUsers.route){
+        popUpTo(Screen.Profile.route){ inclusive = true}
+    }
 }
 
 
