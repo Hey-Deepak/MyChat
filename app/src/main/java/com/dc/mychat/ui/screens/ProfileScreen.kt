@@ -34,7 +34,10 @@ fun ProfileScreen(
     navHostController: NavHostController,
     selectImageLauncher: ActivityResultLauncher<String>
 ) {
-    Log.d("TAG 10.1", "Inside profile screen start")
+    LaunchedEffect(Unit){
+        mainViewModel.setProfileFromPrefs()
+    }
+    Log.d("TAG 10.1", "Inside profile screen start ${mainViewModel.profileState.value}")
     Column(
         modifier = Modifier
             .fillMaxSize(),

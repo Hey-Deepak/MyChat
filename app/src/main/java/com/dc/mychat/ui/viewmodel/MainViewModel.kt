@@ -37,6 +37,7 @@ class MainViewModel @Inject constructor(
 
     val imageUriState = mutableStateOf<Uri?>(null)
     val profileState = mutableStateOf(Profile("", "", ""))
+    val profileStatusState = mutableStateOf(false)
     var allUsersState = mutableStateOf(listOf(profileState.value))
     var allMessagesState = mutableStateListOf<Message>()
     val receiverMailIdState = mutableStateOf("")
@@ -109,15 +110,28 @@ class MainViewModel @Inject constructor(
     fun createProfile(profile: Profile) {
         runBlocking {
             Log.d("TAG MVM", "Mainviewmodel, Create Profile ${imageUriState.value} ")
+
             if (imageUriState.value.toString().contains("content://")) {
                 val downloadedUrl = serverRepository.uploadProfilePicture(imageUriState.value!!, profile)
                 serverRepository.createProfile(profile.copy(displayPhoto = downloadedUrl))
             } else {
                 serverRepository.createProfile(profile)
             }
-            saveLoginStatusToPrefs(true)
+            saveProfileToPrefs(profile)
+            saveProfileStatusToPrefs(true)
             Log.d("TAG 9.5.2", "Inside MainViewModel createProfile End")
         }
+    }
+
+    fun setProfileFromPrefs(){
+        runBlocking {
+            profileState.value = userRepository.getProfileFromPrefs()
+            imageUriState.value = Uri.parse(profileState.value.displayPhoto)
+        }
+    }
+
+    private suspend fun saveProfileStatusToPrefs(status: Boolean) {
+        userRepository.saveProfileStatusToPrefs(status)
     }
 
     fun saveProfileToPrefs(profile: Profile) {
@@ -133,14 +147,15 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getLoginStatus() {
+    fun getStatus() {
         runBlocking {
             loginStatusState.value = userRepository.getLoginStatusFromPrefs()
+            profileStatusState.value = userRepository.getProfileStatusToPrefs()
             Log.d("TAG 9.3", loginStatusState.toString())
         }
     }
 
-    fun saveLoginStatusToPrefs(loginStatus: Boolean) {
+    private fun saveLoginStatusToPrefs(loginStatus: Boolean) {
         viewModelScope.launch {
             userRepository.saveLoginStatusToPrefs(loginStatus = loginStatus)
         }
@@ -158,9 +173,8 @@ class MainViewModel @Inject constructor(
             imageUriState.value = Uri.parse(profile.displayPhoto)
             profileState.value = profile
             loginStatusState.value = true
-
+            saveLoginStatusToPrefs(true)
             saveProfileToPrefs(profile)
-            getLoginStatus()
             Log.d("TAG 9.6", "loginStatus set to true")
 
         }

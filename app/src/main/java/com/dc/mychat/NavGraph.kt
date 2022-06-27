@@ -18,8 +18,12 @@ fun SetupNavGraph(
     launchLoginFlow: (() -> Unit) -> Unit,
     selectImageLauncher: ActivityResultLauncher<String>
 ) {
-    mainViewModel.getLoginStatus()
-    val startDestination = if(mainViewModel.loginStatusState.value ) Screen.AllUsers.route else Screen.Login.route
+    mainViewModel.getStatus()
+    val startDestination = if (mainViewModel.loginStatusState.value){
+        if (mainViewModel.profileStatusState.value) {
+            Screen.AllUsers.route
+        } else Screen.Profile.route
+    } else Screen.Login.route
     Log.d("TAG 2.0","Inside Nav Graph ${startDestination}")
 
     NavHost(navController = navHostController, startDestination = startDestination){

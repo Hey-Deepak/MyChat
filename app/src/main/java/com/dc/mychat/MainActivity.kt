@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.ui.theme.MyChatTheme
 import com.dc.mychat.ui.viewmodel.MainViewModel
 import com.firebase.ui.auth.AuthUI
@@ -45,11 +46,18 @@ class MainActivity : ComponentActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+
+    }
+
     private val selectImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             Log.d("TAG MainActivity", "uri: $uri")
             if (uri != null){
                 mainViewModel.imageUriState.value = uri
+                mainViewModel.profileState.value = mainViewModel.profileState.value.copy(displayPhoto = uri.toString())
+                mainViewModel.saveProfileToPrefs(mainViewModel.profileState.value)
             }
             //mainViewModel.serverRepository.uploadProfilePicture(uri)
         }

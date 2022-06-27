@@ -17,6 +17,10 @@ interface UserRepository {
 
     suspend fun getLoginStatusFromPrefs(): Boolean
 
+    suspend fun saveProfileStatusToPrefs(status: Boolean)
+
+    suspend fun getProfileStatusToPrefs(): Boolean
+
 }
 
 

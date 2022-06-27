@@ -32,4 +32,12 @@ class UserRepositoryImp(
     override suspend fun getLoginStatusFromPrefs(): Boolean {
         return prefs.getBoolean("loginStatus", false)
     }
+
+    override suspend fun saveProfileStatusToPrefs(status: Boolean) {
+        prefs.edit().putBoolean("profileStatus", status).apply()
+    }
+
+    override suspend fun getProfileStatusToPrefs(): Boolean {
+        return prefs.getBoolean("profileStatus", false)
+    }
 }
