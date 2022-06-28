@@ -16,8 +16,7 @@ import com.dc.mychat.domain.repository.ServerRepository
 import com.dc.mychat.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -50,12 +49,8 @@ class MainViewModel @Inject constructor(
     )
     val loginStatusState = mutableStateOf(false)
 
-    init {
-
-    }
 
     fun getAllMessageFromFirebase() {
-        Log.d("TAG getAllMessageFromFirebase", groupIdState.value)
         viewModelScope.launch {
             messageRepository.subscribeToMessages3(groupIdState.value) {
                 allMessagesState.clear()
@@ -87,7 +82,7 @@ class MainViewModel @Inject constructor(
 
                         override fun onResponse(call: Call, response: Response) {
                             val responseMsg = response.body?.string() ?: ""
-                            if(responseMsg.contains("message_id"))
+                            if (responseMsg.contains("message_id"))
                                 continuation.resume(response.message)
                             else
                                 continuation.resumeWithException(
@@ -102,17 +97,18 @@ class MainViewModel @Inject constructor(
     }
 
     fun getMailIdFromSharedPrefs() {
-        runBlocking {
+        viewModelScope.launch(Dispatchers.Main) {
             senderMailIdState.value = userRepository.getProfileFromPrefs().mailId
         }
     }
 
     fun createProfile(profile: Profile) {
-        runBlocking {
+        viewModelScope.launch(Dispatchers.Main) {
             Log.d("TAG MVM", "Mainviewmodel, Create Profile ${imageUriState.value} ")
 
             if (imageUriState.value.toString().contains("content://")) {
-                val downloadedUrl = serverRepository.uploadProfilePicture(imageUriState.value!!, profile)
+                val downloadedUrl =
+                    serverRepository.uploadProfilePicture(imageUriState.value!!, profile)
                 serverRepository.createProfile(profile.copy(displayPhoto = downloadedUrl))
             } else {
                 serverRepository.createProfile(profile)
@@ -123,8 +119,8 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun setProfileFromPrefs(){
-        runBlocking {
+    fun setProfileFromPrefs() {
+        viewModelScope.launch(Dispatchers.Main) {
             profileState.value = userRepository.getProfileFromPrefs()
             imageUriState.value = Uri.parse(profileState.value.displayPhoto)
         }
@@ -148,10 +144,28 @@ class MainViewModel @Inject constructor(
     }
 
     fun getStatus() {
-        runBlocking {
-            loginStatusState.value = userRepository.getLoginStatusFromPrefs()
-            profileStatusState.value = userRepository.getProfileStatusToPrefs()
-            Log.d("TAG 9.3", loginStatusState.toString())
+        viewModelScope.launch(Dispatchers.Main) {
+
+            val job = async {
+                val job1 : Deferred<Boolean> = async {
+                    Log.d("TAG getStatus loginStatusState async", loginStatusState.toString())
+                    userRepository.getLoginStatusFromPrefs()
+                }
+                val job2 : Deferred<Boolean> = async {
+                    Log.d("TAG getStatus profileStatusState async", profileStatusState.toString())
+                    userRepository.getProfileStatusToPrefs()
+                }
+                loginStatusState.value = job1.await()
+                Log.d("TAG getStatus loginStatusState job1", job1.await().toString())
+                Log.d("TAG getStatus loginStatusState job1", userRepository.getLoginStatusFromPrefs().toString())
+                profileStatusState.value = job2.await()
+                Log.d("TAG getStatus profileStatusState job2", job2.await().toString())
+                Log.d("TAG getStatus profileStatusState job2", userRepository.getProfileStatusToPrefs().toString())
+            }
+            job.join()
+
+            Log.d("TAG getStatus loginStatusState", loginStatusState.toString())
+            Log.d("TAG getStatus profileStatusState", profileStatusState.toString())
         }
     }
 
@@ -162,9 +176,11 @@ class MainViewModel @Inject constructor(
     }
 
     fun getFirebaseUser(it: FirebaseUser) {
-        runBlocking {
-            var profile = serverRepository.fetchProfile(it)
-            if (profile == null){
+        viewModelScope.launch(Dispatchers.Main) {
+            var profile = async {
+                serverRepository.fetchProfile(it)
+            }.await()
+            if (profile == null) {
                 profile = Profile(it.displayName.toString(), it.email!!, it.photoUrl.toString())
             }
             Log.d(
@@ -180,7 +196,6 @@ class MainViewModel @Inject constructor(
             Log.d("TAG 9.6", "loginStatus set to true")
 
         }
-
     }
 
     fun onUserClicked(profile: Profile) {
