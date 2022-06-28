@@ -25,6 +25,7 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
+import kotlin.math.log
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -36,7 +37,7 @@ class MainViewModel @Inject constructor(
 
     val imageUriState = mutableStateOf<Uri?>(null)
     val profileState = mutableStateOf(Profile("", "", ""))
-    val profileStatusState = mutableStateOf(false)
+    val profileStatusState = mutableStateOf<Boolean?>(null)
     var allUsersState = mutableStateOf(listOf(profileState.value))
     var allMessagesState = mutableStateListOf<Message>()
     val receiverMailIdState = mutableStateOf("")
@@ -47,7 +48,7 @@ class MainViewModel @Inject constructor(
     val groupIdState = mutableStateOf(
         listOf(senderMailIdState.value, receiverMailIdState.value).sorted().joinToString("%")
     )
-    val loginStatusState = mutableStateOf(false)
+    val loginStatusState = mutableStateOf<Boolean?>(null)
 
 
     fun getAllMessageFromFirebase() {
@@ -144,7 +145,12 @@ class MainViewModel @Inject constructor(
     }
 
     fun getStatus() {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch {
+            loginStatusState.value = userRepository.getLoginStatusFromPrefs()
+            profileStatusState.value = userRepository.getProfileStatusToPrefs()
+        }
+
+        /*viewModelScope.launch(Dispatchers.Main) {
 
             val job = async {
                 val job1 : Deferred<Boolean> = async {
@@ -166,7 +172,7 @@ class MainViewModel @Inject constructor(
 
             Log.d("TAG getStatus loginStatusState", loginStatusState.toString())
             Log.d("TAG getStatus profileStatusState", profileStatusState.toString())
-        }
+        }*/
     }
 
     private fun saveLoginStatusToPrefs(loginStatus: Boolean) {
