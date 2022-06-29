@@ -1,11 +1,7 @@
 package com.dc.mychat.ui.screens
 
 
-import android.content.Intent
-import android.net.Uri
 import android.util.Log
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -20,9 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.dc.mychat.R
 import com.dc.mychat.Screen
-import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.ui.viewmodel.MainViewModel
-import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -52,12 +46,9 @@ fun LoginScreen(
                 val user = FirebaseAuth.getInstance().currentUser
                 user?.let {
                     Log.d("TAG 2","Inside Button LoggedIn Screen ${it.toString()}")
-                    mainViewModel.getFirebaseUser(it)
+                    mainViewModel.getFirebaseUser(it, navHostController)
                     Log.d("TAG 3","Inside Button LoggedIn Screen ${it.toString()}")
-                    navHostController.navigate(Screen.Profile.route){
-                        popUpTo(Screen.Login.route){ inclusive = true }
-                    }
-                    Log.d("TAG 4","Inside Button LoggedIn Screen ${it.toString()}")
+
                 }
             }
 

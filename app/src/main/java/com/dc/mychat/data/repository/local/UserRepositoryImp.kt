@@ -8,6 +8,7 @@ import com.google.gson.Gson
 class UserRepositoryImp(
     val prefs: SharedPreferences,
 ) : UserRepository {
+
     override fun getLoginEmailFromPrefs(): String? {
         return prefs.getString("emailId", null)
     }

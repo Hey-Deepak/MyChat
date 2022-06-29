@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
+import com.dc.mychat.Screen
 import com.dc.mychat.other.fcm.FCMMessageBuilder
 import com.dc.mychat.other.fcm.FCMSender
 import com.dc.mychat.domain.model.Message
@@ -25,7 +27,6 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
-import kotlin.math.log
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -37,7 +38,7 @@ class MainViewModel @Inject constructor(
 
     val imageUriState = mutableStateOf<Uri?>(null)
     val profileState = mutableStateOf(Profile("", "", ""))
-    val profileStatusState = mutableStateOf<Boolean?>(null)
+    val profileStatusState = mutableStateOf<Boolean?>(false)
     var allUsersState = mutableStateOf(listOf(profileState.value))
     var allMessagesState = mutableStateListOf<Message>()
     val receiverMailIdState = mutableStateOf("")
@@ -48,7 +49,7 @@ class MainViewModel @Inject constructor(
     val groupIdState = mutableStateOf(
         listOf(senderMailIdState.value, receiverMailIdState.value).sorted().joinToString("%")
     )
-    val loginStatusState = mutableStateOf<Boolean?>(null)
+    val loginStatusState = mutableStateOf<Boolean?>(false)
 
 
     fun getAllMessageFromFirebase() {
@@ -97,14 +98,14 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getMailIdFromSharedPrefs() {
-        viewModelScope.launch(Dispatchers.Main) {
+    private fun getMailIdFromSharedPrefs() {
+        viewModelScope.launch {
             senderMailIdState.value = userRepository.getProfileFromPrefs().mailId
         }
     }
 
-    fun createProfile(profile: Profile) {
-        viewModelScope.launch(Dispatchers.Main) {
+    fun createProfile(profile: Profile, navHostController: NavHostController) {
+        viewModelScope.launch {
             Log.d("TAG MVM", "Mainviewmodel, Create Profile ${imageUriState.value} ")
 
             if (imageUriState.value.toString().contains("content://")) {
@@ -117,6 +118,9 @@ class MainViewModel @Inject constructor(
             saveProfileToPrefs(profile)
             saveProfileStatusToPrefs(true)
             Log.d("TAG 9.5.2", "Inside MainViewModel createProfile End")
+            navHostController.navigate(Screen.AllUsers.route){
+                popUpTo(Screen.Profile.route){ inclusive = true}
+            }
         }
     }
 
@@ -149,30 +153,6 @@ class MainViewModel @Inject constructor(
             loginStatusState.value = userRepository.getLoginStatusFromPrefs()
             profileStatusState.value = userRepository.getProfileStatusToPrefs()
         }
-
-        /*viewModelScope.launch(Dispatchers.Main) {
-
-            val job = async {
-                val job1 : Deferred<Boolean> = async {
-                    Log.d("TAG getStatus loginStatusState async", loginStatusState.toString())
-                    userRepository.getLoginStatusFromPrefs()
-                }
-                val job2 : Deferred<Boolean> = async {
-                    Log.d("TAG getStatus profileStatusState async", profileStatusState.toString())
-                    userRepository.getProfileStatusToPrefs()
-                }
-                loginStatusState.value = job1.await()
-                Log.d("TAG getStatus loginStatusState job1", job1.await().toString())
-                Log.d("TAG getStatus loginStatusState job1", userRepository.getLoginStatusFromPrefs().toString())
-                profileStatusState.value = job2.await()
-                Log.d("TAG getStatus profileStatusState job2", job2.await().toString())
-                Log.d("TAG getStatus profileStatusState job2", userRepository.getProfileStatusToPrefs().toString())
-            }
-            job.join()
-
-            Log.d("TAG getStatus loginStatusState", loginStatusState.toString())
-            Log.d("TAG getStatus profileStatusState", profileStatusState.toString())
-        }*/
     }
 
     private fun saveLoginStatusToPrefs(loginStatus: Boolean) {
@@ -181,18 +161,17 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getFirebaseUser(it: FirebaseUser) {
+    fun getFirebaseUser(it: FirebaseUser, navHostController: NavHostController) {
         viewModelScope.launch(Dispatchers.Main) {
+            Log.d("TAG", "getFirebaseUser: A")
             var profile = async {
+                Log.d("TAG", "getFirebaseUser: B")
                 serverRepository.fetchProfile(it)
             }.await()
+            Log.d("TAG", "getFirebaseUser: C")
             if (profile == null) {
                 profile = Profile(it.displayName.toString(), it.email!!, it.photoUrl.toString())
             }
-            Log.d(
-                "TAG 9.4.1",
-                "Inside MainViewModel getFirebaseUser(Profile) $profile"
-            )
 
             imageUriState.value = Uri.parse(profile.displayPhoto)
             profileState.value = profile
@@ -200,7 +179,9 @@ class MainViewModel @Inject constructor(
             saveLoginStatusToPrefs(true)
             saveProfileToPrefs(profile)
             Log.d("TAG 9.6", "loginStatus set to true")
-
+            navHostController.navigate(Screen.Profile.route){
+                popUpTo(Screen.Login.route){ inclusive = true }
+            }
         }
     }
 

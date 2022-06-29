@@ -10,10 +10,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -21,11 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.dc.mychat.R
-import com.dc.mychat.Screen
 import com.dc.mychat.ui.viewmodel.MainViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 
 @Composable
@@ -107,10 +101,8 @@ fun ProfileScreen(
 
 fun createProfile(mainViewModel: MainViewModel, navHostController: NavHostController) {
     Log.d("TAG", "createProfile: ${mainViewModel.profileState.value}")
-    mainViewModel.createProfile(mainViewModel.profileState.value)
-    navHostController.navigate(Screen.AllUsers.route){
-        popUpTo(Screen.Profile.route){ inclusive = true}
-    }
+    mainViewModel.createProfile(mainViewModel.profileState.value, navHostController)
+
 }
 
 
