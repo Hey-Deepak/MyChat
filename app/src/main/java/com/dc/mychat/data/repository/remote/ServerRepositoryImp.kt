@@ -1,6 +1,7 @@
 package com.dc.mychat.data.repository.remote
 
 import android.net.Uri
+import androidx.core.net.toUri
 import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.domain.repository.ServerRepository
 import com.google.firebase.auth.FirebaseUser
@@ -8,7 +9,9 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class ServerRepositoryImp(): ServerRepository {
 
@@ -19,15 +22,14 @@ class ServerRepositoryImp(): ServerRepository {
             firestoreDatabaseRef.collection("Profiles").document(profile.mailId).set(profile).await()
     }
 
-    override suspend fun uploadProfilePicture(uri: Uri, profile: Profile): String {
-        storageRef.child("images/${profile.mailId}").putFile(uri).await()
+    override suspend fun uploadProfilePicture(profile: Profile): String {
+        storageRef.child("images/${profile.mailId}").putFile(profile.displayPhoto.toUri()).await()
         val photoPath = storageRef.child("images/${profile.mailId}").downloadUrl.await()
         return photoPath.toString()
     }
 
 
-    override suspend fun getAllProfile(): List<Profile>{
-
+    override suspend fun getAllProfile(): List<Profile> {
         return firestoreDatabaseRef.collection("Profiles").get().await()
             .toObjects(Profile::class.java).filterNotNull()
     }

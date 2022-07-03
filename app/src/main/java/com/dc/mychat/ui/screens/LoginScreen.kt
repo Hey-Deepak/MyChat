@@ -15,15 +15,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.dc.mychat.R
-import com.dc.mychat.Screen
-import com.dc.mychat.ui.viewmodel.MainViewModel
+import com.dc.mychat.ui.viewmodel.LoginViewModel
+import com.dc.mychat.ui.viewmodel.SharedViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun LoginScreen(
-    mainViewModel: MainViewModel,
+    loginViewModel: LoginViewModel,
     navHostController: NavHostController,
-    launchLoginFlow: (() -> Unit) -> Unit
+    launchLoginFlow: (() -> Unit) -> Unit,
+    sharedViewModel: SharedViewModel
 ) {
     Column(
         Modifier.fillMaxSize(),
@@ -46,7 +47,7 @@ fun LoginScreen(
                 val user = FirebaseAuth.getInstance().currentUser
                 user?.let {
                     Log.d("TAG 2","Inside Button LoggedIn Screen ${it.toString()}")
-                    mainViewModel.getFirebaseUser(it, navHostController)
+                    loginViewModel.getFirebaseUser(it, navHostController,sharedViewModel)
                     Log.d("TAG 3","Inside Button LoggedIn Screen ${it.toString()}")
 
                 }

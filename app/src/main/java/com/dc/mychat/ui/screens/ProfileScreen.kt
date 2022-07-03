@@ -19,19 +19,22 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.dc.mychat.R
-import com.dc.mychat.ui.viewmodel.MainViewModel
+import com.dc.mychat.ui.viewmodel.ProfileViewModel
+import com.dc.mychat.ui.viewmodel.SharedViewModel
 
 
 @Composable
 fun ProfileScreen(
-    mainViewModel: MainViewModel,
+    profileViewModel: ProfileViewModel,
     navHostController: NavHostController,
-    selectImageLauncher: ActivityResultLauncher<String>
+    selectImageLauncher: ActivityResultLauncher<String>,
+    sharedViewModel: SharedViewModel
 ) {
-    LaunchedEffect(Unit){
-        mainViewModel.setProfileFromPrefs()
-    }
-    Log.d("TAG 10.1", "Inside profile screen start ${mainViewModel.profileState.value}")
+
+    // Set Profile State
+    profileViewModel.profileState.value = sharedViewModel.senderProfile
+
+    Log.d("TAG", "Inside profile screen start ${profileViewModel.profileState.value}")
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -46,7 +49,7 @@ fun ProfileScreen(
 
 
             AsyncImage(
-                model = mainViewModel.imageUriState.value.toString(),
+                model = profileViewModel.profileState.value!!.displayPhoto,
                 contentDescription = null,
                 modifier = Modifier.size(250.dp)
             )
@@ -63,16 +66,12 @@ fun ProfileScreen(
                         }
                 )
             }
-
-
         }
 
-
-
         OutlinedTextField(
-            value = mainViewModel.profileState.value.displayName,
+            value = profileViewModel.profileState.value!!.displayName,
             onValueChange = {
-                mainViewModel.profileState.value = mainViewModel.profileState.value.copy(
+                profileViewModel.profileState.value = profileViewModel.profileState.value!!.copy(
                     displayName = it
                 )
             },
@@ -88,7 +87,7 @@ fun ProfileScreen(
 
         Button(
             onClick = {
-                createProfile(mainViewModel = mainViewModel, navHostController)
+                createProfile(profileViewModel, navHostController, sharedViewModel)
             },
             modifier = Modifier.padding(8.dp),
         ) {
@@ -99,9 +98,9 @@ fun ProfileScreen(
 
 }
 
-fun createProfile(mainViewModel: MainViewModel, navHostController: NavHostController) {
-    Log.d("TAG", "createProfile: ${mainViewModel.profileState.value}")
-    mainViewModel.createProfile(mainViewModel.profileState.value, navHostController)
+fun createProfile(profileViewModel: ProfileViewModel, navHostController: NavHostController, sharedViewModel: SharedViewModel) {
+    Log.d("TAG", "createProfile: ${profileViewModel.profileState.value}")
+    profileViewModel.createProfile(profileViewModel.profileState.value!!, navHostController, sharedViewModel)
 
 }
 

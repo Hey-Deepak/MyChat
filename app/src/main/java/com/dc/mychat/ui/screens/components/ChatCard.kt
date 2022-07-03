@@ -1,14 +1,12 @@
 package com.dc.mychat.ui.screens
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,13 +16,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.dc.mychat.Screen
-import com.dc.mychat.domain.model.Message
 import com.dc.mychat.domain.model.Profile
-import com.dc.mychat.ui.viewmodel.MainViewModel
+import com.dc.mychat.ui.viewmodel.AllUsersViewModel
+import com.dc.mychat.ui.viewmodel.SharedViewModel
 
 @ExperimentalMaterialApi
 @Composable
-fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController, profile: Profile) {
+fun CardChat(navHostController: NavHostController, userProfile: Profile, sharedViewModel: SharedViewModel) {
     Card(
         elevation = 10.dp,
         modifier = Modifier
@@ -32,7 +30,7 @@ fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController,
             .fillMaxWidth()
             .padding(8.dp),
         onClick = {
-            onUserClicked(navHostController, mainViewModel, profile)
+            onUserClicked(navHostController, userProfile, sharedViewModel)
         }
     ) {
         Row(
@@ -48,7 +46,7 @@ fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController,
                 border = BorderStroke(1.dp, Color.Green),
 
                 ) {
-                AsyncImage(model = Uri.parse(profile.displayPhoto),
+                AsyncImage(model = Uri.parse(userProfile.displayPhoto),
                     contentDescription = "display photo")
             }
             Column(
@@ -57,14 +55,14 @@ fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = profile.displayName,
+                    text = userProfile.displayName,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     fontSize = 24.sp
                 )
                 Text(
-                    text = profile.mailId,
+                    text = userProfile.mailId,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
@@ -81,9 +79,9 @@ fun CardChat(mainViewModel: MainViewModel, navHostController: NavHostController,
 
 fun onUserClicked(
     navHostController: NavHostController,
-    mainViewModel: MainViewModel,
-    profile: Profile
+    profile: Profile,
+    sharedViewModel: SharedViewModel
 ) {
-    mainViewModel.onUserClicked(profile = profile)
+    sharedViewModel.addReceiverProfile(profile)
     navHostController.navigate(Screen.Message.route)
 }

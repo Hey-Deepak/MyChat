@@ -2,12 +2,12 @@ package com.dc.mychat.data.repository.local
 
 import android.content.SharedPreferences
 import com.dc.mychat.domain.model.Profile
-import com.dc.mychat.domain.repository.UserRepository
+import com.dc.mychat.domain.repository.LocalRepository
 import com.google.gson.Gson
 
-class UserRepositoryImp(
+class LocalRepositoryImp(
     val prefs: SharedPreferences,
-) : UserRepository {
+) : LocalRepository {
 
     override fun getLoginEmailFromPrefs(): String? {
         return prefs.getString("emailId", null)
@@ -31,14 +31,15 @@ class UserRepositoryImp(
     }
 
     override suspend fun getLoginStatusFromPrefs(): Boolean {
+
         return prefs.getBoolean("loginStatus", false)
     }
 
-    override suspend fun saveProfileStatusToPrefs(status: Boolean) {
-        prefs.edit().putBoolean("profileStatus", status).apply()
+    override suspend fun saveIsProfileCreatedStatusToPrefs(status: Boolean) {
+        prefs.edit().putBoolean("isProfileCreated", status).apply()
     }
 
-    override suspend fun getProfileStatusToPrefs(): Boolean {
-        return prefs.getBoolean("profileStatus", false)
+    override suspend fun getIsProfileCreatedFromPrefs(): Boolean {
+        return prefs.getBoolean("isProfileCreated", false)
     }
 }

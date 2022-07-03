@@ -2,12 +2,12 @@ package com.dc.mychat.di
 
 import android.content.Context
 import androidx.activity.ComponentActivity
-import com.dc.mychat.data.repository.local.UserRepositoryImp
+import com.dc.mychat.data.repository.local.LocalRepositoryImp
 import com.dc.mychat.data.repository.remote.MessageRepositoryImp
 import com.dc.mychat.data.repository.remote.ServerRepositoryImp
 import com.dc.mychat.domain.repository.MessageRepository
 import com.dc.mychat.domain.repository.ServerRepository
-import com.dc.mychat.domain.repository.UserRepository
+import com.dc.mychat.domain.repository.LocalRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,10 +21,10 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideUserRepository(
+    fun provideLocalRepository(
         @ApplicationContext appContext: Context
-    ): UserRepository {
-        return UserRepositoryImp(
+    ): LocalRepository {
+        return LocalRepositoryImp(
             appContext.getSharedPreferences("main", ComponentActivity.MODE_PRIVATE)
         )
     }

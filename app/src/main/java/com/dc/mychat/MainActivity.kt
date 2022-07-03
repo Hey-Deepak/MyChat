@@ -12,23 +12,27 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.ui.theme.MyChatTheme
-import com.dc.mychat.ui.viewmodel.MainViewModel
+import com.dc.mychat.ui.viewmodel.*
 import com.firebase.ui.auth.AuthUI
-import com.google.android.gms.auth.api.Auth
+
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+
 
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    val mainViewModel: MainViewModel by viewModels()
+    val sharedViewModel: SharedViewModel by viewModels()
+    val loginViewModel: LoginViewModel by viewModels()
+    val profileViewModel: ProfileViewModel by viewModels()
+    val allUsersViewModel: AllUsersViewModel by viewModels()
+    val messagesViewModel : MessagesViewModel by viewModels()
+    val splashViewModel : SplashViewModel by viewModels()
+
     lateinit var navHostController: NavHostController
 
     @OptIn(ExperimentalMaterialApi::class)
@@ -39,29 +43,32 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyChatTheme {
                 navHostController = rememberNavController()
-                SetupNavGraph(navHostController = navHostController, mainViewModel, ::launchLoginFlow, selectImageLauncher)
+                SetupNavGraph(
+                    navHostController = navHostController,
+                    splashViewModel,
+                    loginViewModel,
+                    profileViewModel,
+                    allUsersViewModel,
+                    messagesViewModel,
+                    ::launchLoginFlow,
+                    selectImageLauncher
+                )
             }
         }
 
 
     }
 
-    override fun onResume() {
-        super.onResume()
 
-    }
 
     private val selectImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             Log.d("TAG MainActivity", "uri: $uri")
             if (uri != null){
-                mainViewModel.imageUriState.value = uri
-                mainViewModel.profileState.value = mainViewModel.profileState.value.copy(displayPhoto = uri.toString())
-                mainViewModel.saveProfileToPrefs(mainViewModel.profileState.value)
+                profileViewModel.profileState.value = profileViewModel.profileState.value!!.copy(displayPhoto = uri.toString())
+                sharedViewModel.addSenderProfile(profileViewModel.profileState.value!!)
             }
-            //mainViewModel.serverRepository.uploadProfilePicture(uri)
         }
-
 
 
 

@@ -4,23 +4,23 @@ import android.content.SharedPreferences
 import com.dc.mychat.domain.model.Profile
 import kotlinx.coroutines.Deferred
 
-interface UserRepository {
+interface LocalRepository {
 
+
+    // Email
+    fun saveEmailToPrefs(email: String)
     fun getLoginEmailFromPrefs(): String?
 
-    fun saveEmailToPrefs(email: String)
-
+    //Profile
     suspend fun saveProfileToPrefs(profile: Profile)
-
     suspend fun getProfileFromPrefs(): Profile
 
+    // Status (Is?)
     suspend fun saveLoginStatusToPrefs(loginStatus: Boolean)
+    suspend fun saveIsProfileCreatedStatusToPrefs(status: Boolean)
 
     suspend fun getLoginStatusFromPrefs(): Boolean
-
-    suspend fun saveProfileStatusToPrefs(status: Boolean)
-
-    suspend fun getProfileStatusToPrefs(): Boolean
+    suspend fun getIsProfileCreatedFromPrefs(): Boolean
 
 }
 
