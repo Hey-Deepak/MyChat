@@ -16,7 +16,7 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val localRepository: LocalRepository
 ):ViewModel() {
-    private val isProfileCreatedState = mutableStateOf<Boolean>(false)
+    private val isProfileCreatedState = mutableStateOf(false)
 
     fun readProfileFromPrefsAndNavigate(navHostController: NavHostController) {
         viewModelScope.launch {

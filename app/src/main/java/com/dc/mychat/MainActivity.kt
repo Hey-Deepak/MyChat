@@ -46,10 +46,6 @@ class MainActivity : ComponentActivity() {
                 SetupNavGraph(
                     navHostController = navHostController,
                     splashViewModel,
-                    loginViewModel,
-                    profileViewModel,
-                    allUsersViewModel,
-                    messagesViewModel,
                     ::launchLoginFlow,
                     selectImageLauncher
                 )

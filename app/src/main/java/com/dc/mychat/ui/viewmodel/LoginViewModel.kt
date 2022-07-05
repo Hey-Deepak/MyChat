@@ -32,10 +32,8 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             Log.d("TAG", "getFirebaseUser: A")
 
-            var profile = async {
-                Log.d("TAG", "Profile Fetching...")
-                serverRepository.fetchProfile(it)
-            }.await()
+            Log.d("TAG", "Profile Fetching...")
+            var profile = serverRepository.fetchProfile(it)
             Log.d("TAG", "getFirebaseUser profile: $profile")
             if (profile == null) {
                 profile = Profile(it.displayName.toString(), it.email!!, it.photoUrl.toString())

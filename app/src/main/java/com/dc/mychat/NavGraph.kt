@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -19,10 +20,6 @@ import com.google.gson.Gson
 fun SetupNavGraph(
     navHostController: NavHostController,
     splashViewModel: SplashViewModel,
-    loginViewModel: LoginViewModel,
-    profileViewModel: ProfileViewModel,
-    allUsersViewModel: AllUsersViewModel,
-    messagesViewModel: MessagesViewModel,
     launchLoginFlow: (() -> Unit) -> Unit,
     selectImageLauncher: ActivityResultLauncher<String>
 ) {
@@ -41,6 +38,7 @@ fun SetupNavGraph(
             SplashScreen()
         }
         composable(route = Screen.Login.route) {
+            val loginViewModel: LoginViewModel = hiltViewModel()
             LoginScreen(
                 loginViewModel = loginViewModel,
                 navHostController = navHostController,
@@ -51,6 +49,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.Profile.route
         ) {
+            val profileViewModel: ProfileViewModel = hiltViewModel()
             ProfileScreen(
                 profileViewModel = profileViewModel,
                 navHostController = navHostController,
@@ -60,6 +59,7 @@ fun SetupNavGraph(
         }
 
         composable(route = Screen.AllUsers.route) {
+            val allUsersViewModel: AllUsersViewModel = hiltViewModel()
             AllUsersScreen(
                 allUsersViewModel = allUsersViewModel,
                 navHostController = navHostController,
@@ -70,6 +70,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.Message.route
         ) {
+            val messagesViewModel: MessagesViewModel = hiltViewModel()
             MessageScreen(messagesViewModel, navHostController, sharedViewModel)
 
         }
