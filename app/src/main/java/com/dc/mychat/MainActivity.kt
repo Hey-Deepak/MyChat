@@ -27,10 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     val sharedViewModel: SharedViewModel by viewModels()
-    val loginViewModel: LoginViewModel by viewModels()
     val profileViewModel: ProfileViewModel by viewModels()
-    val allUsersViewModel: AllUsersViewModel by viewModels()
-    val messagesViewModel : MessagesViewModel by viewModels()
     val splashViewModel : SplashViewModel by viewModels()
 
     lateinit var navHostController: NavHostController
