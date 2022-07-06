@@ -1,9 +1,5 @@
 package com.dc.mychat.ui.screens.components
 
-import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,21 +9,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dc.mychat.domain.model.Message
-import com.dc.mychat.ui.viewmodel.MainViewModel
-import com.google.firebase.Timestamp
+import com.dc.mychat.ui.viewmodel.MessagesViewModel
+import com.dc.mychat.ui.viewmodel.SharedViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun MessageCard(message: Message, mainViewModel: MainViewModel) {
-    val isRight = mainViewModel.senderMailIdState.value.equals(message.senderMailId)
+fun MessageCard(message: Message, sharedViewModel: SharedViewModel) {
+    val isRight = sharedViewModel.senderProfile!!.mailId == message.senderMailId
 
     Box(
         modifier = Modifier

@@ -1,4 +1,4 @@
-package com.dc.mychat.data.repository.fcm
+package com.dc.mychat.other.fcm
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -13,7 +13,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.dc.mychat.MainActivity
 import com.dc.mychat.R
-import com.dc.mychat.domain.model.Message
 import com.dc.mychat.domain.model.NewMessageNotification
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -54,7 +53,7 @@ class FCMReceiverService : FirebaseMessagingService() {
 
         //Build
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(message.receiverMailId)
+            .setContentTitle(message.senderMailId)
             .setContentText(message.message)
             .setStyle(NotificationCompat.BigTextStyle().bigText(message.message))
             .setSmallIcon(R.drawable.ic_chat_app_icon)

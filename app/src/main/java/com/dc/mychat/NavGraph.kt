@@ -4,38 +4,79 @@ import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.dc.mychat.ui.screens.*
-import com.dc.mychat.ui.viewmodel.MainViewModel
-import com.google.firebase.messaging.FirebaseMessagingService
+import com.dc.mychat.ui.screens.components.SplashScreen
+import com.dc.mychat.ui.viewmodel.*
+import com.google.gson.Gson
 
 @ExperimentalMaterialApi
 @Composable
 fun SetupNavGraph(
     navHostController: NavHostController,
-    mainViewModel: MainViewModel,
+    splashViewModel: SplashViewModel,
     launchLoginFlow: (() -> Unit) -> Unit,
     selectImageLauncher: ActivityResultLauncher<String>
 ) {
-    mainViewModel.getLoginStatus()
-    val startDestination = if(mainViewModel.loginStatusState.value ) Screen.AllUsers.route else Screen.LoggedIn.route
-    Log.d("TAG 5.2","Inside Nav Graph ${startDestination}")
 
-    NavHost(navController = navHostController, startDestination = startDestination){
-        composable(route = Screen.LoggedIn.route){
-            LoggedInScreen(mainViewModel = mainViewModel, navHostController = navHostController, launchLoginFlow)
+    val sharedViewModel: SharedViewModel = viewModel()
+
+    LaunchedEffect(Unit) {
+        splashViewModel.readProfileFromPrefsAndNavigate(navHostController)
+    }
+
+    val startDestination = Screen.Splash.route
+    Log.d("TAG", "SetupNavGraph: $startDestination")
+
+    NavHost(navController = navHostController, startDestination = startDestination) {
+        composable(route = Screen.Splash.route) {
+            SplashScreen()
         }
-        composable(route = Screen.Profile.route){
-            ProfileScreen(mainViewModel = mainViewModel, navHostController = navHostController, selectImageLauncher)
+        composable(route = Screen.Login.route) {
+            val loginViewModel: LoginViewModel = hiltViewModel()
+            LoginScreen(
+                loginViewModel = loginViewModel,
+                navHostController = navHostController,
+                launchLoginFlow,
+                sharedViewModel
+            )
         }
-        composable(route = Screen.AllUsers.route){
-            AllUsersScreen(mainViewModel = mainViewModel, navHostController = navHostController)
+        composable(
+            route = Screen.Profile.route
+        ) {
+            val profileViewModel: ProfileViewModel = hiltViewModel()
+            ProfileScreen(
+                profileViewModel = profileViewModel,
+                navHostController = navHostController,
+                selectImageLauncher,
+                sharedViewModel
+            )
         }
-        composable(route = Screen.Message.route){
-            MessageScreen(mainViewModel = mainViewModel)
+
+        composable(route = Screen.AllUsers.route) {
+            val allUsersViewModel: AllUsersViewModel = hiltViewModel()
+            AllUsersScreen(
+                allUsersViewModel = allUsersViewModel,
+                navHostController = navHostController,
+                sharedViewModel = sharedViewModel
+            )
+        }
+
+        composable(
+            route = Screen.Message.route
+        ) {
+            val messagesViewModel: MessagesViewModel = hiltViewModel()
+            MessageScreen(messagesViewModel, navHostController, sharedViewModel)
+
         }
     }
 }
+
+
+
 

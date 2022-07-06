@@ -1,31 +1,36 @@
 package com.dc.mychat.data.repository.remote
 
-import android.nfc.Tag
-import android.util.Log
-import android.util.Log.d
-import android.widget.Toast
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import android.net.Uri
+import androidx.core.net.toUri
 import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.domain.repository.ServerRepository
-import com.dc.mychat.ui.viewmodel.MainViewModel
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class ServerRepositoryImp(): ServerRepository {
 
-    val firestoreDatabaseRef = Firebase.firestore
+    private val firestoreDatabaseRef = Firebase.firestore
+    private val storageRef = Firebase.storage.reference
 
     override suspend fun createProfile(profile: Profile) {
             firestoreDatabaseRef.collection("Profiles").document(profile.mailId).set(profile).await()
     }
 
+    override suspend fun uploadProfilePicture(profile: Profile): String {
+        storageRef.child("images/${profile.mailId}").putFile(profile.displayPhoto.toUri()).await()
+        val photoPath = storageRef.child("images/${profile.mailId}").downloadUrl.await()
+        return photoPath.toString()
+    }
 
-    override suspend fun getAllProfile(): List<Profile>{
 
+    override suspend fun getAllProfile(): List<Profile> {
         return firestoreDatabaseRef.collection("Profiles").get().await()
             .toObjects(Profile::class.java).filterNotNull()
     }
@@ -34,6 +39,11 @@ class ServerRepositoryImp(): ServerRepository {
     override suspend fun getProfile(name: String): Profile? {
 
         return firestoreDatabaseRef.collection("Profiles").document(name).get().await()
+            .toObject(Profile::class.java)
+    }
+
+    override suspend fun fetchProfile(it: FirebaseUser): Profile? {
+        return firestoreDatabaseRef.collection("Profiles").document(it.email.toString()).get().await()
             .toObject(Profile::class.java)
     }
 

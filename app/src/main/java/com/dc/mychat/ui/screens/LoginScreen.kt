@@ -1,11 +1,7 @@
 package com.dc.mychat.ui.screens
 
 
-import android.content.Intent
-import android.net.Uri
 import android.util.Log
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -19,17 +15,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.dc.mychat.R
-import com.dc.mychat.Screen
-import com.dc.mychat.domain.model.Profile
-import com.dc.mychat.ui.viewmodel.MainViewModel
-import com.firebase.ui.auth.AuthUI
+import com.dc.mychat.ui.viewmodel.LoginViewModel
+import com.dc.mychat.ui.viewmodel.SharedViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun LoggedInScreen(
-    mainViewModel: MainViewModel,
+fun LoginScreen(
+    loginViewModel: LoginViewModel,
     navHostController: NavHostController,
-    launchLoginFlow: (() -> Unit) -> Unit
+    launchLoginFlow: (() -> Unit) -> Unit,
+    sharedViewModel: SharedViewModel
 ) {
     Column(
         Modifier.fillMaxSize(),
@@ -52,10 +47,9 @@ fun LoggedInScreen(
                 val user = FirebaseAuth.getInstance().currentUser
                 user?.let {
                     Log.d("TAG 2","Inside Button LoggedIn Screen ${it.toString()}")
-                    mainViewModel.getFirebaseUser(it)
+                    loginViewModel.getFirebaseUser(it, navHostController,sharedViewModel)
                     Log.d("TAG 3","Inside Button LoggedIn Screen ${it.toString()}")
-                    navHostController.navigate(Screen.Profile.route)
-                    Log.d("TAG 4","Inside Button LoggedIn Screen ${it.toString()}")
+
                 }
             }
 
@@ -64,15 +58,6 @@ fun LoggedInScreen(
                 fontSize = 20.sp)
         }
 
-    }
-    fun fireLoginIntent(loginLauncher: ActivityResultLauncher<Intent>) {
-        val intent = AuthUI.getInstance()
-            .createSignInIntentBuilder()
-            .setAvailableProviders(listOf(
-                AuthUI.IdpConfig.GoogleBuilder().build()
-            ))
-            .build()
-        loginLauncher.launch(intent)
     }
 
 }

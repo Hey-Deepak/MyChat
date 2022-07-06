@@ -1,4 +1,4 @@
-package com.dc.mychat.data.repository.fcm
+package com.dc.mychat.other.fcm
 
 import okhttp3.Callback
 import okhttp3.OkHttpClient
