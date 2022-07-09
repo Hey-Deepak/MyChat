@@ -30,7 +30,6 @@ class LoginViewModel @Inject constructor(
 
     fun getFirebaseUser(it: FirebaseUser, navHostController: NavHostController, sharedViewModel: SharedViewModel) {
         viewModelScope.launch {
-            Log.d("TAG", "getFirebaseUser: A")
 
             Log.d("TAG", "Profile Fetching...")
             var profile = serverRepository.fetchProfile(it)
