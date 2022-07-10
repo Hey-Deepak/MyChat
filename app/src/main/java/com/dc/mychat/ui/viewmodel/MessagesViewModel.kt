@@ -48,6 +48,7 @@ class MessagesViewModel @Inject constructor(
     fun sendMessage(message: Message, sharedViewModel: SharedViewModel) {
         viewModelScope.launch {
             loadingState.value = true
+            Log.d("TAG", "sendMessage: loginState ${loadingState.value}")
             allMessagesState.add(message)
             Log.d("TAG 9.7.1 SharedViewModel", allMessagesState.toString())
             Log.d("TAG 9.7.2 SharedViewModel", groupIdState.value)
@@ -79,6 +80,7 @@ class MessagesViewModel @Inject constructor(
             }
             textState.value = ""
             loadingState.value = false
+            Log.d("TAG", "sendMessage: loginState ${loadingState.value}")
         }
     }
 
