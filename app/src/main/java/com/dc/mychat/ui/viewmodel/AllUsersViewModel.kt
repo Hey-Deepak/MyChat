@@ -9,6 +9,7 @@ import com.dc.mychat.domain.model.Message
 import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.domain.repository.ServerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,10 +19,13 @@ class AllUsersViewModel @Inject constructor(
 ) : ViewModel(){
 
     var allUsersState = mutableStateOf(listOf(Profile()))
+    val loadingState = mutableStateOf(false)
 
     fun getAllProfileFromFirebase() {
         viewModelScope.launch {
+            loadingState.value = true
             allUsersState.value = serverRepository.getAllProfile()
+            loadingState.value = false
         }
     }
 

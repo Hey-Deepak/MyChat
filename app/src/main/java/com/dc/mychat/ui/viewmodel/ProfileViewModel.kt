@@ -21,13 +21,14 @@ class ProfileViewModel @Inject constructor(
 ): ViewModel() {
 
     val profileState = mutableStateOf<Profile?>(null)
+    val loadingState = mutableStateOf(false)
 
 
     fun createProfile(profile: Profile, navHostController: NavHostController, sharedViewModel: SharedViewModel) {
 
         viewModelScope.launch {
             Log.d("TAG PVM", "Create Profile ${profileState.value} ")
-
+            loadingState.value = true
             if (profileState.value!!.displayPhoto.contains("content://")) {
                 val downloadedUrl =
                     serverRepository.uploadProfilePicture(profile)
@@ -41,7 +42,7 @@ class ProfileViewModel @Inject constructor(
             saveIsProfileCreatedStatusToPrefs(true)
 
             Log.d("TAG 9.5.2", "Inside SharedViewModel createProfile End")
-
+            loadingState.value = false
             // Navigate to All Users Screen
             navHostController.navigate(Screen.AllUsers.route){
                 popUpTo(Screen.Profile.route){ inclusive = true}

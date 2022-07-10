@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.dc.mychat.R
+import com.dc.mychat.ui.screens.components.LoadingDialog
 import com.dc.mychat.ui.screens.components.MessageCard
 import com.dc.mychat.ui.screens.components.SendMessageCard
 import com.dc.mychat.ui.screens.components.TopBar
@@ -77,6 +78,8 @@ fun MessageScreen(
         ) {
             SendMessageCard(messagesViewModel, sharedViewModel)
         }
+
+        LoadingDialog(isDialogShowing = messagesViewModel.loadingState.value)
 
     }
 }

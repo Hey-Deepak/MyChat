@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.dc.mychat.ui.screens.components.LoadingDialog
 import com.dc.mychat.ui.viewmodel.AllUsersViewModel
 import com.dc.mychat.ui.viewmodel.SharedViewModel
 
@@ -25,7 +26,10 @@ fun AllUsersScreen(
     sharedViewModel: SharedViewModel
 ) {
     allUsersViewModel.getAllProfileFromFirebase()
-    Log.d("TAG", "All User Screen, SENDER = ${sharedViewModel.senderProfile} RECEIVER ${sharedViewModel.receiverProfile} ")
+    Log.d(
+        "TAG",
+        "All User Screen, SENDER = ${sharedViewModel.senderProfile} RECEIVER ${sharedViewModel.receiverProfile} "
+    )
     Surface() {
         Column(
             modifier = Modifier
@@ -51,6 +55,7 @@ fun AllUsersScreen(
                 }
             }
         }
+        LoadingDialog(isDialogShowing = allUsersViewModel.loadingState.value)
     }
 }
 

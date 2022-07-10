@@ -27,23 +27,27 @@ class MessagesViewModel @Inject constructor(
     private val messageRepository: MessageRepository
 ) : ViewModel(){
 
-    var allMessagesState = mutableStateListOf<Message>()
+    val allMessagesState = mutableStateListOf<Message>()
     val textState = mutableStateOf("")
     private val groupIdState = mutableStateOf("")
+    val loadingState = mutableStateOf(false)
 
 
     fun getAllMessageFromFirebase(receiverProfile: Profile?, senderProfile: Profile?) {
         viewModelScope.launch {
+            loadingState.value = true
             groupIdState.value = listOf(receiverProfile!!.mailId, senderProfile!!.mailId).sorted().joinToString("%")
             messageRepository.subscribeToMessages3(groupIdState.value) {
                 allMessagesState.clear()
                 allMessagesState.addAll(it.messageArray)
             }
+            loadingState.value = false
         }
     }
 
     fun sendMessage(message: Message, sharedViewModel: SharedViewModel) {
         viewModelScope.launch {
+            loadingState.value = true
             allMessagesState.add(message)
             Log.d("TAG 9.7.1 SharedViewModel", allMessagesState.toString())
             Log.d("TAG 9.7.2 SharedViewModel", groupIdState.value)
@@ -74,6 +78,7 @@ class MessagesViewModel @Inject constructor(
                 )
             }
             textState.value = ""
+            loadingState.value = false
         }
     }
 
