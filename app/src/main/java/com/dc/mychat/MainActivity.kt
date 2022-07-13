@@ -44,7 +44,8 @@ class MainActivity : ComponentActivity() {
                     navHostController = navHostController,
                     splashViewModel,
                     ::launchLoginFlow,
-                    selectImageLauncher
+                    selectImageLauncher,
+                    profileViewModel
                 )
             }
         }

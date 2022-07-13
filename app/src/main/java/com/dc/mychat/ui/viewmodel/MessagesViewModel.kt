@@ -12,6 +12,7 @@ import com.dc.mychat.domain.repository.MessageRepository
 import com.dc.mychat.other.fcm.FCMMessageBuilder
 import com.dc.mychat.other.fcm.FCMSender
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
@@ -32,9 +33,18 @@ class MessagesViewModel @Inject constructor(
     private val groupIdState = mutableStateOf("")
     val loadingState = mutableStateOf(false)
 
+    val showErrorState = mutableStateOf(false)
+    val showErrorMessageState = mutableStateOf("")
+
+    private val messagesExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
+        loadingState.value = false
+        showErrorState.value = true
+        showErrorMessageState.value = throwable.message.toString()
+    }
+
 
     fun getAllMessageFromFirebase(receiverProfile: Profile?, senderProfile: Profile?) {
-        viewModelScope.launch {
+        viewModelScope.launch(messagesExceptionHandler) {
             loadingState.value = true
             groupIdState.value = listOf(receiverProfile!!.mailId, senderProfile!!.mailId).sorted().joinToString("%")
             messageRepository.subscribeToMessages3(groupIdState.value) {
@@ -46,12 +56,9 @@ class MessagesViewModel @Inject constructor(
     }
 
     fun sendMessage(message: Message, sharedViewModel: SharedViewModel) {
-        viewModelScope.launch {
+        viewModelScope.launch(messagesExceptionHandler) {
             loadingState.value = true
-            Log.d("TAG", "sendMessage: loginState ${loadingState.value}")
             allMessagesState.add(message)
-            Log.d("TAG 9.7.1 SharedViewModel", allMessagesState.toString())
-            Log.d("TAG 9.7.2 SharedViewModel", groupIdState.value)
             messageRepository.sendMessage(message = message, groupId = groupIdState.value)
             val data = FCMMessageBuilder.buildNewMessageNotification(
                 NewMessageNotification(

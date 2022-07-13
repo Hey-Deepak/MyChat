@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.dc.mychat.R
+import com.dc.mychat.ui.screens.components.ErrorDialog
 import com.dc.mychat.ui.screens.components.LoadingDialog
 import com.dc.mychat.ui.viewmodel.ProfileViewModel
 import com.dc.mychat.ui.viewmodel.SharedViewModel
@@ -95,6 +96,10 @@ fun ProfileScreen(
             Text(text = "Done", fontSize = 16.sp)
         }
         LoadingDialog(isDialogShowing = profileViewModel.loadingState.value)
+        ErrorDialog(isDialogShowing = profileViewModel.showErrorState.value,
+            errorMessage = profileViewModel.showErrorMessageState.value){
+            profileViewModel.showErrorState.value = it
+        }
     }
 
 }

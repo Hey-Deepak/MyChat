@@ -1,6 +1,5 @@
 package com.dc.mychat.ui.viewmodel
 
-import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,6 +10,7 @@ import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.domain.repository.ServerRepository
 import com.dc.mychat.domain.repository.LocalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,11 +22,19 @@ class ProfileViewModel @Inject constructor(
 
     val profileState = mutableStateOf<Profile?>(null)
     val loadingState = mutableStateOf(false)
+    val showErrorState = mutableStateOf(false)
+    val showErrorMessageState = mutableStateOf("")
+
+    private val profileExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
+        loadingState.value = false
+        showErrorState.value = true
+        showErrorMessageState.value = throwable.message.toString()
+    }
 
 
     fun createProfile(profile: Profile, navHostController: NavHostController, sharedViewModel: SharedViewModel) {
 
-        viewModelScope.launch {
+        viewModelScope.launch(profileExceptionHandler) {
             Log.d("TAG PVM", "Create Profile ${profileState.value} ")
             loadingState.value = true
             if (profileState.value!!.displayPhoto.contains("content://")) {
@@ -52,7 +60,7 @@ class ProfileViewModel @Inject constructor(
 
 
     private fun saveProfileToPrefs(profile: Profile) {
-        viewModelScope.launch {
+        viewModelScope.launch(profileExceptionHandler) {
             localRepository.saveProfileToPrefs(profile = profile)
             Log.d("TAG", "ProfileViewmodel, profile saved to prefs ${profile.toString()}")
         }
@@ -60,7 +68,7 @@ class ProfileViewModel @Inject constructor(
 
 
     private fun saveIsProfileCreatedStatusToPrefs(statusOfProfile: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch (profileExceptionHandler){
             localRepository.saveIsProfileCreatedStatusToPrefs(statusOfProfile)
             Log.d("TAG", "ProfileViewmodel, profileStatus saved to prefs ${statusOfProfile}")
         }

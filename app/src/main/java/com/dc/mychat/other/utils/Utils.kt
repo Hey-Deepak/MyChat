@@ -2,7 +2,6 @@ package com.dc.mychat.other.utils
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
-import androidx.activity.ComponentActivity
 import com.dc.mychat.domain.model.Profile
 import com.google.gson.Gson
 

@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.dc.mychat.R
+import com.dc.mychat.ui.screens.components.ErrorDialog
+import com.dc.mychat.ui.screens.components.LoadingDialog
 import com.dc.mychat.ui.viewmodel.LoginViewModel
 import com.dc.mychat.ui.viewmodel.SharedViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -42,13 +44,10 @@ fun LoginScreen(
         )
 
         Button(onClick = {
-            Log.d("TAG1","Inside Button")
             launchLoginFlow {
                 val user = FirebaseAuth.getInstance().currentUser
                 user?.let {
-                    Log.d("TAG 2","Inside Button LoggedIn Screen ${it.toString()}")
                     loginViewModel.getFirebaseUser(it, navHostController,sharedViewModel)
-                    Log.d("TAG 3","Inside Button LoggedIn Screen ${it.toString()}")
 
                 }
             }
@@ -58,6 +57,11 @@ fun LoginScreen(
                 fontSize = 20.sp)
         }
 
+        LoadingDialog(isDialogShowing = loginViewModel.loadingState.value)
+        ErrorDialog(isDialogShowing = loginViewModel.showErrorState.value,
+            errorMessage = loginViewModel.showErrorMessageState.value){
+            loginViewModel.showErrorState.value = it
+        }
     }
 
 }

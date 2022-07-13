@@ -14,10 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.dc.mychat.R
-import com.dc.mychat.ui.screens.components.LoadingDialog
-import com.dc.mychat.ui.screens.components.MessageCard
-import com.dc.mychat.ui.screens.components.SendMessageCard
-import com.dc.mychat.ui.screens.components.TopBar
+import com.dc.mychat.ui.screens.components.*
 import com.dc.mychat.ui.viewmodel.MessagesViewModel
 import com.dc.mychat.ui.viewmodel.SharedViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -38,7 +35,7 @@ fun MessageScreen(
     Log.d("TAG", "MessageScreen: RECEIVER = $receiverProfile  SENDER = $senderProfile")
 
     // Get All Messages from Firebase
-    LaunchedEffect(key1 = messagesViewModel.allMessagesState){
+    LaunchedEffect(key1 = messagesViewModel.allMessagesState) {
         messagesViewModel.getAllMessageFromFirebase(receiverProfile, senderProfile)
     }
 
@@ -83,6 +80,12 @@ fun MessageScreen(
         }
 
         LoadingDialog(isDialogShowing = messagesViewModel.loadingState.value)
+        ErrorDialog(
+            isDialogShowing = messagesViewModel.showErrorState.value,
+            errorMessage = messagesViewModel.showErrorMessageState.value
+        ) {
+            messagesViewModel.showErrorState.value = it
+        }
 
     }
 }

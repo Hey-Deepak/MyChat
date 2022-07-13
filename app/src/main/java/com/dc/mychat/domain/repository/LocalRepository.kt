@@ -1,8 +1,8 @@
 package com.dc.mychat.domain.repository
 
-import android.content.SharedPreferences
+
 import com.dc.mychat.domain.model.Profile
-import kotlinx.coroutines.Deferred
+
 
 interface LocalRepository {
 
