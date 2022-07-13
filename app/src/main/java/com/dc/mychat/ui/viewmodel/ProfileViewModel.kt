@@ -24,6 +24,8 @@ class ProfileViewModel @Inject constructor(
     val loadingState = mutableStateOf(false)
     val showErrorState = mutableStateOf(false)
     val showErrorMessageState = mutableStateOf("")
+    val showToastMessageState = mutableStateOf("")
+    val showToastState = mutableStateOf(false)
 
     private val profileExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
         loadingState.value = false
@@ -35,7 +37,7 @@ class ProfileViewModel @Inject constructor(
     fun createProfile(profile: Profile, navHostController: NavHostController, sharedViewModel: SharedViewModel) {
 
         viewModelScope.launch(profileExceptionHandler) {
-            Log.d("TAG PVM", "Create Profile ${profileState.value} ")
+            showToast("Profile is Creating")
             loadingState.value = true
             if (profileState.value!!.displayPhoto.contains("content://")) {
                 val downloadedUrl =
@@ -49,8 +51,9 @@ class ProfileViewModel @Inject constructor(
             saveProfileToPrefs(profile)
             saveIsProfileCreatedStatusToPrefs(true)
 
-            Log.d("TAG 9.5.2", "Inside SharedViewModel createProfile End")
             loadingState.value = false
+            showToast("Profile is Created")
+
             // Navigate to All Users Screen
             navHostController.navigate(Screen.AllUsers.route){
                 popUpTo(Screen.Profile.route){ inclusive = true}
@@ -62,7 +65,7 @@ class ProfileViewModel @Inject constructor(
     private fun saveProfileToPrefs(profile: Profile) {
         viewModelScope.launch(profileExceptionHandler) {
             localRepository.saveProfileToPrefs(profile = profile)
-            Log.d("TAG", "ProfileViewmodel, profile saved to prefs ${profile.toString()}")
+            showToast("Profile Saved to Prefs")
         }
     }
 
@@ -72,5 +75,10 @@ class ProfileViewModel @Inject constructor(
             localRepository.saveIsProfileCreatedStatusToPrefs(statusOfProfile)
             Log.d("TAG", "ProfileViewmodel, profileStatus saved to prefs ${statusOfProfile}")
         }
+    }
+
+    private fun showToast(message:String){
+        showToastState.value = true
+        showToastMessageState.value = message
     }
 }
