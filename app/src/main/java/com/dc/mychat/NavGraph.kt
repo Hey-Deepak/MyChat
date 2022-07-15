@@ -21,7 +21,8 @@ fun SetupNavGraph(
     navHostController: NavHostController,
     splashViewModel: SplashViewModel,
     launchLoginFlow: (() -> Unit) -> Unit,
-    selectImageLauncher: ActivityResultLauncher<String>
+    selectImageLauncher: ActivityResultLauncher<String>,
+    profileViewModel: ProfileViewModel
 ) {
 
     val sharedViewModel: SharedViewModel = viewModel()
@@ -49,7 +50,6 @@ fun SetupNavGraph(
         composable(
             route = Screen.Profile.route
         ) {
-            val profileViewModel: ProfileViewModel = hiltViewModel()
             ProfileScreen(
                 profileViewModel = profileViewModel,
                 navHostController = navHostController,

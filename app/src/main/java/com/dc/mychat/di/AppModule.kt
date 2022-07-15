@@ -8,6 +8,7 @@ import com.dc.mychat.data.repository.remote.ServerRepositoryImp
 import com.dc.mychat.domain.repository.MessageRepository
 import com.dc.mychat.domain.repository.ServerRepository
 import com.dc.mychat.domain.repository.LocalRepository
+import com.dc.mychat.ui.viewmodel.SharedViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,14 +33,26 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideMessageRepository() : MessageRepository {
+    fun provideMessageRepository(): MessageRepository {
         return MessageRepositoryImp()
     }
 
     @Singleton
     @Provides
-    fun provideServerRepository() : ServerRepository {
+    fun provideServerRepository(): ServerRepository {
         return ServerRepositoryImp()
+    }
+
+    @Singleton
+    @Provides
+    fun provideSharedViewModel(
+        @ApplicationContext appContext: Context
+    ): SharedViewModel {
+        return SharedViewModel(
+            provideLocalRepository(
+                appContext
+            )
+        )
     }
 
 

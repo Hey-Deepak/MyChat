@@ -8,12 +8,15 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.dc.mychat.ui.screens.components.ErrorDialog
+import com.dc.mychat.ui.screens.components.LoadingDialog
 import com.dc.mychat.ui.viewmodel.AllUsersViewModel
 import com.dc.mychat.ui.viewmodel.SharedViewModel
 
@@ -24,9 +27,11 @@ fun AllUsersScreen(
     navHostController: NavHostController,
     sharedViewModel: SharedViewModel
 ) {
+    LaunchedEffect(key1 = Unit){
     allUsersViewModel.getAllProfileFromFirebase()
-    Log.d("TAG", "All User Screen, SENDER = ${sharedViewModel.senderProfile} RECEIVER ${sharedViewModel.receiverProfile} ")
-    Surface() {
+        Log.d("TAG", "AllUsersScreen: getAllProfileFromFirebase")
+    }
+    Surface {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -51,6 +56,12 @@ fun AllUsersScreen(
                 }
             }
         }
+        LoadingDialog(isDialogShowing = allUsersViewModel.loadingState.value)
+        ErrorDialog(
+            allUsersViewModel.showErrorState.value,
+            allUsersViewModel.showErrorMessageState.value){
+                allUsersViewModel.showErrorState.value = it
+            }
     }
 }
 

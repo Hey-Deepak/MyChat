@@ -1,6 +1,5 @@
 package com.dc.mychat.ui.viewmodel
 
-import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,6 +10,7 @@ import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.domain.repository.ServerRepository
 import com.dc.mychat.domain.repository.LocalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,13 +21,24 @@ class ProfileViewModel @Inject constructor(
 ): ViewModel() {
 
     val profileState = mutableStateOf<Profile?>(null)
+    val loadingState = mutableStateOf(false)
+    val showErrorState = mutableStateOf(false)
+    val showErrorMessageState = mutableStateOf("")
+    val showToastMessageState = mutableStateOf("")
+    val showToastState = mutableStateOf(false)
+
+    private val profileExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
+        loadingState.value = false
+        showErrorState.value = true
+        showErrorMessageState.value = throwable.message.toString()
+    }
 
 
     fun createProfile(profile: Profile, navHostController: NavHostController, sharedViewModel: SharedViewModel) {
 
-        viewModelScope.launch {
-            Log.d("TAG PVM", "Create Profile ${profileState.value} ")
-
+        viewModelScope.launch(profileExceptionHandler) {
+            showToast("Profile is Creating")
+            loadingState.value = true
             if (profileState.value!!.displayPhoto.contains("content://")) {
                 val downloadedUrl =
                     serverRepository.uploadProfilePicture(profile)
@@ -40,7 +51,8 @@ class ProfileViewModel @Inject constructor(
             saveProfileToPrefs(profile)
             saveIsProfileCreatedStatusToPrefs(true)
 
-            Log.d("TAG 9.5.2", "Inside SharedViewModel createProfile End")
+            loadingState.value = false
+            showToast("Profile is Created")
 
             // Navigate to All Users Screen
             navHostController.navigate(Screen.AllUsers.route){
@@ -51,17 +63,22 @@ class ProfileViewModel @Inject constructor(
 
 
     private fun saveProfileToPrefs(profile: Profile) {
-        viewModelScope.launch {
+        viewModelScope.launch(profileExceptionHandler) {
             localRepository.saveProfileToPrefs(profile = profile)
-            Log.d("TAG", "ProfileViewmodel, profile saved to prefs ${profile.toString()}")
+            showToast("Profile Saved to Prefs")
         }
     }
 
 
     private fun saveIsProfileCreatedStatusToPrefs(statusOfProfile: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch (profileExceptionHandler){
             localRepository.saveIsProfileCreatedStatusToPrefs(statusOfProfile)
             Log.d("TAG", "ProfileViewmodel, profileStatus saved to prefs ${statusOfProfile}")
         }
+    }
+
+    private fun showToast(message:String){
+        showToastState.value = true
+        showToastMessageState.value = message
     }
 }

@@ -7,15 +7,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.dc.mychat.R
-import com.dc.mychat.ui.screens.components.MessageCard
-import com.dc.mychat.ui.screens.components.SendMessageCard
-import com.dc.mychat.ui.screens.components.TopBar
+import com.dc.mychat.ui.screens.components.*
 import com.dc.mychat.ui.viewmodel.MessagesViewModel
 import com.dc.mychat.ui.viewmodel.SharedViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -36,7 +35,9 @@ fun MessageScreen(
     Log.d("TAG", "MessageScreen: RECEIVER = $receiverProfile  SENDER = $senderProfile")
 
     // Get All Messages from Firebase
-    messagesViewModel.getAllMessageFromFirebase(receiverProfile, senderProfile)
+    LaunchedEffect(key1 = messagesViewModel.allMessagesState) {
+        messagesViewModel.getAllMessageFromFirebase(receiverProfile, senderProfile)
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -76,6 +77,14 @@ fun MessageScreen(
                 .padding(8.dp), contentAlignment = Alignment.Center
         ) {
             SendMessageCard(messagesViewModel, sharedViewModel)
+        }
+
+        LoadingDialog(isDialogShowing = messagesViewModel.loadingState.value)
+        ErrorDialog(
+            isDialogShowing = messagesViewModel.showErrorState.value,
+            errorMessage = messagesViewModel.showErrorMessageState.value
+        ) {
+            messagesViewModel.showErrorState.value = it
         }
 
     }

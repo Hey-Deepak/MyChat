@@ -5,9 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.dc.mychat.Screen
-import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.domain.repository.LocalRepository
-import com.dc.mychat.domain.repository.MessageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
