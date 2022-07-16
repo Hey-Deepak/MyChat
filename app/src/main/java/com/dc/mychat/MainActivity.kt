@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
@@ -81,7 +82,7 @@ class MainActivity : ComponentActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 Log.d("TAG","Inside ResultLambda ")
                 loginHandler()
-            }
+            } else Toast.makeText(this, "Not able to get URI", Toast.LENGTH_SHORT).show()
         }
     }
 
