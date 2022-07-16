@@ -67,6 +67,7 @@ class MainActivity : ComponentActivity() {
 
 
     private lateinit var loginLauncher: ActivityResultLauncher<Intent>
+    private lateinit var imagePickerLauncher: ActivityResultLauncher<String>
 
     // Step 3: Handler (to get the result)
     private lateinit var loginHandler: (() -> Unit)

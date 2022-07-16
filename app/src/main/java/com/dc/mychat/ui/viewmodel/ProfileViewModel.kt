@@ -18,24 +18,13 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val localRepository: LocalRepository,
     private val serverRepository: ServerRepository
-): ViewModel() {
+): BaseViewModel() {
 
     val profileState = mutableStateOf<Profile?>(null)
-    val loadingState = mutableStateOf(false)
-    val showErrorState = mutableStateOf(false)
-    val showErrorMessageState = mutableStateOf("")
-    val showToastMessageState = mutableStateOf("")
-    val showToastState = mutableStateOf(false)
-
-    private val profileExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
-        loadingState.value = false
-        showErrorState.value = true
-        showErrorMessageState.value = throwable.message.toString()
-    }
+    private val profileExceptionHandler = exceptionHandler
 
 
     fun createProfile(profile: Profile, navHostController: NavHostController, sharedViewModel: SharedViewModel) {
-
         viewModelScope.launch(profileExceptionHandler) {
             showToast("Profile is Creating")
             loadingState.value = true
@@ -75,10 +64,5 @@ class ProfileViewModel @Inject constructor(
             localRepository.saveIsProfileCreatedStatusToPrefs(statusOfProfile)
             Log.d("TAG", "ProfileViewmodel, profileStatus saved to prefs ${statusOfProfile}")
         }
-    }
-
-    private fun showToast(message:String){
-        showToastState.value = true
-        showToastMessageState.value = message
     }
 }

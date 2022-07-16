@@ -20,17 +20,9 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val localRepository: LocalRepository,
     private val serverRepository: ServerRepository
-) : ViewModel() {
+) : BaseViewModel() {
 
-    val loadingState = mutableStateOf(false)
-    val showErrorState = mutableStateOf(false)
-    val showErrorMessageState = mutableStateOf("")
-
-    private val loginExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
-        loadingState.value = false
-        showErrorState.value = true
-        showErrorMessageState.value = throwable.message.toString()
-    }
+    private val loginExceptionHandler = exceptionHandler
 
 
     private fun saveLoginStatusToPrefs(loginStatus: Boolean) {
@@ -45,7 +37,6 @@ class LoginViewModel @Inject constructor(
             loadingState.value = true
             Log.d("TAG", "Profile Fetching...")
             var profile = serverRepository.fetchProfile(it)
-            Log.d("TAG", "getFirebaseUser profile: $profile")
             if (profile == null) {
                 profile = Profile(it.displayName.toString(), it.email!!, it.photoUrl.toString())
             }

@@ -26,21 +26,12 @@ import kotlin.coroutines.suspendCoroutine
 @HiltViewModel
 class MessagesViewModel @Inject constructor(
     private val messageRepository: MessageRepository
-) : ViewModel(){
+) : BaseViewModel(){
 
     val allMessagesState = mutableStateListOf<Message>()
     val textState = mutableStateOf("")
     private val groupIdState = mutableStateOf("")
-    val loadingState = mutableStateOf(false)
-
-    val showErrorState = mutableStateOf(false)
-    val showErrorMessageState = mutableStateOf("")
-
-    private val messagesExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
-        loadingState.value = false
-        showErrorState.value = true
-        showErrorMessageState.value = throwable.message.toString()
-    }
+    private val messagesExceptionHandler = exceptionHandler
 
 
     fun getAllMessageFromFirebase(receiverProfile: Profile?, senderProfile: Profile?) {
@@ -72,7 +63,6 @@ class MessagesViewModel @Inject constructor(
                         override fun onFailure(call: Call, e: IOException) {
                             continuation.resumeWithException(e)
                         }
-
                         override fun onResponse(call: Call, response: Response) {
                             val responseMsg = response.body?.string() ?: ""
                             if (responseMsg.contains("message_id"))

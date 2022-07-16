@@ -14,13 +14,14 @@ import javax.inject.Inject
 @HiltViewModel
 class SharedViewModel @Inject constructor(
     private val localRepository: LocalRepository
-) : ViewModel() {
+) : BaseViewModel() {
 
     var senderProfile by mutableStateOf<Profile?>(null)
     var receiverProfile by mutableStateOf<Profile?>(null)
+    private val sharedExceptionHandler = exceptionHandler
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(sharedExceptionHandler) {
             if (localRepository.getIsProfileCreatedFromPrefs())
             senderProfile = localRepository.getProfileFromPrefs()
         }

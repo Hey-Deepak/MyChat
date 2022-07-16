@@ -14,18 +14,10 @@ import javax.inject.Inject
 @HiltViewModel
 class AllUsersViewModel @Inject constructor(
     private val serverRepository: ServerRepository
-) : ViewModel(){
+) : BaseViewModel(){
 
-    val showErrorState = mutableStateOf(false)
-    val showErrorMessageState = mutableStateOf("")
     var allUsersState = mutableStateOf(listOf(Profile()))
-    val loadingState = mutableStateOf(false)
-
-    private val allUserExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
-        loadingState.value = false
-        showErrorState.value = true
-        showErrorMessageState.value = throwable.message.toString()
-    }
+    private val allUserExceptionHandler = exceptionHandler
 
     fun getAllProfileFromFirebase() {
         viewModelScope.launch(allUserExceptionHandler) {
@@ -34,6 +26,4 @@ class AllUsersViewModel @Inject constructor(
             loadingState.value = false
         }
     }
-
-
 }

@@ -37,7 +37,6 @@ fun ProfileScreen(
     // Set Profile State
     profileViewModel.profileState.value = sharedViewModel.senderProfile
 
-    Log.d("TAG", "Inside profile screen start ${profileViewModel.profileState.value}")
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -74,7 +73,7 @@ fun ProfileScreen(
         OutlinedTextField(
             value = profileViewModel.profileState.value!!.displayName,
             onValueChange = {
-                profileViewModel.profileState.value = profileViewModel.profileState.value!!.copy(
+                sharedViewModel.senderProfile = profileViewModel.profileState.value!!.copy(
                     displayName = it
                 )
             },
