@@ -22,18 +22,16 @@ class LoginViewModel @Inject constructor(
     private val serverRepository: ServerRepository
 ) : BaseViewModel() {
 
-    private val loginExceptionHandler = exceptionHandler
-
 
     private fun saveLoginStatusToPrefs(loginStatus: Boolean) {
-        viewModelScope.launch(loginExceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             localRepository.saveLoginStatusToPrefs(loginStatus = loginStatus)
         }
     }
 
 
     fun getFirebaseUser(it: FirebaseUser, navHostController: NavHostController, sharedViewModel: SharedViewModel) {
-        viewModelScope.launch (loginExceptionHandler){
+        viewModelScope.launch (exceptionHandler){
             loadingState.value = true
             Log.d("TAG", "Profile Fetching...")
             var profile = serverRepository.fetchProfile(it)
@@ -56,7 +54,7 @@ class LoginViewModel @Inject constructor(
 }
 
     private fun saveProfileToPrefs(profile: Profile) {
-        viewModelScope.launch(loginExceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             localRepository.saveProfileToPrefs(profile = profile)
             Log.d("TAG", "ProfileViewmodel, profile saved to prefs ${profile.toString()}")
         }
@@ -64,7 +62,7 @@ class LoginViewModel @Inject constructor(
 
 
     private fun saveIsProfileCreatedStatusToPrefs(statusOfProfile: Boolean) {
-        viewModelScope.launch (loginExceptionHandler){
+        viewModelScope.launch (exceptionHandler){
             localRepository.saveIsProfileCreatedStatusToPrefs(statusOfProfile)
             Log.d("TAG", "ProfileViewmodel, profileStatus saved to prefs ${statusOfProfile}")
         }

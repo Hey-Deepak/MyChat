@@ -17,10 +17,9 @@ class AllUsersViewModel @Inject constructor(
 ) : BaseViewModel(){
 
     var allUsersState = mutableStateOf(listOf(Profile()))
-    private val allUserExceptionHandler = exceptionHandler
 
     fun getAllProfileFromFirebase() {
-        viewModelScope.launch(allUserExceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             loadingState.value = true
             allUsersState.value = serverRepository.getAllProfile()
             loadingState.value = false

@@ -15,10 +15,9 @@ class SplashViewModel @Inject constructor(
     private val localRepository: LocalRepository
 ):BaseViewModel() {
     private val isProfileCreatedState = mutableStateOf(false)
-    private val splashExceptionHandler = exceptionHandler
 
     fun readProfileFromPrefsAndNavigate(navHostController: NavHostController) {
-        viewModelScope.launch(splashExceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             isProfileCreatedState.value = localRepository.getIsProfileCreatedFromPrefs()
             if (isProfileCreatedState.value){
                 navHostController.navigate(Screen.AllUsers.route){

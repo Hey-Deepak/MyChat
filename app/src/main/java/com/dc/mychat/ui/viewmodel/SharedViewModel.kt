@@ -18,10 +18,9 @@ class SharedViewModel @Inject constructor(
 
     var senderProfile by mutableStateOf<Profile?>(null)
     var receiverProfile by mutableStateOf<Profile?>(null)
-    private val sharedExceptionHandler = exceptionHandler
 
     init {
-        viewModelScope.launch(sharedExceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             if (localRepository.getIsProfileCreatedFromPrefs())
             senderProfile = localRepository.getProfileFromPrefs()
         }

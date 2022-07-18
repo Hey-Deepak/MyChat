@@ -21,11 +21,10 @@ class ProfileViewModel @Inject constructor(
 ): BaseViewModel() {
 
     val profileState = mutableStateOf<Profile?>(null)
-    private val profileExceptionHandler = exceptionHandler
 
 
     fun createProfile(profile: Profile, navHostController: NavHostController, sharedViewModel: SharedViewModel) {
-        viewModelScope.launch(profileExceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             showToast("Profile is Creating")
             loadingState.value = true
             if (profileState.value!!.displayPhoto.contains("content://")) {
@@ -52,7 +51,7 @@ class ProfileViewModel @Inject constructor(
 
 
     private fun saveProfileToPrefs(profile: Profile) {
-        viewModelScope.launch(profileExceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             localRepository.saveProfileToPrefs(profile = profile)
             showToast("Profile Saved to Prefs")
         }
@@ -60,7 +59,7 @@ class ProfileViewModel @Inject constructor(
 
 
     private fun saveIsProfileCreatedStatusToPrefs(statusOfProfile: Boolean) {
-        viewModelScope.launch (profileExceptionHandler){
+        viewModelScope.launch (exceptionHandler){
             localRepository.saveIsProfileCreatedStatusToPrefs(statusOfProfile)
             Log.d("TAG", "ProfileViewmodel, profileStatus saved to prefs ${statusOfProfile}")
         }
