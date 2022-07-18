@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dc.mychat.ui.theme.MyChatTheme
 import com.dc.mychat.ui.viewmodel.*
 import com.firebase.ui.auth.AuthUI
+import com.github.dhaval2404.imagepicker.ImagePicker
 
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +38,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         registerLoginLauncher()
+        registerImagePickerLauncher()
         FirebaseMessaging.getInstance().subscribeToTopic("users")
         setContent {
             MyChatTheme {
@@ -45,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     navHostController = navHostController,
                     splashViewModel,
                     ::launchLoginFlow,
-                    selectImageLauncher,
+                    ::lauchImagePickerFlow,
                     profileViewModel
                 )
             }
@@ -56,22 +58,8 @@ class MainActivity : ComponentActivity() {
 
 
 
-    private val selectImageLauncher =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            Log.d("TAG MainActivity", "uri: $uri")
-            if (uri != null){
-                profileViewModel.profileState.value = profileViewModel.profileState.value!!.copy(displayPhoto = uri.toString())
-                sharedViewModel.addSenderProfile(profileViewModel.profileState.value!!)
-            }
-        }
-
-
-
     private lateinit var loginLauncher: ActivityResultLauncher<Intent>
-    private lateinit var imagePickerLauncher: ActivityResultLauncher<String>
-
-    // Step 3: Handler (to get the result)
-    private lateinit var loginHandler: (() -> Unit)
+    private lateinit var imagePickerLauncher: ActivityResultLauncher<Intent>
 
     // Step 1: Registration
     private fun registerLoginLauncher() {
@@ -83,6 +71,30 @@ class MainActivity : ComponentActivity() {
                 Log.d("TAG","Inside ResultLambda ")
                 loginHandler()
             } else Toast.makeText(this, "Not able to Login, Try Again", Toast.LENGTH_SHORT).show()
+        }
+    }
+    private fun registerImagePickerLauncher() {
+        imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            val resultCode = result.resultCode
+            val uri = result.data
+
+            when (resultCode) {
+                Activity.RESULT_OK -> {
+                    if (uri != null){
+                        Log.d("TAG", "registerImagePickerLauncher: ${uri.data}")
+                        profileViewModel.profileState.value = profileViewModel.profileState.value!!.copy(displayPhoto = uri.data.toString())
+                        Log.d("TAG", "registerImagePickerLauncher: ${profileViewModel.profileState.value}")
+                        sharedViewModel.addSenderProfile(profileViewModel.profileState.value!!)
+                    } else Toast.makeText(this, "Not able to Pick Image", Toast.LENGTH_SHORT).show()
+                }
+                ImagePicker.RESULT_ERROR -> {
+                    Toast.makeText(this, ImagePicker.getError(uri), Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show()
+                }
+            }
+
         }
     }
 
@@ -99,6 +111,18 @@ class MainActivity : ComponentActivity() {
 
         loginLauncher.launch(intent)
     }
+    private fun lauchImagePickerFlow(){
+        Log.d("TAG", "lauchImagePickerFlow: launchImagePickerFlow")
+        ImagePicker.with(this)
+            .cropSquare()
+            .compress(1024)
+            .createIntent { intent ->
+                imagePickerLauncher.launch(intent)
+            }
+    }
+
+    // Step 3: Handler (to get the result)
+    private lateinit var loginHandler: (() -> Unit)
 
 }
 

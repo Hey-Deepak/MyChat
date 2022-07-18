@@ -27,7 +27,7 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             showToast("Profile is Creating")
             loadingState.value = true
-            if (profileState.value!!.displayPhoto.contains("content://")) {
+            if (profileState.value!!.displayPhoto.contains("file://")) {
                 val downloadedUrl =
                     serverRepository.uploadProfilePicture(profile)
                 serverRepository.createProfile(profile.copy(displayPhoto = downloadedUrl))

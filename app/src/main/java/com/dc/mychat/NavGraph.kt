@@ -1,5 +1,6 @@
 package com.dc.mychat
 
+import android.content.Intent
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.ExperimentalMaterialApi
@@ -13,7 +14,6 @@ import androidx.navigation.compose.composable
 import com.dc.mychat.ui.screens.*
 import com.dc.mychat.ui.screens.components.SplashScreen
 import com.dc.mychat.ui.viewmodel.*
-import com.google.gson.Gson
 
 @ExperimentalMaterialApi
 @Composable
@@ -21,7 +21,7 @@ fun SetupNavGraph(
     navHostController: NavHostController,
     splashViewModel: SplashViewModel,
     launchLoginFlow: (() -> Unit) -> Unit,
-    selectImageLauncher: ActivityResultLauncher<String>,
+    launchImagePickerFlow: () -> Unit,
     profileViewModel: ProfileViewModel
 ) {
 
@@ -53,7 +53,7 @@ fun SetupNavGraph(
             ProfileScreen(
                 profileViewModel = profileViewModel,
                 navHostController = navHostController,
-                selectImageLauncher,
+                launchImagePickerFlow,
                 sharedViewModel
             )
         }
