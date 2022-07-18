@@ -13,6 +13,7 @@ import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
+import kotlin.system.measureTimeMillis
 
 class MessageRepositoryImp() : MessageRepository {
 
@@ -21,14 +22,17 @@ class MessageRepositoryImp() : MessageRepository {
 
     override suspend fun sendMessage(message: Message, groupId: String) {
         Log.d("TAG 19.1 Message & GroupId Message Repo ", "$message + $groupId")
-        val doc = firebaseChatCollectionRef.document(groupId).get().await()
-        if (doc.exists()) {
-            firebaseChatCollectionRef.document(groupId)
-                .update("messageArray", FieldValue.arrayUnion(message)).await()
-        } else {
-            firebaseChatCollectionRef.document(groupId)
-                .set(Messages(listOf(message))).await()
-        }
+
+            val doc = firebaseChatCollectionRef.document(groupId).get().await()
+            if (doc.exists()) {
+                firebaseChatCollectionRef.document(groupId)
+                    .update("messageArray", FieldValue.arrayUnion(message)).await()
+            } else {
+                firebaseChatCollectionRef.document(groupId)
+                    .set(Messages(listOf(message))).await()
+            }
+
+
 
 
     }

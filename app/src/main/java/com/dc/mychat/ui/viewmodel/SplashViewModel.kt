@@ -13,11 +13,11 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val localRepository: LocalRepository
-):ViewModel() {
+):BaseViewModel() {
     private val isProfileCreatedState = mutableStateOf(false)
 
     fun readProfileFromPrefsAndNavigate(navHostController: NavHostController) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             isProfileCreatedState.value = localRepository.getIsProfileCreatedFromPrefs()
             if (isProfileCreatedState.value){
                 navHostController.navigate(Screen.AllUsers.route){

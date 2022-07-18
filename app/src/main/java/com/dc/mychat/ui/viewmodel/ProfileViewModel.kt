@@ -18,28 +18,16 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val localRepository: LocalRepository,
     private val serverRepository: ServerRepository
-): ViewModel() {
+): BaseViewModel() {
 
     val profileState = mutableStateOf<Profile?>(null)
-    val loadingState = mutableStateOf(false)
-    val showErrorState = mutableStateOf(false)
-    val showErrorMessageState = mutableStateOf("")
-    val showToastMessageState = mutableStateOf("")
-    val showToastState = mutableStateOf(false)
-
-    private val profileExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
-        loadingState.value = false
-        showErrorState.value = true
-        showErrorMessageState.value = throwable.message.toString()
-    }
 
 
     fun createProfile(profile: Profile, navHostController: NavHostController, sharedViewModel: SharedViewModel) {
-
-        viewModelScope.launch(profileExceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             showToast("Profile is Creating")
             loadingState.value = true
-            if (profileState.value!!.displayPhoto.contains("content://")) {
+            if (profileState.value!!.displayPhoto.contains("file://")) {
                 val downloadedUrl =
                     serverRepository.uploadProfilePicture(profile)
                 serverRepository.createProfile(profile.copy(displayPhoto = downloadedUrl))
@@ -63,7 +51,7 @@ class ProfileViewModel @Inject constructor(
 
 
     private fun saveProfileToPrefs(profile: Profile) {
-        viewModelScope.launch(profileExceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             localRepository.saveProfileToPrefs(profile = profile)
             showToast("Profile Saved to Prefs")
         }
@@ -71,14 +59,9 @@ class ProfileViewModel @Inject constructor(
 
 
     private fun saveIsProfileCreatedStatusToPrefs(statusOfProfile: Boolean) {
-        viewModelScope.launch (profileExceptionHandler){
+        viewModelScope.launch (exceptionHandler){
             localRepository.saveIsProfileCreatedStatusToPrefs(statusOfProfile)
             Log.d("TAG", "ProfileViewmodel, profileStatus saved to prefs ${statusOfProfile}")
         }
-    }
-
-    private fun showToast(message:String){
-        showToastState.value = true
-        showToastMessageState.value = message
     }
 }

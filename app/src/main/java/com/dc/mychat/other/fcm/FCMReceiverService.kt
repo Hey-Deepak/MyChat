@@ -14,45 +14,54 @@ import androidx.core.app.NotificationManagerCompat
 import com.dc.mychat.MainActivity
 import com.dc.mychat.R
 import com.dc.mychat.domain.model.NewMessageNotification
+import com.dc.mychat.domain.repository.LocalRepository
 import com.dc.mychat.other.utils.Utils
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.scopes.ServiceScoped
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+
 import java.util.*
 import javax.inject.Inject
 
-class FCMReceiverService @Inject constructor(
 
-) : FirebaseMessagingService() {
-
-
-
+@AndroidEntryPoint
+class FCMReceiverService : FirebaseMessagingService() {
     companion object {
         const val TAG = "FCMReceiverService"
         const val CHANNEL_ID = "notifications"
     }
+    @Inject
+    lateinit var localRepository: LocalRepository
+
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.Main + job)
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-
         super.onMessageReceived(remoteMessage)
-        val userProfile = Utils.getProfileFromPrefs(this)
-        val userMailId = userProfile!!.mailId
-        Log.d("TAG 12.0", "FCM Notification $userMailId")
-        //val type = remoteMessage.data["type"]?.toInt() ?: return
-        val msgString = remoteMessage.data["msg"] ?: return
-        Log.d("TAG 12.1", "msgString Notification $msgString")
-        val msg = parseMsg<NewMessageNotification>(msgString)
-        Log.d(TAG, "onMessageReceived: ${msg.toString()}")
-        msg?.let {
-            // Notification to receiver
-            if (it.receiverMailId == userMailId)
-            showNotification(it)
-        } ?: kotlin.run {
-            Log.d("TAG FCM 12.2", "unable to parse message object of type : type")
+        scope.launch {
+            val userProfile = localRepository.getProfileFromPrefs()
+            val userMailId = userProfile.mailId
+            Log.d("TAG 12.0", "FCM Notification $userMailId")
+            val msgString = remoteMessage.data["msg"] ?: return@launch
+            Log.d("TAG 12.1", "msgString Notification $msgString")
+            val msg = parseMsg<NewMessageNotification>(msgString)
+            Log.d(TAG, "onMessageReceived: ${msg.toString()}")
+            msg?.let {
+                // Notification to receiver
+                if (it.receiverMailId == userMailId)
+                    showNotification(it)
+            } ?: kotlin.run {
+                Log.d("TAG FCM 12.2", "unable to parse message object of type : type")
+            }
         }
-
-
     }
+
 
     private fun showNotification(message: NewMessageNotification) {
         createNotificationChannel()
@@ -60,7 +69,8 @@ class FCMReceiverService @Inject constructor(
         //PendingIntent
         val intent = Intent(this, MainActivity::class.java)
         //intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent =
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         //Build
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)

@@ -1,5 +1,6 @@
 package com.dc.mychat.ui.screens
 
+import android.content.Intent
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.*
@@ -30,14 +31,13 @@ import com.dc.mychat.ui.viewmodel.SharedViewModel
 fun ProfileScreen(
     profileViewModel: ProfileViewModel,
     navHostController: NavHostController,
-    selectImageLauncher: ActivityResultLauncher<String>,
+    launchImagePickerFlow: ()->Unit,
     sharedViewModel: SharedViewModel
 ) {
 
     // Set Profile State
     profileViewModel.profileState.value = sharedViewModel.senderProfile
 
-    Log.d("TAG", "Inside profile screen start ${profileViewModel.profileState.value}")
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -65,7 +65,7 @@ fun ProfileScreen(
                     modifier = Modifier
                         .size(40.dp)
                         .clickable {
-                            selectImageLauncher.launch("image/*")
+                            launchImagePickerFlow()
                         }
                 )
             }
@@ -74,7 +74,7 @@ fun ProfileScreen(
         OutlinedTextField(
             value = profileViewModel.profileState.value!!.displayName,
             onValueChange = {
-                profileViewModel.profileState.value = profileViewModel.profileState.value!!.copy(
+                sharedViewModel.senderProfile = profileViewModel.profileState.value!!.copy(
                     displayName = it
                 )
             },
@@ -100,6 +100,8 @@ fun ProfileScreen(
         ) {
             Text(text = "Done", fontSize = 16.sp)
         }
+
+        // Dialogs
         LoadingDialog(isDialogShowing = profileViewModel.loadingState.value)
         ErrorDialog(
             isDialogShowing = profileViewModel.showErrorState.value,
@@ -107,7 +109,6 @@ fun ProfileScreen(
         ) {
             profileViewModel.showErrorState.value = it
         }
-
         ShowToast(message = profileViewModel.showToastMessageState.value) {
             profileViewModel.showToastState.value = it
         }
