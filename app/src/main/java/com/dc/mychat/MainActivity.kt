@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 Log.d("TAG","Inside ResultLambda ")
                 loginHandler()
-            } else Toast.makeText(this, "Not able to get URI", Toast.LENGTH_SHORT).show()
+            } else Toast.makeText(this, "Not able to Login, Try Again", Toast.LENGTH_SHORT).show()
         }
     }
 
