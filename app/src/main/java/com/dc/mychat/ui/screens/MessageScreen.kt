@@ -24,6 +24,7 @@ import com.dc.mychat.ui.viewmodel.MessagesViewModel
 import com.dc.mychat.ui.viewmodel.SharedViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -47,6 +48,7 @@ fun MessageScreen(
     LaunchedEffect(key1 = messagesViewModel.allMessagesState) {
 
         messagesViewModel.getAllMessageFromFirebase(receiverProfile, senderProfile)
+
     }
 
     Column(
@@ -69,12 +71,14 @@ fun MessageScreen(
                 state = listState
             ) {
 
+
                 for (i in messagesViewModel.allMessagesState.indices) {
                     val message = messagesViewModel.allMessagesState[i]
                     if (
                         i + 1 <= messagesViewModel.allMessagesState.size - 1 &&
                         messagesViewModel.allMessagesState[i].timestamp.toDate().date !=
-                        messagesViewModel.allMessagesState[i + 1].timestamp.toDate().date) {
+                        messagesViewModel.allMessagesState[i + 1].timestamp.toDate().date
+                    ) {
                         item {
                             MessageCard(message = message, sharedViewModel = sharedViewModel)
                             Row(
@@ -85,9 +89,8 @@ fun MessageScreen(
                                     text = SimpleDateFormat(
                                         "dd MMMM",
                                         Locale.US
-                                    ).format(messagesViewModel.allMessagesState[i+1].timestamp.toDate()),
-                                    fontStyle = FontStyle.Italic,
-                                    fontWeight = FontWeight.Bold
+                                    ).format(messagesViewModel.allMessagesState[i + 1].timestamp.toDate()),
+                                    fontWeight = FontWeight.Medium
                                 )
                             }
                         }
@@ -97,14 +100,13 @@ fun MessageScreen(
                         }
                     }
                 }
-
-                CoroutineScope(Dispatchers.Main).launch {
-                    if (messagesViewModel.allMessagesState.isNotEmpty()) {
-
-                        listState.scrollToItem(messagesViewModel.allMessagesState.size - 1)
-                    }
-                }
             }
+                LaunchedEffect(key1 = messagesViewModel.allMessagesState.size){
+                        Log.d("TAG 3", "MessageScreen: scrollToItem ${messagesViewModel.allMessagesState.size}")
+                        if (messagesViewModel.allMessagesState.isNotEmpty()) {
+                            listState.scrollToItem(messagesViewModel.allMessagesState.size - 1)
+                        }
+                }
         }
         Box(
             modifier = Modifier
