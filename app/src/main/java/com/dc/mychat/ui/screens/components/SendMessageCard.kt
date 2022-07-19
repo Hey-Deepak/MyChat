@@ -1,14 +1,15 @@
 package com.dc.mychat.ui.screens.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
-
-
+import com.dc.mychat.R
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -20,7 +21,11 @@ import com.google.firebase.Timestamp
 
 
 @Composable
-fun SendMessageCard(messagesViewModel: MessagesViewModel, sharedViewModel: SharedViewModel) {
+fun SendMessageCard(
+    messagesViewModel: MessagesViewModel,
+    sharedViewModel: SharedViewModel,
+    launchImagePickerForMessageFlow: (() -> Unit) -> Unit
+) {
 
     Card(
         modifier = Modifier
@@ -41,18 +46,49 @@ fun SendMessageCard(messagesViewModel: MessagesViewModel, sharedViewModel: Share
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
 
                 trailingIcon = {
-                    IconButton(onClick = {
+                    Row(modifier = Modifier.wrapContentSize()) {
+
+                        // Send Message with Image Button
+                        IconButton(onClick = {
+
+                            launchImagePickerForMessageFlow() {
+                                messagesViewModel.sendMessage(
+                                    message = Message(
+                                        messagesViewModel.textState.value,
+                                        messagesViewModel.imageUriState.value,
+                                        timestamp = Timestamp.now(),
+                                        senderMailId = sharedViewModel.senderProfile!!.mailId
+                                    ),
+                                    sharedViewModel = sharedViewModel
+                                )
+                            }
+
+                        }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_camera),
+                                contentDescription = "Send Image"
+                            )
+                        }
+
+                        // Send Message Button
+                        IconButton(onClick = {
                             messagesViewModel.sendMessage(
                                 message = Message(
                                     messagesViewModel.textState.value,
-                                    Timestamp.now(),
-                                    sharedViewModel.senderProfile!!.mailId
+                                    messagesViewModel.imageUriState.value,
+                                    timestamp = Timestamp.now(),
+                                    senderMailId = sharedViewModel.senderProfile!!.mailId
                                 ),
                                 sharedViewModel = sharedViewModel
                             )
-                    }) {
-                        Icon(imageVector = Icons.Filled.Send, contentDescription = "Send Message")
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Send,
+                                contentDescription = "Send Message"
+                            )
+                        }
                     }
+
                 },
                 textStyle = TextStyle(fontSize = 20.sp),
                 label = {

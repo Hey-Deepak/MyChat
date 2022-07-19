@@ -4,8 +4,9 @@ import com.google.firebase.Timestamp
 
 
 
-data class Message (
+data class Message(
     val message: String = "",
+    var imageUri: String = "",
     val timestamp: Timestamp = Timestamp(1212122L, 121212),
     val senderMailId: String = ""
     )

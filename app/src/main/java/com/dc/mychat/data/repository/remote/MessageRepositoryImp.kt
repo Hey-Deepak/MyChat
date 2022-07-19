@@ -1,63 +1,63 @@
 package com.dc.mychat.data.repository.remote
 
 import android.util.Log
+import androidx.core.net.toUri
 import com.dc.mychat.domain.model.Message
 import com.dc.mychat.domain.model.Messages
 import com.dc.mychat.domain.repository.MessageRepository
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
+
+
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.delay
+import com.google.firebase.storage.ktx.storage
+
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.tasks.await
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
-import kotlin.system.measureTimeMillis
 
 class MessageRepositoryImp() : MessageRepository {
 
-    val firebaseChatCollectionRef = Firebase.firestore.collection("Chats")
+    private val firebaseChatCollectionRef = Firebase.firestore.collection("Chats")
+    private val storageRef = Firebase.storage.reference
 
 
     override suspend fun sendMessage(message: Message, groupId: String) {
-        Log.d("TAG 19.1 Message & GroupId Message Repo ", "$message + $groupId")
 
-            val doc = firebaseChatCollectionRef.document(groupId).get().await()
-            if (doc.exists()) {
-                firebaseChatCollectionRef.document(groupId)
-                    .update("messageArray", FieldValue.arrayUnion(message)).await()
-            } else {
-                firebaseChatCollectionRef.document(groupId)
-                    .set(Messages(listOf(message))).await()
-            }
+        if (message.imageUri.isNotEmpty()) {
+            val imageUrl = uploadImageToFireStorage(message, groupId)
+            message.imageUri = imageUrl
+        }
 
-
-
+        val doc = firebaseChatCollectionRef.document(groupId).get().await()
+        if (doc.exists()) {
+            firebaseChatCollectionRef.document(groupId)
+                .update("messageArray", FieldValue.arrayUnion(message)).await()
+        } else {
+            firebaseChatCollectionRef.document(groupId)
+                .set(Messages(listOf(message))).await()
+        }
 
     }
 
 
-    /*override suspend fun getAllMessagesFromFirebase(): List<Message> {
-        val groupName = "gljat999@gmail.com%choudharydeepak990@gmail.com"
-        return suspendCoroutine { cont ->
-            firebaseChatCollectionRef.document(groupName).get().addOnSuccessListener {
+    override suspend fun uploadImageToFireStorage(message: Message, groupId: String): String {
+        storageRef.child("images/chats/${groupId}/${message.timestamp}")
+            .putFile(message.imageUri.toUri()).await()
+        val photoPath =
+            storageRef.child("images/chats/${groupId}/${message.timestamp}").downloadUrl.await()
+        return photoPath.toString()
+    }
 
-                val messages = it.toObject(Messages::class.java)
-                cont.resume(messages!!.messageArray)
-            }.addOnFailureListener {
-                cont.resumeWithException(it)
-            }
-        }
-    }*/
 
     override suspend fun getAllMessagesFromFirebase(groupId: String): MutableList<Message> {
-        Log.d("TAG 19.9", "${groupId}")
         val listOfMessages = firebaseChatCollectionRef.document(groupId).get().await()
             .toObject(Messages::class.java)?.messageArray ?: emptyList()
         return listOfMessages.toMutableList()
 
     }
+
 
     override fun subscribeForMessages(groupId: String): List<Message> {
 
@@ -88,7 +88,7 @@ class MessageRepositoryImp() : MessageRepository {
     ) {
         firebaseChatCollectionRef.document(groupId).addSnapshotListener { documentSnapshot, e ->
 
-            
+
             val messages = documentSnapshot?.toObject(Messages::class.java)
 
             if (messages == null) {

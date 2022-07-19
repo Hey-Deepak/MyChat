@@ -1,10 +1,8 @@
 package com.dc.mychat.ui.viewmodel
 
-import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dc.mychat.domain.model.Message
 import com.dc.mychat.domain.model.NewMessageNotification
@@ -18,12 +16,11 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
-import kotlin.system.measureTimeMillis
+
 
 @HiltViewModel
 class MessagesViewModel @Inject constructor(
@@ -32,8 +29,8 @@ class MessagesViewModel @Inject constructor(
 
     val allMessagesState = mutableStateListOf<Message>()
     val textState = mutableStateOf("")
+    val imageUriState = mutableStateOf("")
     private val groupIdState = mutableStateOf("")
-
 
 
     fun getAllMessageFromFirebase(receiverProfile: Profile?, senderProfile: Profile?) {
@@ -53,10 +50,12 @@ class MessagesViewModel @Inject constructor(
 
         viewModelScope.launch(exceptionHandler) {
             try {
-                withTimeout(5000){
+                withTimeout(10000) {
                     loadingState.value = true
                     allMessagesState.add(message)
+
                     messageRepository.sendMessage(message = message, groupId = groupIdState.value)
+
                     val data = FCMMessageBuilder.buildNewMessageNotification(
                         NewMessageNotification(
                             message.message,
@@ -91,9 +90,6 @@ class MessagesViewModel @Inject constructor(
             } catch (e: TimeoutCancellationException) {
                 throw Exception("Your Internet connection in Broken")
             }
-
         }
-
     }
-
 }

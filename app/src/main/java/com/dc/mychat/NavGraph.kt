@@ -1,8 +1,6 @@
 package com.dc.mychat
 
-import android.content.Intent
 import android.util.Log
-import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,7 +20,9 @@ fun SetupNavGraph(
     splashViewModel: SplashViewModel,
     launchLoginFlow: (() -> Unit) -> Unit,
     launchImagePickerFlow: () -> Unit,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    launchImagePickerForMessageFlow: (() -> Unit) -> Unit,
+    messagesViewModel: MessagesViewModel
 ) {
 
     val sharedViewModel: SharedViewModel = viewModel()
@@ -70,8 +70,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.Message.route
         ) {
-            val messagesViewModel: MessagesViewModel = hiltViewModel()
-            MessageScreen(messagesViewModel, navHostController, sharedViewModel)
+            MessageScreen(messagesViewModel, navHostController, sharedViewModel, launchImagePickerForMessageFlow)
 
         }
     }

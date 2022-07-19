@@ -18,4 +18,6 @@ interface MessageRepository {
         onChanged: (Messages) -> Unit
     )
 
+    suspend fun uploadImageToFireStorage(message: Message, groupId: String): String
+
 }

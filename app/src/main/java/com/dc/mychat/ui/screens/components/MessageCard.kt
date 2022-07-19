@@ -12,8 +12,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import coil.compose.AsyncImage
 import com.dc.mychat.domain.model.Message
-import com.dc.mychat.ui.viewmodel.MessagesViewModel
 import com.dc.mychat.ui.viewmodel.SharedViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -36,32 +37,46 @@ fun MessageCard(message: Message, sharedViewModel: SharedViewModel) {
                 modifier = Modifier
                     .wrapContentWidth(),
                 elevation = 8.dp,
-                shape = if (isRight) RoundedCornerShape(8.dp, 0.dp, 8.dp, 8.dp ) else RoundedCornerShape(0.dp, 8.dp, 8.dp, 8.dp ),
+                shape = if (isRight) RoundedCornerShape(
+                    8.dp,
+                    0.dp,
+                    8.dp,
+                    8.dp
+                ) else RoundedCornerShape(0.dp, 8.dp, 8.dp, 8.dp),
                 backgroundColor = Color.LightGray
             ) {
                 Row(
                     modifier = Modifier,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(
-                        text = message.message,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier
-                            .padding(8.dp)
+                    if (message.message.isEmpty()) {
+                        AsyncImage(
+                            model = message.imageUri,
+                            contentDescription = "Message Image",
+                            modifier = Modifier.fillMaxSize(0.75f)
+                        )
+                    } else {
+                        Text(
+                            text = message.message,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier
+                                .padding(8.dp)
 
-                    )
-                    Text(
-                        text = SimpleDateFormat(
-                            "h:mm a",
-                            Locale.US
-                        ).format(message.timestamp.toDate()),
-                        fontSize = 8.sp,
-                        fontWeight = FontWeight.Light,
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .padding(8.dp)
-                    )
+                        )
+                        Text(
+                            text = SimpleDateFormat(
+                                "h:mm a",
+                                Locale.US
+                            ).format(message.timestamp.toDate()),
+                            fontSize = 8.sp,
+                            fontWeight = FontWeight.Light,
+                            modifier = Modifier
+                                .wrapContentWidth()
+                                .padding(8.dp)
+                        )
+                    }
+
                 }
 
             }
