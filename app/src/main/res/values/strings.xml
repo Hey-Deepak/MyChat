@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyChat</string>
+    <string name="reply_label">REPLY</string>
 </resources>
