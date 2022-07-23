@@ -11,6 +11,7 @@ import android.util.Base64.DEFAULT
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.RemoteInput
 import com.dc.mychat.MainActivity
 import com.dc.mychat.R
 import com.dc.mychat.domain.model.NewMessageNotification
@@ -62,15 +63,10 @@ class FCMReceiverService : FirebaseMessagingService() {
         }
     }
 
-
     private fun showNotification(message: NewMessageNotification) {
         createNotificationChannel()
+        Log.d("TAG", "showNotification: Channel created")
 
-        //PendingIntent
-        val intent = Intent(this, MainActivity::class.java)
-        //intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        val pendingIntent =
-            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         //Build
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
@@ -78,8 +74,6 @@ class FCMReceiverService : FirebaseMessagingService() {
             .setContentText(message.message)
             .setStyle(NotificationCompat.BigTextStyle().bigText(message.message))
             .setSmallIcon(R.drawable.ic_chat_app_icon)
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         //Post
@@ -98,7 +92,6 @@ class FCMReceiverService : FirebaseMessagingService() {
             notificationManager.createNotificationChannel(channel)
         }
     }
-
 }
 
 private inline fun <reified T> parseMsg(msgString: String): T? {
@@ -107,6 +100,5 @@ private inline fun <reified T> parseMsg(msgString: String): T? {
         String(Base64.decode(msgString, DEFAULT)),
         T::class.java
     )
-
     return msg
 }
