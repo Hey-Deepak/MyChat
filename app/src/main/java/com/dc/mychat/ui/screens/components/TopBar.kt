@@ -20,3 +20,21 @@ fun TopBar(title: String, buttonIcon: Painter, onButtonClicked: () -> Unit) {
         backgroundColor = MaterialTheme.colors.primaryVariant
     )
 }
+
+@Composable
+fun TopBarForNavigation(title: String, buttonIcon: Painter, onButtonClicked: () -> Unit) {
+    TopAppBar(
+        title = {
+            Text(
+                text = title
+            )
+        },
+        backgroundColor = MaterialTheme.colors.primaryVariant,
+        actions = {
+            IconButton(onClick = { onButtonClicked() }) {
+                Icon(buttonIcon, contentDescription = "profile")
+            }
+        }
+    )
+
+}
