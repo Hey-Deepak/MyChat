@@ -6,13 +6,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.IconButton
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AddCircle
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -23,12 +24,10 @@ import androidx.navigation.NavHostController
 import com.dc.mychat.MainActivity
 import com.dc.mychat.R
 import com.dc.mychat.Screen
-import com.dc.mychat.ui.screens.components.ErrorDialog
-import com.dc.mychat.ui.screens.components.LoadingDialog
-import com.dc.mychat.ui.screens.components.TopBar
-import com.dc.mychat.ui.screens.components.TopBarForNavigation
+import com.dc.mychat.ui.screens.components.*
 import com.dc.mychat.ui.viewmodel.AllUsersViewModel
 import com.dc.mychat.ui.viewmodel.SharedViewModel
+import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable
@@ -37,9 +36,13 @@ fun AllUsersScreen(
     navHostController: NavHostController,
     sharedViewModel: SharedViewModel
 ) {
-    LaunchedEffect(key1 = Unit){
-    allUsersViewModel.getAllProfileFromFirebase()
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(key1 = Unit) {
+        allUsersViewModel.getAllProfileFromFirebase()
         Log.d("TAG", "AllUsersScreen: getAllProfileFromFirebase")
+
     }
     Surface {
         Column(
@@ -47,10 +50,46 @@ fun AllUsersScreen(
                 .fillMaxSize()
         ) {
 
-            TopBarForNavigation(title = "MyChat", buttonIcon = painterResource(id = R.drawable.profile)) {
-                navHostController.navigate(Screen.Profile.route)
-            }
+            var bottomNavItems = listOf(
+                BottomNavItem(
+                    name = "Home",
+                    route = "home",
+                    icon = Icons.Rounded.Home,
+                ),
+                BottomNavItem(
+                    name = "Create",
+                    route = "add",
+                    icon = Icons.Rounded.AddCircle,
+                ),
+                BottomNavItem(
+                    name = "Settings",
+                    route = "settings",
+                    icon = Icons.Rounded.Settings,
+                ),
+            )
 
+            Scaffold(
+                topBar = {
+                    TopBarForNavigation(
+                        title = "MyChat",
+                        buttonIcon = painterResource(id = R.drawable.profile),
+                        onNavBarClicked = {
+                            scope.launch {
+                                scaffoldState.drawerState.open()
+                            }
+                        },
+                        onProfileButtonClicked = {
+                            navHostController.navigate(Screen.Profile.route)
+                        }
+                    )
+                },
+                scaffoldState = scaffoldState,
+                drawerContent = {
+                    Text(text = "Profile")
+                    DrawerContent(items = bottomNavItems, navHostController = navHostController)
+                }
+
+            ) {
             Column(
                 modifier = Modifier
                     .wrapContentHeight()
@@ -66,13 +105,20 @@ fun AllUsersScreen(
                     }
                 }
             }
+
+            }
+
+
+
+
         }
         LoadingDialog(isDialogShowing = allUsersViewModel.loadingState.value)
         ErrorDialog(
             allUsersViewModel.showErrorState.value,
-            allUsersViewModel.showErrorMessageState.value){
-                allUsersViewModel.showErrorState.value = it
-            }
+            allUsersViewModel.showErrorMessageState.value
+        ) {
+            allUsersViewModel.showErrorState.value = it
+        }
     }
 }
 
