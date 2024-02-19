@@ -23,6 +23,22 @@
           }
         },
         {
+          "client_id": "243638650365-k5t4ub8dika9fin02ep5bd1hg1pjajrt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dc.mychat",
+            "certificate_hash": "51cf91fda89e83c38d8f2572c4ba2ab7817b62d7"
+          }
+        },
+        {
+          "client_id": "243638650365-qtqfjgejuvdof8d7ra0qd9ko09cu4rf5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dc.mychat",
+            "certificate_hash": "afd052a70614001838e4407830d26f1fedc8fabb"
+          }
+        },
+        {
           "client_id": "243638650365-nb1sf8gfdgrbsihq832jkp434quvaro4.apps.googleusercontent.com",
           "client_type": 3
         }

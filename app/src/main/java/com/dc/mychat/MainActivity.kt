@@ -12,7 +12,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dc.mychat.ui.theme.MyChatTheme
@@ -34,7 +33,7 @@ class MainActivity : ComponentActivity() {
 
     lateinit var navHostController: NavHostController
 
-    @OptIn(ExperimentalMaterialApi::class)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         registerLoginLauncher()

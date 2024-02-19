@@ -9,12 +9,13 @@ import com.dc.mychat.domain.repository.MessageRepository
 import com.dc.mychat.domain.repository.ServerRepository
 import com.dc.mychat.domain.repository.LocalRepository
 import com.dc.mychat.ui.viewmodel.SharedViewModel
-import dagger.Module
 import dagger.Provides
+import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+
 
 @Module
 @InstallIn(SingletonComponent::class)

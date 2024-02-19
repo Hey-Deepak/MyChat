@@ -6,6 +6,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import com.dc.mychat.R
 import androidx.compose.ui.Modifier
@@ -31,7 +37,9 @@ fun SendMessageCard(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
-        elevation = 8.dp
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        )
     ) {
         Row(
             modifier = Modifier,

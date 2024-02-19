@@ -3,9 +3,11 @@ package com.dc.mychat.ui.screens
 import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,11 +22,13 @@ import com.dc.mychat.domain.model.Profile
 import com.dc.mychat.ui.viewmodel.AllUsersViewModel
 import com.dc.mychat.ui.viewmodel.SharedViewModel
 
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardChat(navHostController: NavHostController, userProfile: Profile, sharedViewModel: SharedViewModel) {
     Card(
-        elevation = 10.dp,
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 10.dp
+        ),
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()

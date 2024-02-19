@@ -3,8 +3,10 @@ package com.dc.mychat.ui.screens.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,14 +38,18 @@ fun MessageCard(message: Message, sharedViewModel: SharedViewModel) {
             Card(
                 modifier = Modifier
                     .wrapContentWidth(),
-                elevation = 8.dp,
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 8.dp
+                ),
                 shape = if (isRight) RoundedCornerShape(
                     8.dp,
                     0.dp,
                     8.dp,
                     8.dp
                 ) else RoundedCornerShape(0.dp, 8.dp, 8.dp, 8.dp),
-                backgroundColor = Color.LightGray
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.LightGray
+                )
             ) {
                 Row(
                     modifier = Modifier,

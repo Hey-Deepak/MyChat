@@ -6,7 +6,7 @@ import com.dc.mychat.domain.model.NewMessageNotification
 import com.google.gson.Gson
 
 
-object FCMMessageBuilder {
+object  FCMMessageBuilder {
 
     fun buildNewMessageNotification(
         newMessageNotification: NewMessageNotification

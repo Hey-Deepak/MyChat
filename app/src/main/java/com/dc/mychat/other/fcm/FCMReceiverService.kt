@@ -32,7 +32,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class FCMReceiverService : FirebaseMessagingService() {
+    class FCMReceiverService : FirebaseMessagingService() {
     companion object {
         const val TAG = "FCMReceiverService"
         const val CHANNEL_ID = "notifications"

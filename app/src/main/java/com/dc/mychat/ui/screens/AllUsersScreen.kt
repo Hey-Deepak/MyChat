@@ -4,9 +4,8 @@ import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -20,7 +19,6 @@ import com.dc.mychat.ui.screens.components.LoadingDialog
 import com.dc.mychat.ui.viewmodel.AllUsersViewModel
 import com.dc.mychat.ui.viewmodel.SharedViewModel
 
-@ExperimentalMaterialApi
 @Composable
 fun AllUsersScreen(
     allUsersViewModel: AllUsersViewModel,
@@ -30,6 +28,7 @@ fun AllUsersScreen(
     LaunchedEffect(key1 = Unit){
     allUsersViewModel.getAllProfileFromFirebase()
         Log.d("TAG", "AllUsersScreen: getAllProfileFromFirebase")
+
     }
     Surface {
         Column(

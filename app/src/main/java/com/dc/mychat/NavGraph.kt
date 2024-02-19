@@ -1,7 +1,6 @@
 package com.dc.mychat
 
 import android.util.Log
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -13,7 +12,7 @@ import com.dc.mychat.ui.screens.*
 import com.dc.mychat.ui.screens.components.SplashScreen
 import com.dc.mychat.ui.viewmodel.*
 
-@ExperimentalMaterialApi
+
 @Composable
 fun SetupNavGraph(
     navHostController: NavHostController,
