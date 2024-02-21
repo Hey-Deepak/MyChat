@@ -26,6 +26,7 @@ class SplashViewModel @Inject constructor(
             } else {
                 navHostController.navigate(Screen.Login.route){
                     popUpTo(Screen.Splash.route) {inclusive = true}
+                    // Feature 1 Started in SplashViewModel
                 }
             }
         }
